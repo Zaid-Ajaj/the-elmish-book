@@ -2,11 +2,11 @@
 
 - [The Elmish Book](README.md)
 
-### Introduction
+### Chapeter 1: Introduction
 - [Introduction](chapters/introduction/index.md)
-- [Audience](chapters/introduction/audience.md)
-- [What you will learn](chapters/introduction/learning-goals.md)
-- [Chapters overview](chapters/introduction/overview.md)
+- [Who This Book Is For](chapters/introduction/audience.md)
+- [What You Will Learn](chapters/introduction/learning-goals.md)
+- [Chapters Overview](chapters/introduction/overview.md)
 
-### Getting Started
+### Chapter 2: Getting Started
 - [Getting Started](chapters/getting-started/index.md)
