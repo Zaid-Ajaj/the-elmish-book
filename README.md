@@ -1,3 +1,3 @@
 # The Elmish Book
 
-Build advanced client applications using F# and Fable.
+A practical guide to building advanced client applications using F# and Fable.
