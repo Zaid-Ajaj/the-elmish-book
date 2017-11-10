@@ -1,0 +1,28 @@
+{
+  "name": "the-elmish-book",
+  "version": "1.0.0",
+  "description": "Build advanced client apps in F#",
+  "dependencies": {},
+  "devDependencies": {
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-enhanced-katex": "^1.0.0",
+    "gh-pages": "^1.0.0"
+  },
+  "scripts": {
+    "build": "gitbook build",
+    "serve": "gitbook serve",
+    "publish": "gitbook build && node publish.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zaid-Ajaj/the-elmish-book.git"
+  },
+  "keywords": [
+    "elmish",
+    "fable",
+    "fsharp",
+    "F#"
+  ],
+  "author": "Zaid Ajaj",
+  "license": "MIT"
+}
