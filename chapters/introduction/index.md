@@ -1,6 +1,6 @@
 # Introduction
 
-The aim of this book is to give the readers in-depth knowledge on how to build client applications in F#, specifically by using the [Fable](fable.io) compiler that takes our F# code and turns it into modern Javascript, thus allowing our F# code to be run inside any Javascript runtime whether it is the browser, node or others. See [About Fable](why-fable.md) to learn more.
+The aim of this book is to give the readers in-depth knowledge on how to build client applications in F#, specifically by using the [Fable](fable.io) compiler that takes our F# code and turns it into modern Javascript, thus allowing our F# code to be run inside any Javascript runtime whether it is the browser, node or others. See [About Fable](about-fable.md) to learn more.
 
 Our main focus will be building client applications for the browser. We will start by learning the basic workflow around client applications, understand the tooling and the hybrid nature of Fable applications since we will be both using [dotnet](https://dotnet.github.io/) and [node](https://nodejs.org/en/) tools for developement. 
 
