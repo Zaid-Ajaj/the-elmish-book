@@ -6,7 +6,7 @@
   "devDependencies": {
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-enhanced-katex": "^1.0.0",
-    "gh-pages": "^1.0.0"
+    "gh-pages": "^1.1.0"
   },
   "scripts": {
     "build": "gitbook build",
