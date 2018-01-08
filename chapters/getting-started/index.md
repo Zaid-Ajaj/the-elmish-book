@@ -1,2 +1,1 @@
-# Getting started
-
+# Understanding Fable

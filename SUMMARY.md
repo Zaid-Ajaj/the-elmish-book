@@ -9,5 +9,5 @@
 - [About Fable](chapters/introduction/about-fable.md)
 - [Chapters Overview](chapters/introduction/overview.md)
 
-### Chapter 2: Getting Started
-- [Getting Started](chapters/getting-started/index.md)
+### Chapter 2: Understanding Fable
+- [Understanding Fable](chapters/getting-started/index.md)
