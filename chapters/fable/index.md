@@ -1,4 +1,4 @@
-# Getting Started - Introduction
+# Introduction
 
 
 ![Fable](img/fable-workflow.png)
