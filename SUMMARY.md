@@ -1,14 +1,14 @@
 # Summary
 
 - [The Elmish Book](README.md)
+- [Introduction](chapters/introduction.md)
+- [Audience](chapters/audience.md)
+- [Chapters Overview](chapters/overview.md)
 
-### Chapeter 1: Introduction
-- [Introduction](chapters/introduction/index.md)
-- [Audience](chapters/introduction/audience.md)
-- [What You Will Learn](chapters/introduction/learning-goals.md)
-- [Chapters Overview](chapters/introduction/overview.md)
-
-### Chapter 2: Fable
-- [Introduction](chapters/fable/index.md)
+### Chapeter 1: Fable
 - [Getting Started](chapters/fable/getting-started.md)
-- [About Fable](chapters/fable/about.md)
+- [The Tools at Play](chapters/fable/tools.md)
+- [The Big Picture](chapters/fable/big-picture.md)
+
+### Chapter 2: The Elm Architecture
+- [Intoduction](chapters/elm/index.md)
