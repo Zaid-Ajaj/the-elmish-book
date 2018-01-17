@@ -6,6 +6,8 @@
 - [Chapters Overview](chapters/overview.md)
 
 ### Chapeter 1: Fable
+- [Introduction](chapters/fable/index.md)
+- [About Fable](chapters/fable/about.md)
 - [Getting Started](chapters/fable/getting-started.md)
 - [The Tools at Play](chapters/fable/tools.md)
 - [The Big Picture](chapters/fable/big-picture.md)

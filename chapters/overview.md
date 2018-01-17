@@ -1,6 +1,6 @@
 # Chapters Overview
 
-The book is divided into five chapters that follow each other in chronological order. Here is a brief overview of the content of each chapter:
+The book is divided into the following chapters. It is recommended that you read them in chronological order. Here is a brief overview of the content of each chapter:
 
 ### Chapter 1: Fable
 This chapter is devoted to getting started with and understanding the developement workflow around Fable projects. We will examine the different tools being used and discuss the role they play within a Fable project.
