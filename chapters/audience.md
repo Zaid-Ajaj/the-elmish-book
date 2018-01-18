@@ -1,6 +1,6 @@
 # Audience
 
-Naturally, the book is primarily aimed at F# developers who wish to use their existing knowledge to build frontend apps. No prior experience is assumed concerning frontend developement as I will to try to explain the concepts needed from scratch.
+Naturally, the book is aimed at F# developers who wish to use their existing knowledge to build frontend apps. No prior experience is assumed concerning frontend developement as I will to try to explain the concepts needed from the very scratch.
 
 That said, anyone who is familiar with the syntax of the ML family of languages like [OCaml](https://ocaml.org/ ) or [Reason](https://github.com/facebook/reason) should have no trouble following along with the book. 
 
