@@ -1,6 +1,6 @@
 # Fable
 
-In order to become productive with Fable and realize it's full potential, a proper understanding of the developement tools is needed. This chapter provides a gentle introduction to Fable and a detailed account of these tools at play during developement, this will be the first step of our journey into the mystical Elmish lands. Let's dive right in!
+In order to become productive with Fable and realize it's full potential, we first need to understand the developement tools that we will be using. This chapter provides a gentle introduction to Fable and a detailed account of these tools at play during developement, Let's dive right in!
 
 - [About Fable](about.md)
 - [The Tools at Play](tools.md)
