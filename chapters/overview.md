@@ -2,7 +2,7 @@
 
 The book is divided into the following chapters. It is recommended that you read them in chronological order. Here is a brief overview of the content of each chapter:
 
-### Chapter 1: Fable
+### Chapter 1: Getting Started
 This chapter is devoted to getting started with and understanding the developement workflow around Fable projects. We will examine the different tools that we will be using and discuss the role they play within a Fable project.
 
 ### Chapter 2: The Elm Architecture
