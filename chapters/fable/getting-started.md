@@ -30,7 +30,7 @@ fable-getting-started
           |-- App.fsproj
           |-- paket.references
 ```
-You might be thinking *"these are many files for a hello world app!"* we will discuss the structure of the template as well as the purpose of each file in great detail soon, for now bear with me, it might seem a bit overkill but I intend to use similar structure for projects in the upcoming chapters so understanding this one will help greatly. 
+You might be thinking *"these are many files for a hello world app!"* we will discuss the structure of the template as well as the purpose of each file in great detail soon, for now bear with me, I intend to use similar structure for projects in the upcoming chapters so understanding this one will help greatly. 
 
 The most important parts of the template are these directories:
 -  `src` is where your F# source code lives 
@@ -59,6 +59,7 @@ This means in order to run your F# code in the browser, you will first need to c
 - [.NET Core](https://www.microsoft.com/net/download) 2.1+ (both SDK and runtime)
 - [Mono](https://www.mono-project.com/download/stable/) 5.0+ for non-windows machines
 - [Node.js](https://nodejs.org/en/) 10.0+ 
+- [VS Code](https://code.visualstudio.com/) to edit the code (along with the [Ionide](http://ionide.io/) extension) 
 
 After you have installed these, you can check if you have the correct versions by running these commands:
 ```bash
@@ -85,21 +86,21 @@ As you can see, a bunch of things happend in there, the template doesn't try to 
   
 ![public](img/public.png) 
 
-Now that we have the javascript generated, we can open `index.html` in the browser, open the developer tools tab and look at the browser console, we should see the message `"Hello world from Fable"` printed out:
+Now that we have the javascript generated, we can open  `index.html` page in the browser, it will look blank because we haven't added anything to it, but you can open the developer tools tab and look at the browser console, we should see the message `"Hello world from Fable"` printed out:
 
 ![console](img/browser-console.png)
 
-Congrats! We have just got our first Fable application. Let us change the source code to make it print a different message and recompile. Go to `App.fs` and change the contents to:
+Congrats! We have just got our first Fable application running. Let us change the source code to make it print a different message and recompile. Go to `App.fs` and change the contents to:
 ```fs
 module App
 
 printfn "Fable is up and running..."
 ```
-then run `build` or (`./build.sh` if you are on linux or macOs) to recompile the project. This time the compilation should have taken significantly less time than the first time build, this is because the template downloaded all dependencies it needed before. Now you can refresh the `index.html` page in the browser and see the new message printed out:
+then run `build` or `./build.sh` if you are on linux or macOs to recompile the project. This time the compilation will take significantly less time than the first build, this is because the template downloaded all dependencies it needed before. Now you can refresh the `index.html` page in the browser and see the new message printed out in the browser console:
 
 ![new-message](img/new-message.png)
 
-Of course, printing out a message to the console is boring. We can try something slightly less boring with some user interaction, we are running code in the browser after all. First things first, add a button to the `index.html` page:
+Of course, printing out a message to the console is boring. We can try something slightly less boring with some user interaction, we are running our code in the browser after all. So let us add a button that will print a message in the console when clicked. First things first, add the button to the `index.html` page:
 
 ```html
 <!doctype html>
@@ -121,7 +122,11 @@ open Fable.Import.Browser
 
 let printMsg = document.getElementById "printMsg"
 
-printMsg.onclick <- fun ev ->
+printMsg.onclick <- fun eventArgs ->
     printfn "Button clicked"
 ```
-As you can see, line 3 opens the namespace to `Fable.Import.Browser`: this is the first example of a binding library
+As you can see, line 3 opens the namespace to `Fable.Import.Browser`. This is the first example of a Fable *binding*: a library that allows our code to access to native javascript API's. In this example, we get access to `document` with which we can reference and manipulate elements on the page, see [full docs here](https://developer.mozilla.org/en-US/docs/Web/API/Document) of `document`. Then at line 5, we ask `document` to give us a reference for the element that has id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element: a function that will run when the button is clicked. 
+
+Now you can save `App.fs` and recompile using `build` or `./build.sh`, refresh the page and you should get something that looks like this:
+
+![button-click](img/button-click.gif)
