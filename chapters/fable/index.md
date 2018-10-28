@@ -1,8 +1,10 @@
-# Fable
+## Introduction
 
-In order to become productive with Fable and realize it's full potential, we first need to understand the developement tools that we will be using. This chapter provides a gentle introduction to Fable developement by building a Hello World application, we will discuss the tools used and the role they play in a Fable project.
+ This chapter provides a gentle introduction to Fable development by building Hello World and other small applications. We will not be using the Elm architecture just yet, instead, we will use the available browser APIs, particularty the [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document) API to play around a bit with elements on the browser pages and build small user interfaces. 
 
-- [Getting Started](getting-started.md)
-- [How Fable Works](about.md)
-- [The Tools at Play](tools.md)
-- [The Big Picture](big-picture.md)   
+### Table of contents
+
+- [Hello World](hello-world.md)
+- [The tool at play](tools.md)
+- [How Fable works](about.md)
+- [The big picture](big-picture.md)

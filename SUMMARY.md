@@ -7,7 +7,9 @@
 
 ### Chapeter 1: Getting started
 - [Introduction](chapters/fable/index.md)
-- [Getting Started](chapters/fable/getting-started.md)
+- [Hello World](chapters/fable/hello-world.md)
+- [Watch Mode](chapters/fable/watch-mode.md)
+- [Counter app](chapters/fable/counter.md)
 - [How Fable Works](chapters/fable/about.md)
 - [The Tools at Play](chapters/fable/tools.md)
 - [The Big Picture](chapters/fable/big-picture.md)

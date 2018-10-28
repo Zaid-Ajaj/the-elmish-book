@@ -1,5 +1,7 @@
 # Chapters Overview
 
+---------------------
+
 The book is divided into the following chapters. It is recommended that you read them in chronological order. Here is a brief overview of the content of each chapter:
 
 ### Chapter 1: Getting Started
