@@ -4,6 +4,8 @@
 
 Naturally, the book is aimed at F# developers who wish to use their existing knowledge and skills in F# to build front-end apps. No prior experience is assumed concerning front-end development as I will to try to explain the concepts needed from the very scratch.
 
+This book however is *not* an introduction to F# itself and I will assume you know the language, to some degree at least. 
+
 That said, anyone who is familiar with the syntax of the ML family of languages like [OCaml](https://ocaml.org/), [Reason](https://github.com/facebook/reason) or [Elm](http://elm-lang.org/) should be able to follow along with the book.
 
 ### I use TypeScript, why should I care?
