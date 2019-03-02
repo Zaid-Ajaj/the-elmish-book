@@ -2,7 +2,7 @@
 
 Let us now try to build something that not only has multiple elements, but also keeps track of and manipulates some local *state*. A counter application is the best candidate for these simple requirements. We can build something that looks like this: 
 
-<resolved-image source="images/fable/counter.gif" />
+<resolved-image source="/images/fable/counter.gif" />
 
 We will need buttons that change the contents of a text element every time you click one of them. To build this from the template, we will add two button tags to the `index.html` page and give them identities `"increase"` and `"decrease"`. We will also add a header element with id `"countViewer"` where we will show the current count, here is how  `index.html` will look like:
 
