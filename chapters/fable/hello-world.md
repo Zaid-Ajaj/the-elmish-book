@@ -1,46 +1,36 @@
 # Hello World with Fable
--------
 
-### Starter Template
+To get started with Fable, it is easier to use a template instead of building your own from scratch, for that I have set up a simple hello world fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository, clone it locally on your machine as follows:
 
-To get started with Fable, it is easier to use a template instead of building your own from scratch, for that I have set up a simple hello world fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repo, if we take a look around the repository, it has the following structure:
+```bash 
+git clone https://github.com/Zaid-Ajaj/fable-getting-started.git
+```
+if we take a look around the repository, it has the following structure:
 ```
 fable-getting-started
-    | 
-    │  .gitattributes
-    │  .gitignore
-    │  .travis.yml
-    │  build.cmd
-    │  build.fsx
-    │  build.sh
-    │  LICENSE
-    │  package-lock.json
-    │  package.json
-    │  paket.dependencies
-    │  paket.lock
-    │  README.md
-    │  webpack.config.js
-    ├─── .paket
-    │     |-- paket.exe
-    │     |-- Paket.Restore.targets
-    │     |-- paket.targets
-    ├─── .vscode
-    │     |-- settings.json
-    ├─── public
-    │     |-- index.html
-    └─── src
-          |-- App.fs
-          |-- App.fsproj
-          |-- paket.references
+  ├─── .gitattributes
+  ├─── .gitignore
+  ├─── LICENSE
+  ├─── Nuget.Config
+  ├─── package-lock.json
+  ├─── package.json
+  ├─── README.md
+  ├─── webpack.config.js
+  ├─── public
+  │     ├───  fable.ico
+  │     ├───  index.html
+  │
+  └─── src
+        ├─── App.fs
+        ├─── App.fsproj
 ```
-You might be thinking *"these are many files for a hello world app!"* we will discuss the structure of the template as well as the purpose of each file in great detail soon, for now bear with me, I intend to use similar structure for projects in the upcoming chapters so understanding this one will help greatly. 
 
 The most important parts of the template are these directories:
 -  `src` is where your F# source code lives 
 -  `public` is the ouput directory when you compile F# to javascript 
 
 The only F# source file in the project is `App.fs` and it contains the following:
-```fs
+```fsharp
 module App
 
 printfn "Hello world from Fable" 
@@ -50,10 +40,12 @@ When the F# project is compiled using Fable, a single javascript file called `bu
 <!doctype html>
 <html>
 <head>
-  <title>Fable Getting Started</title>
+  <title>Fable</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="fable.ico" />
 </head>
-<body>
-  <script src="bundle.js"></script>
+    <script src="bundle.js"></script>
 </body>
 </html>
 ```
@@ -62,12 +54,11 @@ When the F# project is compiled using Fable, a single javascript file called `bu
 In order to run your F# code in the browser, you will first need to compile the project and then run `index.html` in your browser. However, before being able to compile the project, there are a couple of requirements that you need installed on your machine:
 
 - [.NET Core](https://www.microsoft.com/net/download) 2.1+ (both SDK and runtime)
-- [Mono](https://www.mono-project.com/download/stable/) 5.0+ for non-windows machines
 - [Node.js](https://nodejs.org/en/) 10.0+ 
 
 Ofcourse having a code editor is not a requirement for building the project but rather for developement, for editing F# code, it is highly recommended to have [VS Code](https://code.visualstudio.com/) installed (along with the [Ionide](http://ionide.io/) extension).
 
-> Q: *"Ok, but don't I need to install the Fable compiler as well?"* <br />
+> Q: "Ok, but don't I need to install the Fable compiler as well?" <br />
 A: No, the Fable compiler get installed as a development dependency of the template once the packages are restored. 
 
 

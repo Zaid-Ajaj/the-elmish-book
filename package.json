@@ -3,29 +3,10 @@
   "version": "1.0.0",
   "description": "Build advanced client apps in F#",
   "dependencies": {
-    "concurrently": "^3.6.1",
-    "http-server": "^0.11.1",
-    "npm-watch": "^0.3.0"
-  },
-  "devDependencies": {
-    "gitbook-cli": "^2.3.2",
-    "gitbook-plugin-enhanced-katex": "^1.0.0",
-    "gh-pages": "^1.1.0"
-  },
-  "watch": {
-    "build": {
-      "patterns": [
-        "chapters"
-      ],
-      "extensions": "md",
-      "quiet": false
-    }
+    "live-server": "^1.2.1"
   },
   "scripts": {
-    "build": "gitbook build",
-    "serve": "gitbook serve",
-    "publish": "gitbook build && node publish.js",
-    "watch": "concurrently \"npm-watch\" \"http-server ./_book/ -p 4000\""
+    "start": "live-server . --port=4000"
   },
   "repository": {
     "type": "git",

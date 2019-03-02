@@ -1,0 +1,38 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Elmish Book</title>
+    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css">
+    <link rel="stylesheet" href="styles/website.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script>
+      new Docute({
+        target: '#root',
+        highlight: [ "fsharp" ],
+        sidebar: [
+            {
+                title: "The Elmish Book",
+                links: [
+                    { title: "Introduction", link: "/" }, 
+                    { title: "About", link: "/chapters/about" }, 
+                    { title: "Audience", link: "/chapters/audience" }, 
+                    { title: "Overview", link: "/chapters/overview" }
+                ]
+            },
+            {
+                title: 'Gettings started',
+                links: [
+                    { title: 'Introduction', link: '/chapters/fable/' },
+                    { title: 'Hello World', link: '/chapters/fable/hello-world' }
+                ]
+            }
+        ]
+      })
+    </script>
+  </body>
+</html>

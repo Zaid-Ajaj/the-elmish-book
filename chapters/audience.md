@@ -1,7 +1,5 @@
 # Audience
 
----------------------
-
 Naturally, the book is aimed at F# developers who wish to use their existing knowledge and skills in F# to build front-end apps. No prior experience is assumed concerning front-end development as I will to try to explain the concepts needed from the very scratch.
 
 This book however is *not* an introduction to F# itself and I will assume you know the language, to some degree at least. 
@@ -25,6 +23,4 @@ That said, anyone who is familiar with the syntax of the ML family of languages 
 
 ### PureScript dev here, should I learn Fable as well? 
 
-No, you keep doing what you are already doing ;) 
-
-Just kidding! F# and Fable are definitely worth a try even though if you are deep into functional programming!
+No, you keep doing what you are already doing ;)

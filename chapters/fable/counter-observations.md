@@ -1,6 +1,6 @@
 # Counter app: Observations 
 
-You might be wondering why we made the trivial counter application in the previous section and had it implement some silly requirements. Well, this is because it is simple enough to qualify as "Hello world" and at the same time shows you what Fable is all about, so let us go through the main points I wanted conclude from the timy counter app:
+You might be wondering why we made the trivial counter application in the previous section and had it implement some silly requirements. Well, this is because it is simple enough to qualify as "Hello world" and at the same time shows you what Fable is all about, so let us go through the main points I wanted conclude from the tiny counter app:
 
 ### 1 - Fable is a general-purpose compiler 
 
@@ -26,7 +26,7 @@ countViewer.innerText = `Count is at ${count}`;
 ```
 Crazy right?! this is almost what we wrote but with F# instead! This goes to say that Fable is not a specific framework to build web apps but rather a compiler toolchain that translates to javascript to let our code run in any javascript runtime, let it be the browser, [node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others. 
 
-### 2 - Fable provides *bindings* to interact with native javascript APIs
+### 2 - Fable uses *bindings* to interact with native javascript APIs
 
 Already introduced in [Hello World](hello-world.md) section, a Fable *binding* is a special F# library that contains type definitions and method signatures of native javascript APIs (similar to `.ts.d` files of typescript). In the previous samples, we used `document` from the `Fable.Import.Browser` binding, but the library includes a very large and comprehensive subset of bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API), [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) just to name a few. This is one example of a Fable binding, later on we will explore many other bindings not only support native APIs like the browsers' but also APIs from third-party libraries that can be seemlessly consumed from within our Fable Apps. 
 
