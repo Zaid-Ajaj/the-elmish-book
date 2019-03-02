@@ -1,4 +1,4 @@
-# Hello World with Fable
+# Hello World
 
 To get started with Fable, it is easier to use a template instead of building your own from scratch, for that I have set up a simple hello world fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository, clone it locally on your machine as follows:
 
@@ -38,7 +38,7 @@ module App
 printfn "Hello world from Fable" 
 ```
 When the F# project is compiled using Fable, a single javascript file called `bundle.js` will be output in the `public` directory, the `bundle.js` file in turn, is referenced by `index.html` , also in the `public` directory:
-```html
+```html {highlight:[9]}
 <!doctype html>
 <html>
 <head>

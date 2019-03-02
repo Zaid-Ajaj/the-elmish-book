@@ -11,6 +11,7 @@
     <div id="root"></div>
     <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
     <script>
+      // make images work using absolute urls both in developement and when published to github
       Vue.component("ResolvedImage", {
           props: ["source"], 
           template: "<img :src='resolvedUrl' />", 
@@ -40,10 +41,11 @@
                 ]
             },
             {
-                title: 'Gettings started',
+                title: "Gettings started",
                 links: [
-                    { title: 'Introduction', link: '/chapters/fable/' },
-                    { title: 'Hello World', link: '/chapters/fable/hello-world' }
+                    { title: "Introduction", link: "/chapters/fable/" },
+                    { title: "Hello World", link: "/chapters/fable/hello-world" }, 
+                    { title: "Counter Application", link: "/chapters/fable/counter" }
                 ]
             }
         ]
