@@ -97,7 +97,8 @@ npm install
 npm run build
 ```
 I use windows, so the compilation looks as follows on my machine
-![img](/images/fable/compile.gif)
+
+<resolved-image source='/images/fable/compile.gif' />
 
 As you can see, a bunch of things happend in there. After the build is finished, there should be a `bundle.js` file in your `public` directory:
   
@@ -110,7 +111,7 @@ public
 
 Now that we have the javascript generated, we can open  `index.html` page in the browser, it will look blank because we haven't added anything to it, but you can open the developer tools tab and look at the browser console, we should see the message `"Hello world from Fable"` printed out:
 
-![console](/images/fable/browser-console.png)
+<resolved-image source='/images/fable/browser-console.png' />
 
 Congrats! We have just got our first Fable application running. Let us change the source code to make it print a different message and recompile. Go to `App.fs` and change the printed message from `"Hello from Fable"` to `"Fable is up and running..."` as follows:
 
@@ -125,7 +126,7 @@ npm run build
 ```
 This time, no need to run `npm install` because the project depenedencies were already installed from the first run. After `npm run build` finished running you can refresh the `index.html` page in the browser and see the new message printed out in the browser console:
 
-![new-message](/images/fable/new-message.png)
+<resolved-image source="/images/fable/new-message.png" />
 
 ### User Interaction
 
@@ -158,4 +159,4 @@ At line 3, we open the namespace `Browser.Dom`: this is the first example of a F
 
 Now you can save `App.fs` and recompile using `build` or `./build.sh`, refresh the page and you should get something that looks like this:
 
-![button-click](/images/fable/button-click.gif)
+<resolved-image source="/images/fable/button-click.gif" />

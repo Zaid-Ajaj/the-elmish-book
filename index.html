@@ -11,8 +11,23 @@
     <div id="root"></div>
     <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
     <script>
-      new Docute({
-        target: '#root',
+      Vue.component("ResolvedImage", {
+          props: ["source"], 
+          template: "<img :src='resolvedUrl' />", 
+          computed: {
+              resolvedUrl: function() {
+                let path = window.location.pathname;
+                if (path.endsWith("/")) {
+                  return path.substr(0, path.length - 1) + this.source;
+                } else {
+                  return path + this.source;
+                }
+              }
+          }
+      });
+
+      var docs = new Docute({
+        target: "#root",
         highlight: [ "fsharp", "bash" ],
         sidebar: [
             {
