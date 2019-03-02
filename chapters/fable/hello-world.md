@@ -124,7 +124,9 @@ Now to compile again you only need to run:
 ```bash
 npm run build
 ```
-This time, no need to run `npm install` because the project depenedencies were already installed from the first run. After `npm run build` finished running you can refresh the `index.html` page in the browser and see the new message printed out in the browser console:
+
+This time there is no need to run `npm install` because the project depenedencies were already installed from the first run. 
+After `npm run build` finished running you can refresh the `index.html` page in the browser and see the new message printed out in the browser console:
 
 <resolved-image source="/images/fable/new-message.png" />
 
