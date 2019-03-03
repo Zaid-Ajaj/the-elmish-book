@@ -7,4 +7,6 @@ The `Fable -> Babel` transformation is implemented as a set of what is called *r
 This diagram below shows an overview of the process.
 
 
-![Fable](img/fable.png)
+<resolved-image source="/images/fable/fable.png" />
+
+The generated javascript doesn't have to be a minified javascript file, this is only the convention when compiling F# source code for the browser. When building F# projects for Node.js environments, the output can be multiple javascript files referencing (i.e. `requiring`) each other while preserving the same input F# project sturcture that Fable compiled. 
