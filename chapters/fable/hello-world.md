@@ -29,7 +29,7 @@ The most important parts of the template are these directories:
 - `src` is where your F# source code lives 
 - `public` is the ouput directory when you compile F# to javascript 
 - `package.json` is used by node.js to give information to the node package manager (npm for short) that allows it to identify the project as well as handle the project's *dependencies*
-- `webpack.config.js` will contain our "compiler configuration". There is more to it but for now we leave it at that
+- `webpack.config.js` will contain our "compiler configuration" with [webpack](https://webpack.js.org/). We will talk about Webpack in great detail at a later chapter because it is an advanced topic.
 
 The only F# source file in the project is `App.fs` and it contains the following:
 ```fsharp

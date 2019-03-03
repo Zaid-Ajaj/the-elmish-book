@@ -2,9 +2,9 @@
 
 The base class library or *BCL* for short are those native APIs from dotnet that F# can use in normal F# applications. Think the namespaces that start with `System.*`. In the previous counter example, we used `System.Random` to generate random numbers which is a class from the BCL that we were able to use and run in the browser. 
 
-Although we were using the `System.Random` class, the actual implementation is not .NET code. Under the hood, Fable translates these APIs when it makes sense to something that already exists in the native javascript APIs which is in this specific case the `Math.random()` function.
+Although we were using the `System.Random` class, the actual implementation is not .NET code. Under the hood, Fable translates these APIs to something that already (hopefully) exists in the native javascript APIs which is in this specific case the `Math.random()` function.
 
-Supporting *all* of the base class library is not a goal of Fable and when certain BCL functionality is needed, then a binding to the native equavilant of the functionality will be the way to go. Fable tries to support certain BCL when *"it makes sense"* because Fable compiles F# with the idea in mind that the code will run inside a javascript runtime, like V8 in the browser or node.js on the server. In many cases, the APIs provided from the BCL don't work out of the box in these javascript environments, for example, multi-threading APIs within the `System.Threading.Tasks` namespace are not supported because javascript environments are usually single-threaded. 
+Supporting *all* of the base class library is not a goal of Fable and when certain BCL functionality is needed, then a binding to the native equavilant of the functionality will be the way to go. Fable tries to support certain BCL when *'it makes sense'* because Fable compiles F# with the idea in mind that the code will run inside a javascript runtime, like V8 in the browser or node.js on the server. In many cases, the APIs provided from the BCL don't work out of the box in these javascript environments, for example, multi-threading APIs within the `System.Threading.Tasks` namespace are not supported because javascript environments are usually single-threaded. 
 
 Likewise, APIs from `System.IO` are not supported because javascript in the browser cannot access the file system by default. However, Javascript on the server *should* be able to access the file system and do all crazy things on the hosting machine and in such cases we will use javascript-specific APIs from node.js. Again, we would use a binding to the access these APIs, the binding `Fable.Import.Node` covers most built-in modules from node.js.
 
@@ -16,20 +16,18 @@ While Javascript only has the `Number` type (64-bit floating number, the same as
 
 ### Date/Time
 
-Dotnet has `System.DateTime` to represent dates and times, Fable supports this type and the `DateTime` API of static functions, as well as a subset of `System.TimeSpan` and `System.DateTimeOffset`. It is worth noting that a `DateTime` instance compiles down to a `Date` instace in javascript which makes interoperability even more straightforward! More on interoperablity and bindings in a later chapter.
+Dotnet has `System.DateTime` to represent dates and times, Fable supports this type and the `DateTime` API of static functions, as well as a subset of `System.TimeSpan` and `System.DateTimeOffset`. It is worth noting that a `DateTime` instance compiles down to a `Date` instace in javascript which makes interoperability even more straightforward.
 
 ### Converters 
 
 APIs from `System.Convert` and `System.BitConverter` are supported. Although I have to mention that there are some subtleties when you use these these classes in browser or node, for example the functions `Convert.FromBase64String` and `Convert.ToBase64String` use [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob) and [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa) under the hood, which are native browser functions and will not run out of the box within node.js environments, at least at the time of writing that is. In such cases, you would have to provide a binding that *does* work with node.js by using [Buffers](https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding):
 
 ```fsharp
-module Bytes = 
-
-    [<Emit("Array.prototype.slice.call(Buffer.from($0, 'base64'))")>]
-    let fromBase64 (value: string) : byte array = jsNative  
+[<Emit("Array.prototype.slice.call(Buffer.from($0, 'base64'))")>]
+let fromBase64 (value: string) : byte array = jsNative  
 ```
 
-We will thoroughly look into interoperability in another chapter. This is just to show that not everything is supported by default using Fable and that sometimes you might need to work around these rare situations.  
+This is just to show that not everything is supported by default using Fable and that sometimes you might need to work around these rare situations.  
 
 ### Regular Expression
 

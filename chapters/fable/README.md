@@ -5,6 +5,7 @@
 ### Table of contents
 
 - [Hello World](hello-world.md)
-- [The tool at play](tools.md)
-- [How Fable works](about.md)
-- [The big picture](big-picture.md)
+- [Development Mode](development-mode.md)
+- [Counter Application](counter.md)
+- [Observations](observations.md)
+- [.NET Compatibility](compatibility.md)

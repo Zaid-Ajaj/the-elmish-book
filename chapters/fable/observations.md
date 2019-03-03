@@ -24,7 +24,7 @@ decrease.onclick = function (ev) {
 
 countViewer.innerText = `Count is at ${count}`;
 ```
-Crazy right?! this is almost what we wrote but with F# instead! This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F#, whatever it does, to javascript and let your code run in any javascript runtime, let it be the browser, [node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others. 
+Crazy right?! this is almost what we wrote but with F# instead. This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F#, whatever it does, to javascript and let your code run in any javascript runtime, let it be the browser, [node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others. 
 
 ### Fable uses *bindings* to interact with native javascript APIs
 

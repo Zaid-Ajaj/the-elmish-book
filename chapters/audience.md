@@ -4,8 +4,6 @@ Naturally, the book is aimed at F# developers who wish to use their existing kno
 
 This book however is *not* an introduction to F# itself and I will assume you know the language, to some degree at least. 
 
-That said, anyone who is familiar with the syntax of the ML family of languages like [OCaml](https://ocaml.org/), [Reason](https://github.com/facebook/reason) or [Elm](http://elm-lang.org/) should be able to follow along with the book.
-
 ### I use TypeScript, why should I care?
 
 [Typescript](https://www.typescriptlang.org/) is a wonderful language and since you use it, you already know the value of having a static type system for your code, that is why I believe you will appreciate the elegant type system that F# has to offer, along with other language constructs that encourage simple and correct code. As mentioned before, interoperability is one of Fable's main goals, almost everything you can do with typescript, you will be able to do in F# as well like interacting with third-party libraries, components and even consuming typescript from F# code.  
