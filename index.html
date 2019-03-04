@@ -10,6 +10,7 @@
   <body>
     <div id="root"></div>
     <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@leptosia/docute-google-analytics@1/dist/index.min.js"></script>
     <script>
       // make images work using absolute urls both in developement and when published to github
       Vue.component("ResolvedImage", {
@@ -29,6 +30,7 @@
 
       var docs = new Docute({
         target: "#root",
+        plugins: [ docuteGoogleAnalytics("UA-135472140-1") ],
         highlight: [ "fsharp", "bash" ],
         sidebar: [
             {
