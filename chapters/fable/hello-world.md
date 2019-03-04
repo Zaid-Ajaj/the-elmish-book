@@ -134,7 +134,7 @@ After `npm run build` finished running you can refresh the `index.html` page in 
 
 Of course, printing out a message to the console is boring. We can try something slightly less boring with some user interaction, we are running our code in the browser after all. So let us add a button that will print a message in the console when clicked. First things first, add the button to the `index.html` page:
 
-```html
+```html {highlight: [7]}
 <!doctype html>
 <html>
 <head>
