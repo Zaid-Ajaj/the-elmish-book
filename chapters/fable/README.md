@@ -9,3 +9,7 @@
 - [Counter Application](counter.md)
 - [Observations](observations.md)
 - [.NET Compatibility](compatibility.md)
+- [*Fable Pacakges](fable-packages.md)
+- [*How Fable Works](how-fable-works.md)
+
+> Sections staring with * contain advanced content. Embrace yourself before going there.
