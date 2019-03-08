@@ -28,7 +28,7 @@ Crazy right?! this is almost what we wrote but with F# instead. This goes to say
 
 ### Fable uses *bindings* to interact with native javascript APIs
 
-Already introduced in section [Hello World](/chapters/fable/hello-world), a Fable *binding* is a special F# library that contains type definitions and method signatures of native javascript APIs (similar to `.ts.d` files of typescript). In the previous samples, we used `document` from the `Fable.Browser.Dom` binding package which was included in the template, but the library includes a very large and comprehensive bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API), [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) just to name a few. This is only one example of a Fable binding, later on we will explore many other bindings not only support native APIs like the browsers' but also APIs from third-party libraries that can be seemlessly consumed from within our Fable Apps. 
+Already introduced in section [Hello World](/chapters/fable/hello-world), a Fable *binding* is a special F# library that contains type definitions and method signatures of native javascript APIs (similar to `.ts.d` files of typescript). In the previous samples, we used `document` from the `Fable.Browser.Dom` binding package which was included in the template, but the library includes a very large and comprehensive bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API), [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) just to name a few. This is only one example of a Fable binding, later on we will explore many other bindings not only support native APIs like the browsers' but also APIs from third-party libraries that can be seemlessly consumed from within our Fable applications. 
 
 ### Fable preserves F# semantics
 On of the most important aspects of Fable is that it preserves the semantics of F# code and has full support for the F# core library modules such as `List`, `Seq`, `Array`, `Option`, `Map`, `Set`, `Async`, `String` etc. This means that your F# code should run the same way would you expect F# to behave on dotnet. The following language consturcts are supported: pattern matching, active patterns, object expressions, structural equality, sequence and list comprehensions, lazy values, classes and computations expressions.
@@ -66,5 +66,6 @@ async {
 
 </note>
 
+### Unsupported Features
 
-At the time of writing, the only constructs that are not supported are F# code quotations and `query` computation expression because it depends on quotations feature.
+At the time of writing, a couple of F# features are not yet supported. For example F# code quotations and `query` computation expression because it depends on quotations feature. 

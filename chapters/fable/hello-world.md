@@ -147,7 +147,7 @@ Of course, printing out a message to the console is boring. We can try something
 </html>
 ``` 
 Here, we have added a `button` tag to the page with identity attribute called `"printMsg"`, we will use this id to reference the button from the F# code. Modify the contents of `App.fs` to the following:
-```fsharp {highlight: ['5-8']}
+```fsharp {highlight: [3, 5, 7, 8]}
 module App
 
 open Brower.Dom

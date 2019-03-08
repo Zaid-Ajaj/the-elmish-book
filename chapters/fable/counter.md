@@ -54,7 +54,7 @@ countViewer.innerText <- sprintf "Count is at %d" currentCount
 There you have it, a working counter app in F# that uses vanilla javascripts APIs available in the browser. 
 
 ### Random Increments and Decrements
-So far so good. We can add a slight change to the code to make the counter increase or decrease the count by a random number, for example, some *random number*, say between 5 and 10. For this, we will use something you probably already know from writing F# that runs in normal dotnet code: `System.Random`
+So far so good. We can add a slight change to the code to make the counter increase or decrease the count by a some *random number*, say between 5 and 10. For this, we will use something you probably already know from writing F# that runs in normal dotnet code: `System.Random`
 ```fsharp {highlight: [12, 16, 20]}
 module App
 
