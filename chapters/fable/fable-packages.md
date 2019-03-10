@@ -1,4 +1,4 @@
-# Fable Packages
+# Fable/Dotnet Packages
 
 From the template we started with in the [Hello World](hello-world.md) section, we had a simple F# project `App.fsproj` that includes a single F# source file called `App.fs`. If we examine `App.fsproj`, we will see that it is a normal F# project that follows the dotnet SDK format that we are used to from F# on dotnet:
 ```xml {highlight:[9]}
@@ -49,6 +49,16 @@ Fable.Library.nupkg
 
 ### Fable Compiles Source Code
 
-Let me mention this again, the *source files* are included in the nuget package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not compatible by default in F# projects. To make a F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code is also Fable-compatible: doesn't use APIs that Fable doesn't recognize as discussed in [.NET Compatibility](compatibility.md). 
+Let me mention this again, the *source files* are included in the nuget package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not compatible by default in F# projects. To make a F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code of that package is also Fable-compatible: doesn't use APIs that Fable cannot recognize as discussed in [.NET Compatibility](compatibility.md). 
 
 You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable nuget package if Fable only requires the source files?" and that would be a great question! It is not Fable that is using these compiled files but it is your IDE. Whether you are using Inonide, Visual Studio or Rider, these IDE's provide their intellisense and auto-complete features using the definitions within these compiled `dll` files. 
+
+### Fable Compiles Dependencies 
+
+For a full build, Fable not only compiles the entry project but also compiles the dependencies of the project coming from nuget along with their (transitive) dependencies if any exist. The following diagram illustrates a valid project that Fable can compile, assuming all dependencies are compatible with the specific Fable version you are using. This is in fact the case most of the time:
+
+<resolved-image source="/images/fable/simple-project.png" />
+
+### Fable Can Use Native Javascript Libraries 
+
+Aside from Fable-specific dotnet packages that are distributed to [Nuget](https://www.nuget.org/), Fable is also able to use *native* javascript libraries. From either the project you are building or the packages you depend upon, your code can call functions and interop with javascript code coming from node.js packages that are distributed to the [node package manager](https://www.npmjs.com/) (npm for short).   
