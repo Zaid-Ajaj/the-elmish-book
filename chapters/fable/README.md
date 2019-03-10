@@ -12,4 +12,4 @@
 - [*Fable Pacakges](fable-packages.md)
 - [*Understanding How Fable Works](how-fable-works.md)
 
-> Sections staring with * contain advanced content. Embrace yourself before going there.
+> *Advanced content.

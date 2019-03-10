@@ -14,7 +14,7 @@ From the template we started with in the [Hello World](hello-world.md) section, 
   </ItemGroup>
 </Project>
 ```
-Now take a closer look at the highlighted line: a package reference is included that points to `Fable.Browser.Dom`. This package was restored from `nuget`. From dotnet's perspective it is a normal package but in fact this is a *Fable-specific* package and it is meant to only be used within Fable projects. Using this package, we were able to `open Browser.Dom` namespace and gain access to some of the browser's APIs, specifically the DOM APIs that allows us to reference and manipulate elements on the page. 
+Now take a closer look at the highlighted line: a package reference is included that points to `Fable.Browser.Dom`. This package was restored from [nuget](http://www.nuget.org). From dotnet's perspective it is a normal package but in fact this is a *Fable-specific* package and it is meant to only be used within Fable projects. Using this package, we were able to `open Browser.Dom` namespace and gain access to some of the browser's APIs, specifically the DOM APIs that allows us to reference and manipulate elements on the page. 
 
 ### Fable-specific Packages
 
@@ -49,16 +49,36 @@ Fable.Library.nupkg
 
 ### Fable Compiles Source Code
 
-Let me mention this again, the *source files* are included in the nuget package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not compatible by default in F# projects. To make a F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code of that package is also Fable-compatible: doesn't use APIs that Fable cannot recognize as discussed in [.NET Compatibility](compatibility.md). 
+Let me mention this again, the *source files* are included in the nuget package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not compatible by default in Fable projects. To make a F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code of that package is also Fable-compatible: doesn't use APIs that Fable cannot recognize as discussed in [.NET Compatibility](compatibility.md). 
 
-You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable nuget package if Fable only requires the source files?" and that would be a great question! It is not Fable that is using these compiled files but it is your IDE. Whether you are using Inonide, Visual Studio or Rider, these IDE's provide their intellisense and auto-complete features using the definitions within these compiled `dll` files. 
+You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable nuget package if Fable only requires the source files?" It is not Fable that is using these compiled files but it is your IDE. Whether you are using Inonide, Visual Studio or Rider, these IDE's provide their intellisense and auto-complete features using the definitions within these compiled `dll` files. 
 
 ### Fable Compiles Dependencies 
 
-For a full build, Fable not only compiles the entry project but also compiles the dependencies of the project coming from nuget along with their (transitive) dependencies if any exist. The following diagram illustrates a valid project that Fable can compile, assuming all dependencies are compatible with the specific Fable version you are using. This is in fact the case most of the time:
+For a full build, Fable not only compiles the entry project but also compiles the dependencies of the project coming from nuget along with their (transitive) dependencies if any exist. The following diagram illustrates a valid project that Fable can compile, assuming all dependencies are compatible with the Fable version you are using, which is the case most of the time:
 
 <resolved-image source="/images/fable/simple-project.png" />
 
 ### Fable Can Use Native Javascript Libraries 
 
-Aside from Fable-specific dotnet packages that are distributed to [Nuget](https://www.nuget.org/), Fable is also able to use *native* javascript libraries. From either the project you are building or the packages you depend upon, your code can call functions and interop with javascript code coming from node.js packages that are distributed to the [node package manager](https://www.npmjs.com/) (npm for short).   
+Aside from Fable-specific dotnet packages that are distributed to [Nuget](https://www.nuget.org/), Fable is also able to use *native* javascript libraries. Either from the entry project you are building or the packages that project depends upon, the code can call functions and interop with javascript code. Javascript code can be either:
+
+ - (1) Global javascript modules available in the environment where you run your code (browser, node.js etc.)
+ - (2) Packages that are distributed to the [node package manager](https://www.npmjs.com/) (npm for short). 
+
+ The package `Fable.Browser.Dom` we used in the [hello world](hello-world) is of type (1). It is a binding library that interacts with APIs that are globally available in the browser such as the `document` API so eveything works fine.
+
+ Package of type (2) are more common in Fable's landscape. Such packages interact with javascript code internally but provide type-safe public APIs for use from Fable projects. To use a package of type (2), you have to install both packages: the binding library which is a Fable-specific package distributed to nuget and the actual native javascript distributed to npm. 
+ 
+ An example of such packages is the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package which is a binding for [date-fns](https://date-fns.org/) javascript library. To use it inside your project, you have to install `Fable.DateFunction` from nuget and `date-fns` from npm:
+
+```bash
+# inside src directory:
+dotnet add package Fable.DateFunctions
+# inside repo directory
+npm install --save date-fns
+```
+
+The following diagram illustrates a project structure that uses native javascript libraries:
+
+<resolved-image source="/images/fable/complex-project.png" />
