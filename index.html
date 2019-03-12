@@ -1,67 +1,7 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>The Elmish Book</title>
-    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css">
-    <link rel="stylesheet" href="styles/website.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@leptosia/docute-google-analytics@1/dist/index.min.js"></script>
-    <script>
-      // make images work using absolute urls both in developement and when published to github
-      Vue.component("ResolvedImage", {
-          props: ["source"], 
-          template: "<img :src='resolvedUrl' />", 
-          computed: {
-              resolvedUrl: function() {
-                let path = window.location.pathname;
-                if (path.endsWith("/")) {
-                  return path.substr(0, path.length - 1) + this.source;
-                } else {
-                  return path + this.source;
-                }
-              }
-          }
-      });
-
-      var docs = new Docute({
-        target: "#root",
-        plugins: [ docuteGoogleAnalytics("UA-135472140-1") ],
-        highlight: [ "fsharp", "bash" ],
-        sidebar: [{
-              title: "The Elmish Book",
-              links: [
-                  { title: "Introduction", link: "/" }, 
-                  { title: "Audience", link: "/chapters/audience" }, 
-                  { title: "Overview", link: "/chapters/overview" }
-              ]
-            }, {
-              title: "Gettings started",
-              links: [
-                  { title: "Introduction", link: "/chapters/fable/" },
-                  { title: "Hello World", link: "/chapters/fable/hello-world" }, 
-                  { title: "Development Mode", link: "/chapters/fable/development-mode" },
-                  { title: "Counter Application", link: "/chapters/fable/counter" }, 
-                  { title: "Observations", link: "/chapters/fable/observations" }, 
-                  { title: "Compatibility with .NET", link: "/chapters/fable/compatibility" },
-                  { title: "Fable/Dotnet Packages", link: "/chapters/fable/fable-packages" },
-                  { title: "Node.js Packages", link: "/chapters/fable/node-packages" },
-                  { title: "Understanding How Fable Works", link: "/chapters/fable/how-fable-works" }
-              ]
-            }, {
-              title: "The Elm Architecture",
-              links: [
-                { title: "Introduction", link: "/chapters/elm/" }, 
-                { title: "The Elm Architecture", link: "/chapters/elm/the-architecture" },
-                { title: "Counter with Elmish", link: "/chapters/elm/counter" }
-              ]
-            }
-        ]
-      });
-    </script>
-  </body>
+    <body style="padding:20px;">
+        <h1>The Elmish Book</h1>
+    </body>
 </html>
