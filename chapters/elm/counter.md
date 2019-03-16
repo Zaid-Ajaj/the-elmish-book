@@ -1,6 +1,6 @@
 # Counter with Elmish
 
-In the previous chapter of Getting Started with Fable, we built a small [counter application](/chapters/fable/counter).  Today, we will build the same application but instead following The Elm Architecture using the Elmish library. The approach to building this small app and other similar apps will be fundamentally different as we will see in a moment. Despite the triviality of the application, it will be sufficient to demonstrate the basic concepts of Elmish and get us up and running. To get started, I have set up a small template with everything ready to go. Start by cloning the following repository:
+In the previous chapter of Getting Started with Fable, we built a small [counter application](/chapters/fable/counter).  Today, we will build the same application but instead following The Elm Architecture using the Elmish library. The approach to building this small app and other similar apps will be fundamentally different as we will see in a moment. Despite the triviality of the application, it will be sufficient to demonstrate the basic concepts of Elmish and get us up and running. I have set up a small template with everything ready to go. Start by cloning the following repository:
 ```bash
 git clone https://github.com/Zaid-Ajaj/elmish-getting-started.git
 cd elmish-getting-started
@@ -88,7 +88,7 @@ Program.mkSimple init update render
 An Elmish program controls the life-cycle of the application and is responsible for calling the function triplet (`init`, `update` and `render`) in the appropriate manner: 
  - Start with the current state (using initial state at startup)
  - Implement `dispatch` and give it along with current state to the `render` function
- - When `dispatch` is called, call `update` to get a new state and re-`render` the application based on this new state. 
+ - When `dispatch` is called, call `update` to get the next state and re-`render` the application based on this new state. 
  - Repeat
 
 ### Bringing the application to life
@@ -100,8 +100,8 @@ Program.mkSimple init update render
 |> Program.run
 ```
 This tells Elmish two things:
- - "I want to render the application on the element which has id equal to elmish-app"
- - "I want to use React as the rendering engine"
+ - I want to render the application on the element which has id equal to "elmish-app"
+ - I want to use React as the rendering engine
 
 If we examine `index.html`, we will see the placeholder element that will be replaced by the application when it is bootrapped. 
 
