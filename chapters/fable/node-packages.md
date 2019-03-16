@@ -58,4 +58,4 @@ The latter section of `package.json` is the `scripts` sections, also known as np
 ```bash 
 npm run <script name>
 ```
-So when we run `npm start` (short for `npm run start`) we are actually invoking `webpack-dev-server` which will start the developement server. The same goes for `npm run build`, this command will invoke `webpack` to run a full build of the project. 
+So when we run `npm start` (short for `npm run start`) we are actually invoking `webpack-dev-server` which will start the developement server. The same goes for `npm run build`, this command will invoke `webpack` to start a full build of the project. 

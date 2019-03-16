@@ -10,7 +10,7 @@ The structure of this repository is very much similar to the one we used in the 
 npm install
 npm start
 ```
-This will start Webpack's development server and hosts the application locally at http://localhost:8080. Navigate to the url and you be presented with the same old (boring) counter application. What is interesting, is the implementation of it within the `src/App.fs` file, so lets break it down thoroughly in this section.
+This will start Webpack's development server and hosts the application locally at http://localhost:8080. Navigate to the url and you will be presented with the same old (boring) counter application. What is interesting, is the implementation of it within the `src/App.fs` file, so lets break it down thoroughly in this section.
 
 ### The Very Basics
 
@@ -29,11 +29,11 @@ type State = { Count: int }
 ```
 Within every Elmish application, The type of the state captures the data model we want to keep track of while the application is running. In the case of our simple counter application, we want to keep track of the current count which happens to be an integer. 
 
-This is a recurring theme in Elmish applications, we always start by asking the question: "What is the data model I want to keep track of? This will hold the state of the application." 
+This is a recurring theme in Elmish applications, we always start by asking the question: "What is the data model I want to keep track of that will hold the state of the application?" 
 
 The next question we ask ourselves follows: "Which events need to occur for the state to change?". Another way of asking this: "Which events cause my application to *transition* from one state to another?"  
 
-The answer to these questions is a type that encodes the different events which can cause the state transitions. This type is usually called `Msg` and it is naturally defined as a discriminated union: 
+The answer to these questions is a type that encodes the different events which can cause the state to change. This type is usually called `Msg` and it is usually modelled as a discriminated union: 
 ```fsharp
 type Msg =
   | Increment
@@ -62,7 +62,7 @@ let update (msg: Msg) (currentState: State) =
       let nextState = { currentState with Count = currentState.Count - 1 }
       nextState
 ```
-the `update` function handles all possible events, checking each event type to determine how to compute the next state. 
+the `update` function handles all possible events that can occur based on the incoming `Msg`.
 
 Now that we have a way to update the state based on triggered events, we need the last piece of the puzzle: rendering the user interface based on the state and having the ability to trigger events from it: this is the role of the `render` function: 
 ```fsharp
@@ -72,13 +72,15 @@ let render (state: State) (dispatch: Msg -> unit) =
         div [] [ str (string state.Count) ]
         button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ] ]
 ```
-The `render` function computes the user interface of the application where the *current* state is the input and a "dispatcher" function. The function returns a virtual Html tree using an Elmish-specific DSL. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. 
+> This is function is also commonly named as the `view` function. 
+
+The `render` function computes the user interface of the application based on the *current* state of the application. It also takes "dispatch" function as a second input. The function returns a virtual Html tree using an Elmish-specific DSL. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. 
 
 The DSL consists of functions that represent Html tags, such as `div` and `button`. The first argument of these functions is a list of attributes such as `OnClick` and the second argument is a list of the children elements. With this DSL in place, you can easily build Html trees in F# code. More on the `render` function in the next section. 
 
 What's more important is the `dispatch` function, the second argument of `render`. It is responsible for triggering the events of the `Msg` type from within the user interface. We call `dispatch` on a specific message after attaching it to certain event handlers of the user interface such as the `OnClick` handlers of buttons.
 
-Now that we have all the pieces in place: `init`, `update` and `render`, we can tie them together to create an Elmish "program" with the last piece of code that bootstraps the application:
+Now that we have all the pieces in place: `init`, `update` and `render`, we can tie them together to create an Elmish "program" that will bootstraps the application:
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReact "elmish-app"
@@ -100,10 +102,10 @@ Program.mkSimple init update render
 |> Program.run
 ```
 This tells Elmish two things:
- - I want to render the application on the element which has id equal to "elmish-app"
- - I want to use React as the rendering engine
+ - (1) I want to render the application on the element which has id equal to "elmish-app"
+ - (2) I want to use React as the rendering engine
 
-If we examine `index.html`, we will see the placeholder element that will be replaced by the application when it is bootrapped. 
+For part (1), lets examine `public/index.html`, we will see the placeholder element that will be replaced by the application when it is bootrapped. 
 
 ```html {highlight: [10]}
 <!doctype html>
@@ -120,3 +122,6 @@ If we examine `index.html`, we will see the placeholder element that will be rep
 </body>
 </html>
 ```
+As for part (2), it is covered in another section: [React in Elmish](react-in-elmish.md). 
+
+In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the next section we will tinker with what we have and [Extend The Counter](extend-the-counter).
