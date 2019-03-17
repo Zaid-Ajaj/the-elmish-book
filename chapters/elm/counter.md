@@ -72,7 +72,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         div [] [ str (string state.Count) ]
         button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ] ]
 ```
-> This is function is also commonly named as the `view` function. 
+> This is function is also commonly known as the `view` function. 
 
 The `render` function computes the user interface of the application based on the *current* state of the application. It also takes "dispatch" function as a second input. The function returns a virtual Html tree using an Elmish-specific DSL. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. 
 

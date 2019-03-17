@@ -22,4 +22,4 @@ The Elm Architecture provides a systematic approach for these problems using a n
 
  - The Render function: also known as the "view" function, takes the current state and builds user interface from it. The user interface can trigger messages or events. 
 
-These concepts take time and a lot of practice to get used to. They might seem a bit vague at this point and you might have tons of questions. That is fine for now, we are just getting started and we will take it step by step. The next section [Counter with Elmish](counter) will cover the concepts in great detail.
+These concepts take time and a lot of practice to get used to. They might seem a bit vague at this point and you might have tons of questions. That is fine for now, we are just getting started and we will take it step by step. The next section [Counter with Elmish](counter) will cover the concepts in great detail by example.
