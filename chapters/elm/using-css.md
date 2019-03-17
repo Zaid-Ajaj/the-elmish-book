@@ -24,7 +24,7 @@ The easiest way to use predefined styles is to include a `style` tag in your `in
 </body>
 </html>
 ```
-Then in your `render` function, you can assign the `.hidden` style to an element using the `ClassName` attribute:
+Then in your `render` function, you can assign the `.hidden` style to an element using the `ClassName` attribute, the following `render` function will create a hidden `div` element:
 ```fsharp
 let render state dispatch = 
     div [ ClassName "hidden" ] 
@@ -41,7 +41,7 @@ You can apply them both to an element using both classes:
 ```fsharp
 let render state dispatch = 
     div [ ClassName "shiny text-large" ] 
-        [ str "You can't see me" ]
+        [ str "Large red text" ]
 ```
 
 ### Conditional classes 
@@ -65,11 +65,31 @@ let render (state: State) (dispatch: Msg -> unit) =
 The function `classList` takes input of type `(string * bool) list` where the `string` the class name and `bool` is the condition that determines whether the class is applied to element. To use a constant class with `classList`, simply use `true` as the condition:
 ```fsharp
 let shinyAlways = 
-    classList [
-        // apply spinner class when state is loading
-        "spinner", state.Loading
-        // alwasy apply the shiny class
-        "shiny", true
-    ]
+  classList [
+    // apply spinner class when state is loading
+    "spinner", state.Loading
+    // always apply the shiny class
+    "shiny", true
+  ]
 ```
 
+### External Style Sheets
+
+This book unfortunately doesn't teach you nifty CSS tricks. When we want to use advanced CSS techniques, we will resort to using exisiting CSS frameworks and apply them in Elmish applications. Frameworks such as [Bootstrap](https://getbootstrap.com/docs/3.4/), [Bulma](https://bulma.io/), [FontAwesome](https://fontawesome.com/) and many others are emmensly great when we want to create coherent styling for the entire application. The easiest way to get started with any of these if to include them using stylesheet links. For example to include Bulma in the application, simply add this line to `index.html`:
+```html {highlight: [8]}
+<!doctype html>
+<html>
+<head>
+  <title>Fable</title>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="fable.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.css" />
+</head>
+<body>
+    <div id="elmish-app"></div>
+    <script src="bundle.js"></script>
+</body>
+</html>
+```
+Now you can use classes that bulma provides. Try adding `ClassName "button is-primary"` to your counter buttons to see how they look like. Take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website because we will be using the it again in this chapter along with [Font Awesome](https://fontawesome.com/). 
