@@ -1,6 +1,6 @@
-# Extend the Counter
+# Extended Counter: Styling and Conditional Rendering
 
-Starting with our [Counter](counter.md) sample application, we can play around a little bit and extend it to get a better feeling to how the user interface DSL works. 
+Starting with our [Counter](counter.md) sample application, we can play around a little bit and extend it to get a better feeling to how the user interface DSL works: using static styles, dynamic styles and conditional rendering.
 
 Initially the counter looks like this:
 
@@ -59,7 +59,6 @@ let render (state: State) (dispatch: Msg -> unit) =
 
 In Elmish applications, it very common to extract pieces of `render` outside of it to little functions. This makes it better to read and maintain especially when you have a lot of nested elements. In the above example, we definitely didn't need to refactor but I just wanted to make the point clear.
 
-
 ### Conditional Rendering (Using `if ... then ... else`)
 
 Very often, we want to show or hide elements of the application based on the state. In the counter example I want to show a message that says whether the current count is odd or even but only when the count is non-negative (count >= 0):
@@ -116,3 +115,21 @@ In this example, we are always rendering the message but when the css attribute 
 
 ### Conditional Rendering (Using `yield`)
 
+Since the child elements of any Html tag is a list, we can use F#'s `yield` keyword for conditional rendering in combination with an `if ... then` block. Here is how it looks like:
+
+```fsharp {highlight: [13]}
+let render (state: State) (dispatch: Msg -> unit) =  
+  let headerText = 
+    if state.Count % 2 = 0
+    then "Count is even"
+    else "Count is odd"  
+  
+  let oddOrEvenMessage = h1 [ ] [ str headerText ]
+
+  div []
+      [ yield button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ] 
+        yield div [Style [ FontSize 22; Color (textColor state)]] [ str (string state.Count) ] 
+        yield button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
+        if state.Count >= 0 then yield oddOrEvenMessage ]
+```
+The only downside of this approach is that all other elements need to be `yield`ed as well. Because this pattern is used a lot in Fable/F# projects, there are discussions of making `yield` implicit in the coming versions of F#, see [F# RFC FS-1069 - Implicit yields](https://github.com/fsharp/fslang-design/blob/master/RFCs/FS-1069-implicit-yields.md).  

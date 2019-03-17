@@ -87,7 +87,10 @@ Program.mkSimple init update render
 |> Program.withConsoleTrace
 |> Program.run
 ```
-An Elmish program controls the life-cycle of the application and is responsible for calling the function triplet (`init`, `update` and `render`) in the appropriate manner: 
+
+The function `Program.mkSimple` makes a "simple" program: a program with no side-effects. In this chapter we will stick to these simple programs. 
+
+An Elmish program controls the life-cycle of the application and is responsible for calling the function triplet (`init`, `update` and `render`) in the appropriate manner, think about it roughly as follows: 
  - Start with the current state (using initial state at startup)
  - Implement `dispatch` and give it along with current state to the `render` function
  - When `dispatch` is called, call `update` to get the next state and re-`render` the application based on this new state. 
@@ -124,4 +127,4 @@ For part (1), lets examine `public/index.html`, we will see the placeholder elem
 ```
 As for part (2), it is covered in another section: [React in Elmish](react-in-elmish.md). 
 
-In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the next section we will tinker with what we have and [Extend The Counter](extend-the-counter).
+In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the next section we will tinker with what we have and make an [Extended Counter](extended-counter).
