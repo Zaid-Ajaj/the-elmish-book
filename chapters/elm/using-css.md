@@ -75,7 +75,7 @@ let shinyAlways =
 
 ### External Style Sheets
 
-This book unfortunately doesn't teach you nifty CSS tricks. When we want to use advanced CSS techniques, we will resort to using exisiting CSS frameworks and apply them in Elmish applications. Frameworks such as [Bootstrap](https://getbootstrap.com/docs/3.4/), [Bulma](https://bulma.io/), [FontAwesome](https://fontawesome.com/) and many others are emmensly great when we want to create coherent styling for the entire application. The easiest way to get started with any of these if to include them using stylesheet links. For example to include Bulma in the application, simply add this line to `index.html`:
+This book unfortunately doesn't teach you nifty CSS tricks. When we want to use advanced CSS techniques, we will resort to using exisiting CSS frameworks and apply them in Elmish applications. Frameworks such as [Bootstrap](https://getbootstrap.com/docs/3.4/), [Bulma](https://bulma.io/), [FontAwesome](https://fontawesome.com/) and many others are emmensly great when we want to create coherent styling for the entire application. The easiest way to get started with any of these if to include them using stylesheet links. To include Bulma for example, simply add this line to `index.html`:
 ```html {highlight: [8]}
 <!doctype html>
 <html>
@@ -92,4 +92,4 @@ This book unfortunately doesn't teach you nifty CSS tricks. When we want to use 
 </body>
 </html>
 ```
-Now you can use classes that bulma provides. Try adding `ClassName "button is-primary"` to your counter buttons to see how they look like. Take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website because we will be using the it again in this chapter along with [Font Awesome](https://fontawesome.com/). 
+Now you can use classes that bulma provides. Try adding `ClassName "button is-primary"` to your counter buttons to see how they look like. Take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website because we will be using the it again in this chapter along with [Font Awesome](https://fontawesome.com/) which will provide us a plethora of icons that we can use in our apps. 

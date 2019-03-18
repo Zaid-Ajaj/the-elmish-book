@@ -43,7 +43,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 
 <resolved-image source="/images/elm/counter-colored-text.gif" />
 
-Since the value `textColor` only depends on the state, we can extract it outside `render` and make it a function:
+Every time the state changes, the `render` function runs again and computes the UI for that new state. Since the value `textColor` only depends on the state, we can extract it outside `render` and make it a function:
 
 ```fsharp {highlight:['1-4', 10]}
 let textColor (state: State) = 
@@ -155,4 +155,4 @@ let render (state: State) (dispatch: Msg -> unit) =
         yield button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
         if state.Count >= 0 then yield oddOrEvenMessage ]
 ```
-The only downside of this approach is that all other elements need to be `yield`ed as well. Because this pattern is used a lot in Fable/F# projects, there are discussions of making `yield` implicit in the coming versions of F#, see [F# RFC FS-1069 - Implicit yields](https://github.com/fsharp/fslang-design/blob/master/RFCs/FS-1069-implicit-yields.md).  
+The only downside of this approach is that all other elements need to be `yield`ed as well. Because this pattern is used a lot in Fable/F# projects, there are discussions of making `yield` implicit in the coming versions of F#, see [F# RFC FS-1069 - Implicit yields](https://github.com/fsharp/fslang-design/blob/master/RFCs/FS-1069-implicit-yields.md).
