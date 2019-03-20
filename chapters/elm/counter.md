@@ -20,8 +20,8 @@ module App
 
 open Elmish
 open Elmish.React
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
 ```
 Then we define the `State` type, also known is the model of the application:
 ```fsharp
@@ -100,7 +100,7 @@ An Elmish program controls the life-cycle of the application and is responsible 
 We have written the triplet of our Elmish program that make up the counter application but in order to actually see it on screen, we have to tell Elmish which element of the `index.html` will be the *placeholder* of this program. Notice the highlighted line:
 ```fsharp {highlight:[2]}
 Program.mkSimple init update render
-|> Program.withReact "elmish-app"
+|> Program.withReactSynchronous "elmish-app"
 |> Program.withConsoleTrace
 |> Program.run
 ```
