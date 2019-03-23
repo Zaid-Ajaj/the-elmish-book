@@ -1,4 +1,4 @@
-# Extended Counter: Conditional Rendering
+# Conditional Rendering
 
 Starting with our [Counter](counter.md) sample application, we can play around a little bit and extend it to get a better feeling to how the user interface DSL works: using static styles, dynamic styles and conditional rendering.
 

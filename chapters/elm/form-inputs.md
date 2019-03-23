@@ -131,11 +131,17 @@ Notice here the following:
  - The function `valueOrDefault` accepts a boolean input to set the value at start-up
  - The event argument gives information on whether the check box is `Checked` or not
 
- 
-Finally to run this program, the last is piece is the usual program constructor:
+Also there is the `span` as the last element where it renders it's content based on whether the `Capitalized` field was set to true or not. 
+
+### Bootstrapping the `Program`
+
+As usual, we tie the triplet `init`, `update` and `render` into a program and start the application: 
+
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
 |> Program.withConsoleTrace
 |> Program.run
 ```
+
+In the next section [React in Elmish](react-in-elmish) we will talk about what it means to use `React` as a rendering engine in Elmish application and the consequences of this choice. 

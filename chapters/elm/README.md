@@ -8,8 +8,8 @@ Aside from The Elm Architecture, we will look at the tools use are using, the ro
 
  - [The Elm Architecture](the-architecture)
  - [Counter in Elmish](counter)
- - [Extended Counter](extended-counter)
+ - [Extended Counter](conditional-rendering)
  - [Using CSS](using-css)
- - [Text Inputs](text-inputs)
+ - [Text Inputs](form-inputs)
  - [React in Elmish](react-in-elmish)
 
