@@ -83,7 +83,7 @@ What's more important is the `dispatch` function, the second argument of `render
 Now that we have all the pieces in place: `init`, `update` and `render`, we can tie them together to create an Elmish "program" that will bootstraps the application:
 ```fsharp
 Program.mkSimple init update render
-|> Program.withReact "elmish-app"
+|> Program.withReactSynchronous "elmish-app"
 |> Program.withConsoleTrace
 |> Program.run
 ```
@@ -127,4 +127,4 @@ For part (1), lets examine `public/index.html`, we will see the placeholder elem
 ```
 As for part (2), it is covered in another section: [React in Elmish](react-in-elmish.md). 
 
-In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the next section we will tinker with what we have and make an [Extended Counter](extended-counter).
+In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the [next section](conditional-rendering) we will tinker with what we have, add a bit of styling and have our view show or hide elements based on the state.

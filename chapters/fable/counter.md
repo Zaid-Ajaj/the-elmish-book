@@ -25,7 +25,7 @@ We will need buttons that change the contents of a text element every time you c
 </html>
 ```
 
-Now we will do something similar like we did back with our last example that prints the console message: get references to the buttons by their id values and attaching event handlers. Because we want to keep local state of the current count, we will use a mutable value. The `App.fs` becomes the following:
+Now we will do something similar like we did back with our [Hello World](hello-world) example that prints the console message: get references to the buttons by their id values and attaching event handlers. Because we want to keep local state of the current count, we will use a mutable value. The `App.fs` becomes the following:
 
 ```fsharp
 module App
@@ -41,11 +41,15 @@ let mutable currentCount = 0
 
 // attach event handlers
 increase.onclick <- fun ev ->
+    // update the state
     currentCount <- currentCount + 1
+    // update the view
     countViewer.innerText <- sprintf "Count is at %d" currentCount
 
 decrease.onclick <- fun ev ->
+    // update the state
     currentCount <- currentCount - 1
+    // update the view
     countViewer.innerText <- sprintf "Count is at %d" currentCount
 
 // set the count viewer with the initial count

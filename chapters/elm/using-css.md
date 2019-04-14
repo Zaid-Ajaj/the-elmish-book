@@ -75,7 +75,7 @@ let shinyAlways =
 
 ### External Style Sheets
 
-This book unfortunately doesn't teach you nifty CSS tricks. When we want to use advanced CSS techniques, we will resort to using exisiting CSS frameworks and apply them in Elmish applications. Frameworks such as [Bootstrap](https://getbootstrap.com/docs/3.4/), [Bulma](https://bulma.io/), [FontAwesome](https://fontawesome.com/) and many others are emmensly great when we want to create coherent styling for the entire application. The easiest way to get started with any of these if to include them using stylesheet links. To include Bulma for example, simply add this line to `index.html`:
+This book unfortunately doesn't teach you nifty CSS tricks. When we want to use advanced CSS techniques, we will resort to using exisiting CSS frameworks and apply them in Elmish applications. Frameworks such as [Bootstrap](https://getbootstrap.com/docs/3.4/), [Bulma](https://bulma.io/), [FontAwesome](https://fontawesome.com/) and many others are emmensly helpful when we want to create coherent styling for the entire application. The easiest way to get started with any of these is to include them using stylesheet links. To include Bulma for example, simply add this line to `index.html`:
 ```html {highlight: [8]}
 <!doctype html>
 <html>

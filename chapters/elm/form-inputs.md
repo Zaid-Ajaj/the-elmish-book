@@ -6,7 +6,7 @@ Aside from dispatching messages using button clicks, we want to be able to dispa
 
 <resolved-image source="/images/elm/text-input.gif" />
 
-The user interface consists of just elements: a text input box and a label. The text value of the label is whatever the user types into the text input box. This means that the only data that the application keeps track of is a string. We can start modeling the `State` type:
+The user interface consists of just two elements: a text input box and a label. The text value of the label is whatever the user types into the text input box. This means that the only data that the application keeps track of is a string. We can start modeling the `State` type:
 
 ```fsharp
 type State = { TextInput : string }
@@ -61,7 +61,7 @@ If you look closely, you will see that when you type the first letter, the refle
 
 <resolved-image source="/images/elm/text-input-letter.gif" />
 
-This is because the text box contents were capitalized *after* the re-render cycle. Let's say you typed "h", then this follows:
+This is because the text box contents were capitalized *after* the the state was evaluated. Let's say you typed "h", then this follows:
 
 - The internal state of the text box is changed to "h"
 - `OnChange` is triggered where `event.Value = "h"`
@@ -69,7 +69,52 @@ This is because the text box contents were capitalized *after* the re-render cyc
 - New state is computed: `{ TextInput = "h" }`
 - UI is re-rendered: text box has content upper-case "H" and the `span` has content "h".
 
-It is very important to understand the order in which these events occur especially with input elements such as text boxes because of their interal states. 
+This is simply an error on our side because although we are keeping track of the of the previous and next state it in the `update` function, we went on and computed *more* information in the `render` function: the capitalized text with `state.TextInput.ToUpper()`. Now in our `render` function we have two string representations that are out of sync because one is upper-cased in the text box and the other is kept as is in the `span` element. 
+
+You might say: "Well it is very easy to fix this bug, just use `.ToUpper()` inside the `span` element too".
+
+These would be a correct fix to this little bug but there is a bigger fundamental problem with this approach that will eventually haunt you in bigger applications: deriving more information from the state at *multiple* places, both in the `update` and `render` functions resulting in an out-of-sync user interface. 
+
+The solution almost always comes down to two possibilites:
+ - (1) Compute and store the needed information when `updating` the state
+ - (2) Derive new information during the `render`
+
+(1) Upper-case the state when updating the state:
+```fsharp {highlight: [4]}
+let update msg state = 
+  match msg with 
+  | SetTextInput input -> 
+      let nextState = { state with TextInput = input.ToUpper() }
+      nextState
+
+let render state dispatch = 
+  div [ ]
+      [ input [ 
+          valueOrDefault state.TextInput
+          OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
+        span [  ] [ str state.TextInput ] ]
+```
+
+(2) Compute the new information *only once* inside `render`
+```fsharp {highlight: [8, 11, 13]}
+let update msg state = 
+  match msg with 
+  | SetTextInput input -> 
+      let nextState = { state with TextInput = input }
+      nextState
+
+let render state dispatch =
+  let upperCased = state.TextInput.ToUpper()
+  div [ ]
+      [ input [ 
+          valueOrDefault upperCased
+          OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
+        span [  ] [ str upperCased ] ]
+``` 
+
+In both cases the general approach is the following: 
+ - Minimize the places where you compute information (either compute it once inside `update` or once inside `render`)
+ - Avoid redundancy: don't keep track of data you can derive from the state 
 
 ### Check Boxes
 

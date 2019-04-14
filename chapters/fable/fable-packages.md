@@ -51,7 +51,7 @@ Fable.Library.nupkg
 
 Let me mention this again, the *source files* are included in the nuget package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not compatible by default in Fable projects. To make a F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code of that package is also Fable-compatible: doesn't use APIs that Fable cannot recognize as discussed in [.NET Compatibility](compatibility.md). 
 
-You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable nuget package if Fable only requires the source files?" It is not Fable that is using these compiled files but it is your IDE. Whether you are using Inonide, Visual Studio or Rider, these IDE's provide their intellisense and auto-complete features using the definitions within these compiled `dll` files. 
+You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable nuget package if Fable only requires the source files?" It is not Fable that is using these compiled files but it is your IDE. Whether you are using Ionide, Visual Studio or Rider, these IDE's provide their intellisense and auto-complete features using the definitions within these compiled `dll` files. 
 
 ### Fable Compiles Dependencies 
 
@@ -61,16 +61,17 @@ For a full build, Fable not only compiles the entry project but also compiles th
 
 ### Fable Can Use Native Javascript Libraries 
 
-Aside from Fable-specific dotnet packages that are distributed to [Nuget](https://www.nuget.org/), Fable is also able to use *native* javascript libraries. Either as dependencies from the entry project you are building or the packages that project depends upon, the code can call functions and interop with javascript code. Javascript code can be either:
+Aside from Fable-specific dotnet packages that are distributed to [Nuget](https://www.nuget.org/), Fable is also able comsume *native* javascript libraries. Either as dependencies from the entry project you are building or the packages that project depends upon, the F# code can call functions and interop with javascript code. Javascript code can be either:
 
  - (1) Global javascript modules available in the environment where you run your code (browser, node.js etc.)
  - (2) Packages that are distributed to the [node package manager](https://www.npmjs.com/) (npm for short). 
 
- The package `Fable.Browser.Dom` we used in the [hello world](hello-world) is of type (1). It is a binding library that interacts with APIs that are globally available in the browser such as the `document` API so eveything works fine.
+The package `Fable.Browser.Dom` we used in the [hello world](hello-world) is of type (1). It is a binding library that interactswith APIs that are globally available in the browser such as the `document` API so eveything works fine.
+Package of type (2) are more common in Fable's landscape. Such packages interact with javascript code internally but providetype-safe public APIs for use in Fable projects. To use a package of type (2), you have to install both packages: the bindinglibrary which is a Fable-specific package distributed to nuget and the actual native javascript library distributed to npm. 
 
- Package of type (2) are more common in Fable's landscape. Such packages interact with javascript code internally but provide type-safe public APIs for use in Fable projects. To use a package of type (2), you have to install both packages: the binding library which is a Fable-specific package distributed to nuget and the actual native javascript distributed to npm. 
- 
- An example of such packages is the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package which is a binding for [date-fns](https://date-fns.org/) javascript library. To use it inside your project, you have to install `Fable.DateFunction` from nuget and `date-fns` from npm:
+An example of such packages is the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package which is abinding for the native javascript library [date-fns](https://date-fns.org/). This library provides many useful functions to manipulate `DateTime` and you can use it in your Fable projects through this binding.
+
+To use it inside your project, you have to install both `Fable.DateFunction` from nuget and `date-fns` from npm:
 
 ```bash
 # inside src directory:
@@ -82,3 +83,4 @@ npm install --save date-fns
 The following diagram illustrates a project structure that uses native javascript libraries:
 
 <resolved-image source="/images/fable/complex-project.png" />
+

@@ -4,9 +4,11 @@ The base class library or *BCL* for short are those native APIs from dotnet that
 
 Although we were using the `System.Random` class, the actual implementation is not .NET code. Under the hood, Fable translates these APIs to something that already (hopefully) exists in the native javascript APIs which is in this specific case the `Math.random()` function.
 
-Supporting *all* of the base class library is not a goal of Fable and when certain BCL functionality is needed, then a binding to the native equavilant of the functionality will be the way to go. Fable tries to support certain BCL when *'it makes sense'* because Fable compiles F# with the idea in mind that the code will run inside a javascript runtime, like V8 in the browser or node.js on the server. In many cases, the APIs provided from the BCL don't work out of the box in these javascript environments, for example, multi-threading APIs within the `System.Threading.Tasks` namespace are not supported because javascript environments are usually single-threaded. 
+Supporting *all* of the base class library is not a goal of Fable and when certain BCL functionality is needed, then a binding to the native equavilant of the functionality will be the way to go. 
 
-Likewise, APIs from `System.IO` are not supported because javascript in the browser cannot access the file system by default. However, Javascript on the server *should* be able to access the file system and do all crazy things on the hosting machine and in such cases we will use javascript-specific APIs from node.js. Again, we would use a binding to the access these APIs, the binding `Fable.Import.Node` covers most built-in modules from node.js.
+Fable tries to support certain BCL functions and classes when *'it makes sense'* because Fable compiles F# with the idea in mind that the code will run inside a javascript runtime, like V8 in the browser or node.js on the server. In many cases, the APIs provided from the BCL don't work out of the box in these javascript environments. For example, multi-threading APIs within the `System.Threading.Tasks` namespace are not supported because javascript environments are usually single-threaded. 
+
+Likewise, APIs from `System.IO` are not supported because javascript in the browser cannot access the file system by default. However, Javascript on the server *should* be able to access the file system and do all crazy things on the hosting machine and in such cases we will use javascript-specific APIs from node.js. Again, we would use a binding to the access these APIs, the binding `Fable.Node` covers most built-in modules from node.js.
 
 That said, there are many supported APIs from the base class library that Fable compiles while maintaining the same behaivour you would expect if you were running the code from F# on dotnet. So let us go through a quick tour of these APIs. 
 
@@ -16,7 +18,7 @@ While Javascript only has the `Number` type (64-bit floating number, the same as
 
 ### Date/Time
 
-Dotnet has `System.DateTime` to represent dates and times, Fable supports this type and the `DateTime` API of static functions, as well as a subset of `System.TimeSpan` and `System.DateTimeOffset`. It is worth noting that a `DateTime` instance compiles down to a `Date` instace in javascript which makes interoperability even more straightforward.
+Dotnet has `System.DateTime` to represent dates and times, Fable supports this type and the `DateTime` API of static functions, as well as a subset of `System.TimeSpan` and `System.DateTimeOffset`. It is worth noting that a `DateTime` instance compiles down to a `Date` instance in javascript which makes interoperability even more straightforward.
 
 ### Converters 
 

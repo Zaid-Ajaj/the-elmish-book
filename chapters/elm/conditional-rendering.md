@@ -43,7 +43,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 
 <resolved-image source="/images/elm/counter-colored-text.gif" />
 
-Every time the state changes, the `render` function runs again and computes the UI for that new state. Since the value `textColor` only depends on the state, we can extract it outside `render` and make it a function:
+Every time the state changes, the `render` function is evaluated to compute how the UI will look like for that new state. Since the value `textColor` only depends on the state, we can extract it outside `render` and make it a function:
 
 ```fsharp {highlight:['1-4', 10]}
 let textColor (state: State) = 
@@ -59,7 +59,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ] ]
 ```
 
-In Elmish applications, it very common to extract pieces of `render` outside of it to little functions. This makes it better to read and maintain especially when you have a lot of nested elements. In the above example, we definitely didn't need to refactor but I just wanted to make the point clear.
+In Elmish applications, it very common to extract pieces of `render` outside of it to little functions. This makes it better to read and maintain especially when you have a lot of nested elements. In the above example, it was simple enough and we definitely didn't need to refactor but I just wanted to make the point clear as this will come up a lot more often.
 
 ### Conditional Rendering Using `if ... then ... else`
 
