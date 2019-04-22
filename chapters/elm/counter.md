@@ -93,7 +93,8 @@ The function `Program.mkSimple` makes a "simple" program: a program with no side
 An Elmish program controls the life-cycle of the application and is responsible for calling the function triplet (`init`, `update` and `render`) in the appropriate manner, think about it roughly as follows: 
  - Start with the current state (using initial state at startup)
  - Implement `dispatch` and give it along with current state to the `render` function
- - When `dispatch` is called, call `update` to get the next state and re-`render` the application based on this new state. 
+ - Create the user interface generated from the `render` function and attach event hanlders 
+ - When `dispatch` is called (from event handlers), call `update` to get the next state and re-`render` the application based on this new state. 
  - Repeat
 
 ### Bringing the application to life
@@ -125,6 +126,10 @@ For part (1), lets examine `public/index.html`, we will see the placeholder elem
 </body>
 </html>
 ```
-As for part (2), it is covered in another section: [React in Elmish](react-in-elmish.md). 
+As for part (2), it is a bit more complicated. As we have discussed before, Elmish as an implementation of The Elm Architecture to two main concerns (1) managing and keeping track of data (= state) and (2) rendering user interface based on that state  (*re-rendering* the user interface whenever the state changes). 
+
+The second concern (rendering user interfaces) is commonly referred to as the "view part" of The Elm Architecture. Elmish delegates this concern to a third-party library that knows how to work with user interfaces really well, in this case it the [React.js](https://reactjs.org/) library, one of the three most popular libraries in the javascript ecosystem to build web application. Section [React in Elmish](react-in-elmish) goes into greater details of this subject matter.
+
+Although React is only one type of these rendering engines, it is the most popular in the Fable community because of it fits really well with the functional approach and because we can use a plethora of pre-existing React components in our Elmish applications without re-implementing ourselves from scratch. 
 
 In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the [next section](conditional-rendering) we will tinker with what we have, add a bit of styling and have our view show or hide elements based on the state.
