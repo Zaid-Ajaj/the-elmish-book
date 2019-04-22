@@ -1,6 +1,6 @@
 # Node.js Packages
 
-Understanding the hybrid nature of Fable is vital to being productive with Fable projects and realizing their full potential. In every typical Fable project or repository (however you like to call it), you are at least with *types* of projects:
+Understanding the hybrid nature of Fable is vital to being productive with Fable projects and realizing their full potential. In every typical Fable project or repository (however you like to call it), you are working at least with two *types* of projects:
 
  - A F# project
  - A Node.js project
@@ -26,7 +26,7 @@ fable-getting-started
         ├─── App.fs
         ├─── App.fsproj
 ```
-The `package.json` file *implies* that this directory is indeed a Node.js project. Within `package.json`, you can specify the dependencies that the project uses. These dependencies can either be libraries or command line interface (cli) programs. Let's have a look:
+The location of the `package.json` file *implies* that this directory is indeed a Node.js project and `package.json` is at the *root* of such project. Within `package.json`, you can specify the dependencies that the project uses. These dependencies can either be libraries or command line interface (cli) programs. Let's have a look:
 ```json
 {
   "private": true,
@@ -36,8 +36,8 @@ The `package.json` file *implies* that this directory is indeed a Node.js projec
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
-    "fable-compiler": "^2.1.12",
-    "fable-loader": "^2.1.5",
+    "fable-compiler": "^2.3.3",
+    "fable-loader": "^2.1.6",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.2.0"
@@ -49,7 +49,7 @@ This `package.json` has two very important sections: the `devDependencies` and `
 
 This means your development dependencies are installed on a *per-project* basis which is really great because first, you don't to install any program to compile your project and second because the versions of these programs are maintained inside `package.json` allowing you to work on multiple projects on the same machine that use different versions of the same programs. For example you can work on a project A that uses Fable `1.x` and another project B that uses Fable `2.x` without the two interfering with each other. 
 
-You must have wondered: "How did Fable compile the project if I didn't install it anywhere?" Well, there you have it. You installed it as part of your developement dependencies with the package `fable-compiler`. The template uses version `2.1.12` of Fable which is the most recent version at the time of writing. I intend to keep the project template up-to-date with latest Fable versions. 
+You must have wondered: "How did Fable compile the project if I didn't install it anywhere?" Well, there you have it. You installed it as part of your developement dependencies with the package `fable-compiler`. The template uses version `2.3.3` of Fable which is the most recent version at the time of writing. I intend to keep the project template up-to-date with latest Fable versions. 
 
 
 ### Npm scripts 

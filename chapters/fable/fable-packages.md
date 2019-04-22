@@ -10,7 +10,7 @@ From the template we started with in the [Hello World](hello-world.md) section, 
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fable.Browser.Dom" Version="1.0.0-alpha-003" />
+    <PackageReference Include="Fable.Browser.Dom" Version="1.0.0" />
   </ItemGroup>
 </Project>
 ```
