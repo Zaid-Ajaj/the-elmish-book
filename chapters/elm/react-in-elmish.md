@@ -15,9 +15,9 @@ In the previous examples we openend the namespaces
 open Fable.React
 open Fable.React.Props
 ```
-And we were able to use the Elmish DSL to create `ReactElement`s from the functions `div`, `span`, `button` etc. `ReactElement` is infact the output type of these functions:
+And we were able to use the Elmish DSL to create `ReactElement`s from the functions `div`, `span`, `button` etc. `ReactElement` is in fact the output type of these functions:
 ```fsharp
-let header : ReactElement = h1 [ ] [ str "Happy coding!" ]
+let title : ReactElement = h1 [ ] [ str "Happy coding!" ]
 ```
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 
@@ -29,9 +29,46 @@ Now understanding the `render` function comes down to understanding a bit of Rea
 
 ### What is React?
 
-In the first chapter, we have seen how to work with UI elements directly using the `document` API that is natively available from the browser when we were building the very first [Counter](/chapters/fable/counter) example. This API is also called the "DOM", short for the document object model. The DOM is how the browser models and renders the elements on the screen from Html tags such as:
+React is a javascript library for building  user interfaces, or at least, that's what the main page at [https://reactjs.org](https://reactjs.org) says about it. This is pretty vague and doesn't say much. Let's ask another question: what does React *do*, specifically in Elmish applications?
+
+React starts doing it's magic when the `render` function is evaluated for the first time and a `ReactElement` is returned. Suppose the evaluated element looked something as follows regardless of the state:
+```fsharp
+div [ Id "content"; Class "full-width" ] [
+    h1 [ Id "header" ] [ str "Hello from Fable" ]
+]
+```
+This `ReactElement` will be given to React and it will create the equivalent user interface of:
 ```html
-<div>
-    <h1>Hello to Fable</h1>
+<div id="content" class="full-width">
+    <h1 id="header">Hello from Fable</h1>
 </div>
+```
+Which is the *real* user interface you ultimately see on screen. This is of course only on the *initial* render at the start up of the application. 
+
+Now suppose that the state has changed and a *re-render* is triggered where the `render` function now evaluates to the following output:
+```fsharp
+div [ Id "content"; Class "hidden" ] [
+    h1 [ Id "header" ] [ str "Hello from Fable" ]
+]
 ``` 
+Notice here that only the `class` of the main `div` element has changed from "full-width" to "hidden". 
+
+Now this `ReactElement` is again given to React. Because this is a re-render cycle, React only applies the changes needed to the elements. Using advanced heuristics, React is able to *compare* the newly generated `ReactElement` with the previous one and calculates which modifications need to occur. In the example above, React will figure out that it only needs to apply the changes made to the class attribute and executes the modifications at the `document` API level. The real changes applies to the elements we see on screen could look something like this:
+```fsharp
+let content = document.getElementById "content"
+content.classList.remove("full-width")
+content.classList.add("hidden")
+```
+The process of comparing `ReactElement`s to determine the required modifications is called [Reconciliation](https://reactjs.org/docs/reconciliation.html) and it is one of the most important concepts in React. Although reconciliation is internal to React's implementation, getting an idea of how it works will help you optimize your user interface code and avoid certain UI bottlenecks.  
+
+Think about reconciliation as if it had the type:
+```fsharp
+let reconcile (prev: ReactElement) (next: ReactElement) : Modification list = (*...*)
+```
+Here, a `Modification` is an instuction for React to apply on the *real* elements on screen. 
+
+> Of course, this is psuedo-code, using types just makes it easier to think about the concept. 
+
+I say the "real" elements on the screen because these `ReactElement`s are not actual elements. They are only a *representation* of how the user interface should look like. Basically a tree structure that lives in-memory which React uses to determine what changes need to be applied to the *real* elements: the real DOM. This is why these `ReactElement`s are also commonly referred to as the "Virtual DOM" (virtual because they only live in-memory). 
+
+### Expensive Re-Renders

@@ -60,11 +60,11 @@ async {
 }
 ```   
 
-<note type="info">
+<div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 
 `Async.Sleep` with Fable is implemented using `setTimeout` under the hood, however the implementation is more advanced that it provides built-in support for cancellation 
 
-</note>
+</div>
 
 ### Unsupported Features
 
