@@ -1,10 +1,13 @@
-# To-Do List application: Part 0
+# To-Do List application
 
-So far we have learned quite a bit about Elmish, but nothing helps understanding concepts like actually building something that combines the ideas into a coherent application, and for that we will build a To-Do list application in Elmish. This is *the* hello world of every UI framework or paradigm and because of that, it has almost become too cliche to build one these things. However, I will put my spin on the subject and build it in three parts starting from the minimal implementation and upgrading the application, adding more features as we go. 
+So far we have learned quite a bit about Elmish, but nothing helps understanding concepts like actually building something that combines the ideas into a coherent application, and for that we will build a To-Do list application in Elmish. This is *the* hello world of every UI framework or paradigm and because of that, it has almost become too cliche to build one these things. However, I will put my spin to  the subject and build it in three parts starting from the minimal implementation and upgrading the application, adding more features as we go. I will thoroughly explain all of the *three* parts, going through the code bit by bit. After the third part however, you will tasked to extend the application and add a couple of features by yourself. These excercises will help you test the knowledge you have accumulated so far. 
 
-What's important to learn from this experiement is that we understand the *train of thought* in how you approach the problem and which *questions* you ask yourself to guide you when writing your implemenation.  
+The most important thing about this experiement is that we understand the *train of thought* in how you approach the problem and which *questions* you ask yourself to guide you when writing your implemenation. 
 
-Now let's take a look at what we will be building to hype you up a bit. For part 1 we will implement the bare minimum of what you can a call a To-Do list application:
+Enough talk! let's hype you up a bit with gifs of what we will build...
+
+### Part 1: The bare minimum
+We will implement the bare minimum of what you can a call a To-Do list application. Here we will learn how to render a list of text elements into the user interface with F#'s list comprehensions.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;"> 
@@ -12,19 +15,27 @@ Now let's take a look at what we will be building to hype you up a bit. For part
   </div>
 </div>
 
+### Part 2: An actual To-Do list application
+The application will look more like an actual todo list where each item can be marked as completed. The items can also be deleted. Here we will refactor our data model such that we can *identify* the items in the UI and update these exact elements in our `update` function.
 
-For styling, we will be using [Bulma](https://bulma.io/) as our CSS framework and [Font Awesome]() for, well, the awesome icons. Later on we will refactor it to use [Fulma](https://github.com/Fulma/Fulma) intead which will help us use Bulma in a type-safe manner within Elmish applications. 
+<div style="width:100%">
+  <div style="margin: 0 auto; width:65%;"> 
+    <resolved-image source="/images/elm/todo-part2.gif" />      
+  </div>
+</div>
 
-To start off, we clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository like we did in the [Counter](counter.md) example and work our way from there to build the application. Initially, the application will look like this:
+### Part 3: Stepping it up a notch
+Here we will dive deeper into our amazing To-Do list application and add the feature of making every Todo item *editable* as follows. This is a more complex variant of `Part 2` that will help enforce the concepts even more.
 
-<h1 style="color:green">COOL GIF PLACEHOLDER</h1>
+<div style="width:100%">
+  <div style="margin: 0 auto; width:65%;"> 
+    <resolved-image source="/images/elm/todo-part3.gif" />      
+  </div>
+</div>
 
-As you can see from the gif above, the application does a couple of things:
- - Shows a list of to-do items.
- - Every item has description and a checkbox for whether the item is complete.
- - You can type in the description of a new to-do item and add to the list. 
- 
-The first I want to do after cloning is adding a couple of links to reference Bulma and Font Awesome to the `index.html` page inside the `public` directory:
+### Styling with Bulma, Icons with Font Awesome
+
+As I have mentioned earlier, we will be using [Bulma](https://bulma.io/) as our CSS framework and [Font Awesome](https://fontawesome.com/) for, well, the awesome icons. To start off, we clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository like we did in the [Counter](counter.md) example and work our way from there to build the application. From part 1 up to Part 3, the `index.html` page will be same, including the external CSS files. So the very first thing do after cloning is adding a couple of links to reference Bulma and Font Awesome to the `index.html` page inside the `public` directory:
 ```html {highlight: ['7-12']}
 <!doctype html>
 <html>
