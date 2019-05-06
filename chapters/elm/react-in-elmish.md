@@ -29,7 +29,7 @@ Now understanding the `render` function comes down to understanding a bit of Rea
 
 ### What is React?
 
-React is a javascript library for building  user interfaces, or at least, that's what the main page at [https://reactjs.org](https://reactjs.org) says about it. This is pretty vague and doesn't say much. Let's ask another question: what does React *do*, specifically in Elmish applications?
+React is a javascript library and framework for building web application. From Javascript's perspective, this library can be standalone to build application, Elmish builds upon the capabilities of React and helps move the data and state around. When it comes to rendering the elements on screen, that is when React comes into play.
 
 React starts doing it's magic when the `render` function is evaluated for the first time and a `ReactElement` is returned. Suppose the evaluated element looked something as follows regardless of the state:
 ```fsharp
@@ -69,6 +69,4 @@ Here, a `Modification` is an instuction for React to apply on the *real* element
 
 > Of course, this is psuedo-code, using types just makes it easier to think about the concept. 
 
-I say the "real" elements on the screen because these `ReactElement`s are not actual elements. They are only a *representation* of how the user interface should look like. Basically a tree structure that lives in-memory which React uses to determine what changes need to be applied to the *real* elements: the real DOM. This is why these `ReactElement`s are also commonly referred to as the "Virtual DOM" (virtual because they only live in-memory). 
-
-### Expensive Re-Renders
+I say the "real" elements on the screen because these `ReactElement`s are not actual elements. They are only a *representation* of how the user interface should look like. Basically a tree structure that lives in-memory which React uses to determine what changes need to be applied to the *real* elements: the real DOM. This is why these `ReactElement`s are also commonly referred to as the "Virtual DOM". They are called virtual because they only live in-memory. 
