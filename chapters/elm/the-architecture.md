@@ -4,13 +4,13 @@ The Elm Achitecture or TEA for short, is an architecture for building modular us
 
 Despite the name, this programming model is not restricted to the Elm language and many other programming languages use a variant of this architecture that fits within the context of the language. For example, in the javascript world, you have [React](https://reactjs.org/) and [Redux](https://redux.js.org/) as one of most popular TEA implementations. In Fable and F#, we have the [Elmish](https://elmish.github.io/elmish/) library: another implementation of TEA that fits very well with F# constructs. 
 
-Our primary focus in this chapter will be the Elmish the library, how to use it to build Elm-like applications and how it works. 
+Our primary focus in this chapter will be the concepts of The Elm Architecture and how they are implemented within the Elmish library. 
 
 ### The Problem: User Interfaces
 
 Whatever application you might be building, there are almost always *two* main concerns that a UI application has to deal with
  - How to keep track of and maintain the state of the application
- - How to keep the UI in-sync with the state
+ - How to keep the user interface in-sync with the state as it changes
 
 The Elm Architecture provides a systematic approach for these problems using a number of building blocks. These blocks are divided into the following: 
 

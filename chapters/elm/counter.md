@@ -72,9 +72,9 @@ let render (state: State) (dispatch: Msg -> unit) =
         div [] [ str (string state.Count) ]
         button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ] ]
 ```
-> This is function is also commonly known as the `view` function. 
+> This is function is also commonly known as the `view` function. I will use `render` and `view` interchangeably throughout the book.
 
-The `render` function computes the user interface of the application based on the *current* state of the application. It also takes "dispatch" function as a second input. The function returns a virtual Html tree using an Elmish-specific DSL. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. 
+The `render` function computes the user interface of the application based on the *current* state of the application. It also takes "dispatch" function as a second input. The function returns a tree-like structure similar to that of HTML that can built using just functions. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. 
 
 The DSL consists of functions that represent Html tags, such as `div` and `button`. The first argument of these functions is a list of attributes such as `OnClick` and the second argument is a list of the children elements. With this DSL in place, you can easily build Html trees in F# code. More on the `render` function in the next section. 
 
