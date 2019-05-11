@@ -84,7 +84,6 @@ Now that we have all the pieces in place: `init`, `update` and `render`, we can 
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
-|> Program.withConsoleTrace
 |> Program.run
 ```
 
@@ -102,7 +101,6 @@ We have written the triplet of our Elmish program that make up the counter appli
 ```fsharp {highlight:[2]}
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
-|> Program.withConsoleTrace
 |> Program.run
 ```
 This tells Elmish two things:

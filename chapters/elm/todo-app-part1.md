@@ -32,7 +32,7 @@ type Msg =
 Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box, that's why we need extra information `of string` which will carry the text that the user typed. `AddTodo` on the other hand will take the *current* value of `NewTodo` and adds it to `TodoList`. Notice here that `AddTodo` doesn't require extra information because we already have the text of the `NewTodo` in our state.
 
 In the back of your mind, try to imagine how the state evolves from the initial state as these events are triggered: 
-```
+```bash
 -> Initial State = { NewTodo = ""; TodoList = [ "Learn F#" ] }
 -> User starts typing in
 -> Events are triggered:
@@ -76,7 +76,7 @@ This means that if the `NewTodo` is empty then return the state as is.
 Now that we have everything we need (`State` and `Msg`) we can start building the user interface. We can roughtly think about it in three parts
  - The title 
  - The text box and the add button
- - The list showin the todo items
+ - The list of the todo items
 
 The title is the easiest:
 ```fsharp
@@ -103,7 +103,7 @@ div [ Class "field has-addons" ] [
 ```
 We are using Bulma's [form fields](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo` and whenever the user types in, the `OnChange` event is triggered which in turn triggers (i.e. "dispatches") the `SetNewTodo` event giving it the current value of the input. The add button is trivial, just dispatches the `AddTodo` event when clicked. 
 
-Notice the part `i [ Class "fa fa-plus" ] [ ]`. This is how we use icons from the Font Awesome library that we referenced in the beginning. Using the class `fa fa-plus` gives up the "plus" icon. See [here](https://fontawesome.com/icons?d=gallery) all the icons you can use.
+Notice the part `i [ Class "fa fa-plus" ] [ ]`. This is how we use icons from the Font Awesome library that we referenced in the beginning. Using the class `fa fa-plus` gives the "plus" icon. See [here](https://fontawesome.com/icons?d=gallery) all the icons you can use.
 
 Lastly, we have to render the To-Do items themselves in a list. We do it using a list comprehension:
 ```fsharp
@@ -151,8 +151,7 @@ Finally, to bootstrap the application and actually bring it to life, we use inst
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
-|> Program.withConsoleTrace
 |> Program.run
 ```
 
-You can view the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part1) for reference.
+You can view the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part1) for reference. 
