@@ -185,7 +185,6 @@ As usual, we tie the triplet `init`, `update` and `render` into a program and st
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
-|> Program.withConsoleTrace
 |> Program.run
 ```
 

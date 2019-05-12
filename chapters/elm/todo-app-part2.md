@@ -193,7 +193,7 @@ First we calculate the identity that our next To-Do item will have, we do so by 
 
 ### The User Interface
 
-That was it for the `update`, now we consider the `render` function. Since the user interface is more or less the same as the in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Because the code in `render` is starting to explode, I will be breaking parts of it into separate functions: 
+That was it for the `update`, now we consider the `render` function. Since the user interface is more or less the same as the in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Because the code in `render` is starting to get bigger, I will be breaking parts of it into separate functions: 
 ```fsharp {highlight: [10, 12]}
 let createTodoTextbox (state: State) (dispatch: Msg -> unit) = 
   (* render the text box and the Add To-Do button *)
@@ -210,3 +210,115 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
   ]  
 ```
+Here `createTodoTextbox` is resposible for part of the user interface that makes up the text box where the user can input the description of the new To-Do item and the add button. The other function is `renderTodo` which is responsible for rendering a single To-Do item.
+
+The implementation of `createTodoTextbox` is exactly the same as the one from Part 1 but it is now contained in it's own function:
+```fsharp
+let createTodoTextbox (state: State) (dispatch: Msg -> unit) = 
+  div [ Class "field has-addons" ] [
+    div [ Class "control is-expanded" ] [ 
+      input [ 
+        Class "input is-medium"
+        valueOrDefault state.NewTodo
+        OnChange (fun ev -> dispatch (SetNewTodo ev.Value)) ]
+    ] 
+    div [ Class "control" ] [ 
+      button [ Class "button is-primary is-medium"; OnClick (fun _ -> dispatch AddNewTodo) ] [ 
+        i [ Class "fa fa-plus" ] [ ]
+      ]
+    ] 
+  ] 
+```
+Notice that the function has the same parameters as the "root" `render` function. This means we can just propagate the parameters (the state and dispatch function) to the smaller functions like `createTodoTextbox` to make our code cleaner and easier to read.  
+
+The same holds for `renderTodo`, since it is resposible for rendering a single To-Do item, it takes a `Todo` as input along side the dispatch function:
+```fsharp
+let renderTodo (todo: Todo) (dispatch: Msg -> unit) = 
+  let checkButtonStyle = 
+    classList [ 
+      "button", true
+      "is-success", todo.Completed
+      "is-outlined", not todo.Completed 
+    ]
+    
+  div [ Class "box" ] [ 
+    div [ Class "columns is-mobile" ] [
+      div [ Class "column" ] [
+        p [ Class "subtitle" ] [ str todo.Description ] 
+      ] 
+      div [ Class "column is-4" ] [
+        div [ Class "buttons is-right" ] [
+          button [ checkButtonStyle; OnClick (fun _ -> dispatch (ToggleCompleted todo.Id))  ] [
+            i [ Class "fa fa-check" ] [ ] 
+          ] 
+          button [ Class "button is-danger"; OnClick (fun _ -> dispatch (DeleteTodo todo.Id)) ] [
+            i [ Class "fa fa-times" ] [ ] 
+          ] 
+        ]
+      ]
+    ]
+  ]  
+```
+Ok, there is quite some code packed in there for rendering a To-Do, let's walk through it step-by-step. First of all, we are calculating which classes the check button will have based on the information from a `Todo`:
+```fsharp
+classList [ 
+  "button", true
+  "is-success", todo.Completed
+  "is-outlined", not todo.Completed 
+]
+```
+This means the class "button" is always applied, "is-success" class will only be applied if `todo.Completed`, otherwise the class "is-outlines" will be applied. Effectively the code evaluates as follows:
+
+ - todo completed? `"button is-success"` is applied that will show a green checked button
+ - todo not completed? `"button is-outlined"` shows a white check button 
+
+Next up, we are rendering the layout using a `box` to enclose the whole thing and splitting it into two columns, the first column to left will be the `Description` of the `todo`. The second column will contain the buttons, one to toggle the completedness of the To-Do item and the other to delete the item:
+```fsharp
+div [ Class "box" ] [ 
+  div [ Class "columns is-mobile" ] [
+    div [ Class "column" ] [
+      p [ Class "subtitle" ] [ str todo.Description ] 
+    ] 
+    div [ Class "column is-4" ] [
+      div [ Class "buttons is-right" ] [
+        button [ checkButtonStyle; OnClick (fun _ -> dispatch (ToggleCompleted todo.Id))  ] [
+          i [ Class "fa fa-check" ] [ ] 
+        ] 
+        button [ Class "button is-danger"; OnClick (fun _ -> dispatch (DeleteTodo todo.Id)) ] [
+          i [ Class "fa fa-times" ] [ ] 
+        ] 
+      ]
+    ]
+  ]
+]  
+```
+The layout can be visualized roughly as follows:
+<resolved-image source="/images/elm/render-todo-layout.png" />
+
+> Yes, indeed this is MS Paint. 
+
+To understand how the columns work, please refere [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layour into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two colums. But in the example above, I want the description to have more real estate, so I use the `is-4` class on the second column such that the columns will share the width in the ratio 8/12 to 4/12 or simply 2 : 1. The number 12 is not arbibrary, many CSS frameworks including Bulma divide the width of the page into 12 portions, so when we add `is-4` to one of the columns we are saying that the column takes 4/12 of the width. 
+
+An interesting part of this layout is how the buttons are implemented:
+```fsharp
+button [ checkButtonStyle; OnClick (fun _ -> dispatch (ToggleCompleted todo.Id))  ] [
+  i [ Class "fa fa-check" ] [ ] 
+] 
+button [ Class "button is-danger"; OnClick (fun _ -> dispatch (DeleteTodo todo.Id)) ] [
+  i [ Class "fa fa-times" ] [ ] 
+] 
+```
+Notice the `Onclick` event handlers: they trigger events `ToggleCompleted` and `DeleteTodo` providing the events with the `Id` of the To-Do item being rendered. This is important, because this means each button rendered in a To-Do item "knows" which item should be toggled or deleted. Let me try to visualize this, suppose you have the list of To-Do items: 
+```fsharp 
+[ 
+  { Id = 1; Description = "Learn F#"; Completed = true }
+  { Id = 2; Description = "Learn Elmish"; Completed = false } 
+} 
+```
+The rendered buttons know exactly which event to trigger and which `Todo` is associated with each event:
+
+<resolved-image source="/images/elm/associated-events.png" />
+
+You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are just using functions, the event handlers create *closures* that maintain the information used within them, i.e. the `todo.Id` coming from the individual To-Do items that we rendering in the list.
+
+That was it for part 2, you can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part2) for reference. 
