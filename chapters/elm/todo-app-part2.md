@@ -99,6 +99,8 @@ For example, when an event `ToggleCompleted 4` it means "Toggle the completed fl
 ```
 Notice how when we are adding a new todo, we are incrementing the `Id` by 1 based on the maximum value of `Id` in the list. Also we initialize the `Completed` flag of a new `Todo` item to be false. 
 
+### Implementing State Updates
+
 Using the steps above, we have a rough idea of how we should implement the `update` function, let's try to implement it concretely, and go through the code:
 ```fsharp
 let update msg state = 
@@ -191,7 +193,7 @@ Event `AddTodo` now has a bit more logic to it than from the previous section:
 ```
 First we calculate the identity that our next To-Do item will have, we do so by checking the current list of `Todo`'s, if the list is empty, then use 1 is the indentity for the first item, otherwise we get the To-Do item that has the largest `Id` value using `List.maxBy` and we extract the `Id` from that item. Afterwards we create a new `Todo` using the `Id` we calculated and adding (appending) it the `TodoList` we already have in the state. 
 
-### The User Interface
+### Rendering The User Interface
 
 That was it for the `update`, now we consider the `render` function. Since the user interface is more or less the same as the in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Because the code in `render` is starting to get bigger, I will be breaking parts of it into separate functions: 
 ```fsharp {highlight: [10, 12]}
@@ -293,9 +295,10 @@ div [ Class "box" ] [
 ]  
 ```
 The layout can be visualized roughly as follows:
+
 <resolved-image source="/images/elm/render-todo-layout.png" />
 
-> Yes, indeed this is MS Paint. 
+> Yes, this is MS Paint. 
 
 To understand how the columns work, please refere [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layour into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two colums. But in the example above, I want the description to have more real estate, so I use the `is-4` class on the second column such that the columns will share the width in the ratio 8/12 to 4/12 or simply 2 : 1. The number 12 is not arbibrary, many CSS frameworks including Bulma divide the width of the page into 12 portions, so when we add `is-4` to one of the columns we are saying that the column takes 4/12 of the width. 
 
@@ -313,12 +316,12 @@ Notice the `Onclick` event handlers: they trigger events `ToggleCompleted` and `
 [ 
   { Id = 1; Description = "Learn F#"; Completed = true }
   { Id = 2; Description = "Learn Elmish"; Completed = false } 
-} 
+]
 ```
 The rendered buttons know exactly which event to trigger and which `Todo` is associated with each event:
 
 <resolved-image source="/images/elm/associated-events.png" />
 
-You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are just using functions, the event handlers create *closures* that maintain the information used within them, i.e. the `todo.Id` coming from the individual To-Do items that we rendering in the list.
+You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are just using functions, the event handlers of these buttons create *closures* that maintain the information used within them, i.e. the `todo.Id` coming from the individual To-Do items that we rendering from the list.
 
 That was it for part 2, you can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part2) for reference. 

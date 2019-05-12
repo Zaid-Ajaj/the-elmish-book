@@ -12,4 +12,7 @@ Aside from The Elm Architecture, we will look at the tools use are using, the ro
  - [Using CSS](using-css)
  - [Text Inputs](form-inputs)
  - [React in Elmish](react-in-elmish)
+ - [To-Do List Application: Part 1](todo-app-part1.md)
+ - [To-Do List Application: Part 2](todo-app-part2.md)
+ - [To-Do List Application: Part 3](todo-app-part3.md)
 

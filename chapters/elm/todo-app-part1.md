@@ -48,7 +48,7 @@ In the back of your mind, try to imagine how the state evolves from the initial 
 ```
 This gives you an idea of whether your state has enough information to evolve as these events triggered and whether the events themselves carry enough information (event arguments) to be able to update the state. An example of such event arguments is the `string` in `SetNewTodo`. 
 
-### Initializing and Updating The State
+### Implementing State Updates
 
 Since we stopped to think about how state evolves, we kind of already know what the `init` and `update` functions have to do so we can start implementing them concretely:
 ```fsharp
