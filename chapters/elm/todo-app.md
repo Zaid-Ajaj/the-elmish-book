@@ -25,7 +25,7 @@ The application will look more like an actual todo list where each item can be m
 </div>
 
 ### Part 3: Stepping it up a notch
-Here we will dive deeper into our amazing To-Do list application and add the feature of making every Todo item *editable* as follows. This is a more complex variant of `Part 2` that will help enforce the concepts even more.
+Here we will dive deeper into our amazing To-Do list application and add the feature of making every item *editable* as follows. This is a more complex variant of `Part 2` that will help enforce the concepts even more.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;"> 
