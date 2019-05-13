@@ -30,29 +30,34 @@ let update msg state =
 What's more interesting is the `render` function:
 ```fsharp {highlight: [3]}
 let render state dispatch = 
-  div [ ]
-      [ input [ OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
-        span [ ] [ str state.TextInput ] ]
+  div [ ] [ 
+    input [ OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
+    span [ ] [ str state.TextInput ] 
+  ]
 ```
 Here, we are using an `input` element that only takes a list of attributes. This is because normal Html `input` element cannot have nested elements. Notice here the `OnChange` event handler it takes a function of type `Event -> unit` where the input argument (of type `Event`) holds the event arguments: data about the event that has been triggered. In this case the event argument is the current `Value` of the text box element. This way, whenever the text box changes, a `SetTextInput` message is dispatched with the new value of the text input element. 
 
 When the state is updated with the new `Value`, the UI is re-rendered and thus the `span` (highlighted below) will reflect the current value of the text input element:
 ```fsharp {highlight: [4]}
 let render state dispatch = 
-  div [ ]
-      [ input [ OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
-        span [ ] [ str state.TextInput ] ]
+  div [ ] [ 
+    input [ OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
+    span [ ] [ str state.TextInput ] 
+  ]
 ```
 
 Notice here that even when the UI is re-rendered, the input box element preserves the text that has been entered. We *didn't* tell the `input` element that it should use `state.TextInput` and still with each render cycle, the text is kept as it is. This is because HTML input elements such a text box have *internal* state of their own. To change this internal state of the text box, for example when you want to populate the `input` element at start-up or simply modify what the user types, then you can use the `valueOrDefault` function. Let's modify the text that the user types into upper case text:
 
 ```fsharp {highlight: [4]}
 let render state dispatch = 
-  div [ ]
-      [ input [ 
-          valueOrDefault (state.TextInput.ToUpper())
-          OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
-        span [  ] [ str state.TextInput ] ]
+  div [ ] [ 
+    input [ 
+      valueOrDefault (state.TextInput.ToUpper())
+      OnChange (fun ev -> dispatch (SetTextInput ev.Value))
+    ]
+    
+    span [  ] [ str state.TextInput ] 
+  ]
 ```
 
 <resolved-image source="/images/elm/text-input-upper.gif" />
@@ -88,11 +93,14 @@ let update msg state =
       nextState
 
 let render state dispatch = 
-  div [ ]
-      [ input [ 
-          valueOrDefault state.TextInput
-          OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
-        span [  ] [ str state.TextInput ] ]
+  div [ ] [ 
+    input [ 
+      valueOrDefault state.TextInput
+      OnChange (fun ev -> dispatch (SetTextInput ev.Value)) 
+    ]
+    
+    span [ ] [ str state.TextInput ] 
+  ]
 ```
 
 (2) Compute the new information *only once* inside `render`
@@ -105,11 +113,14 @@ let update msg state =
 
 let render state dispatch =
   let upperCased = state.TextInput.ToUpper()
-  div [ ]
-      [ input [ 
-          valueOrDefault upperCased
-          OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
-        span [  ] [ str upperCased ] ]
+  div [ ] [ 
+    input [ 
+      valueOrDefault upperCased
+      OnChange (fun ev -> dispatch (SetTextInput ev.Value)) 
+    ]
+    
+    span [ ] [ str upperCased ] 
+  ]
 ``` 
 
 In both cases the general approach is the following: 
@@ -154,22 +165,24 @@ let update msg state =
 Finally we have the `render` function:
 ```fsharp {highlight: ['9-14']}
 let render state dispatch = 
-  div [ ]
-      [ input [ 
-          valueOrDefault state.TextInput
-          OnChange (fun ev -> dispatch (SetTextInput ev.Value)) ]
+  div [ ] [ 
+    input [ 
+      valueOrDefault state.TextInput
+      OnChange (fun ev -> dispatch (SetTextInput ev.Value)) 
+    ]
           
-        div [ ] [ 
-          label [ HtmlFor "checkbox-capitalized" ] [ str "Capitalized" ]
-          input [ 
-            Id "checkbox-capitalized"
-            Type "checkbox"
-            valueOrDefault state.Capitalized
-            OnChange (fun ev -> dispatch (SetCapitalized ev.Checked))  
-          ] 
-        ]
+    div [ ] [ 
+      label [ HtmlFor "checkbox-capitalized" ] [ str "Capitalized" ]
+      input [ 
+        Id "checkbox-capitalized"
+        Type "checkbox"
+        valueOrDefault state.Capitalized
+        OnChange (fun ev -> dispatch (SetCapitalized ev.Checked))  
+      ] 
+    ]
        
-        span [  ] [ str (if state.Capitalized then state.TextInput.ToUpper() else state.TextInput) ] ]
+    span [  ] [ str (if state.Capitalized then state.TextInput.ToUpper() else state.TextInput) ] 
+  ]
 ```
 Notice here the following: 
  - A check box is simply an `input` element with attribute `Type "checkbox"`
