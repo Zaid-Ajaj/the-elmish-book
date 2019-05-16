@@ -1,10 +1,8 @@
 # To-Do List application
 
-So far we have learned quite a bit about Elmish, but nothing helps understanding concepts like actually building something that combines the ideas into a coherent application, and for that we will build a To-Do list application in Elmish. This is *the* hello world of every UI framework or paradigm and because of that, it has almost become too cliche to build one these things. However, I will put my spin to  the subject and build it in three parts starting from the minimal implementation and upgrading the application, adding more features as we go. I will thoroughly explain all of the *three* parts, going through the code bit by bit. After the third part however, you will tasked to extend the application and add a couple of features by yourself. These excercises will help you test what you have learned so far. 
+So far we have learned quite a bit about Elmish, but nothing helps understanding concepts like actually building something that combines the ideas into a coherent application, and for that we will build a To-Do list application in Elmish. This is *the* hello world of every UI framework or paradigm and because of that, it has almost become too cliche to build one these things. However, I will put my spin to  the subject and build it in three parts starting from the minimal implementation and upgrading the application, adding more features as we go. I will thoroughly explain all of the *three* parts, going through the code bit by bit. After the third part however, you will be tasked to extend the application and add a couple of features by yourself. These excercises will help you test what you have learned so far. 
 
 The most important thing about this experiement is that we understand the *train of thought* in how you approach the problem and which *questions* you ask yourself to guide you when writing your implemenation. 
-
-Enough talk! let's hype you up a bit with gifs of what we will build...
 
 ### Part 1: The bare minimum
 We will implement the bare minimum of what you can a call a To-Do list application. Here we will learn how to render a list of text elements into the user interface with F#'s list comprehensions.

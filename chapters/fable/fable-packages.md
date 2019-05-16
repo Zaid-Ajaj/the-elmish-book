@@ -55,7 +55,7 @@ You might be wondering and thinking to yourself: "Well, then why are the compile
 
 ### Fable Compiles Dependencies 
 
-For a full build, Fable not only compiles the entry project but also compiles the dependencies of the project coming from nuget along with their (transitive) dependencies if any exist. The following diagram illustrates a valid project that Fable can compile, assuming all dependencies are compatible with the Fable version you are using, which is the case most of the time:
+For a full build, Fable not only compiles the entry project but also compiles the dependencies of the project coming from nuget along with their (transitive) dependencies if any exist. The following diagram illustrates a valid project that Fable can compile, assuming all dependencies are compatible with the Fable version you are using, which is the case most of the time unless you are using an age-old Fable package. This goes to say that Fable is *not* necessarily backwards-compatible with Fable packages:
 
 <resolved-image source="/images/fable/simple-project.png" />
 
