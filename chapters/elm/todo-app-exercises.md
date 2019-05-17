@@ -70,7 +70,6 @@ Of course, this is not "disabling" the button for real, it just shows the user t
 
 *Hint: remember how we implemented the completed check box*
 
-
 ### Exercise 3: Multi-Edit Mode
 
 The way we implemented the To-Do list application only allows to edit a *sinlge* To-Do item at a time. In this exercise, you will extend this feature and allow the user to edit multiple items at the same time. It will look like this:
@@ -85,7 +84,52 @@ You will need to extend the state as now you are keeping track not of a single "
  - (1) Keep track of `TodoBeingEdited list` instead of `TodoBeingEdited option` 
  - (2) Remove `TodoBeingEdited option` altogether and instead add `BeingEdited:bool` and `EditDescription:string` to every `Todo` in your state
 
-Both approaches are OK because they are keeping track of the same amount of data (no redundancy) so I would recommend you implement the feature twice using *both* approaches and see for yourself which one is easier to think about and to implement. Good luck! 
+Both approaches are OK because they are keeping track of the same amount of data, meaning no information redundancy. I would recommend you implement the feature twice using *both* approaches and see for yourself which one is easier to think about and to implement. Good luck! 
 
 You can view and use the application [live here](https://zaid-ajaj.github.io/elmish-todo-exercises/).
 
+### Exercise 4: Refactor with Fulma
+
+Throughout the user interface of the To-Do list, we have been using Bulma's classes to enhance the look and feel of the application. These classes are just strings that we have to look up in the documentation and remember to write correctly in our application, we can do much better than magic strings: enter [Fulma](https://github.com/Fulma/Fulma)!
+
+Fulma is a library that allows us to write UI code that makes use of Bulma classes in a type-safe manner. It provides idiomatic F# APIs to contruct the user interface elements without having to remember the magic strings and have the compiler check the correctness of the code. 
+
+For example, the following snippet:
+```fsharp
+button [ Class "button is-primary is-medium"; OnClick (fun _ -> dispatch CancelEdit) ] [
+  str "Add"
+]
+```
+Can be rewritten using Fulma's modules as follows:
+```fsharp
+Button.button 
+  [ Button.Color IsPrimary
+    Button.Size IsMedium
+    Button.OnClick (fun _ -> dispatch CancelEdit) ] [
+    str "Add"
+  ]
+```
+Notice how Bulma's classes such as `is-primary` and `is-medium` are grouped in their appropriate categories using `Button.Color` and `Button.Size` respectively. 
+
+The same applies for most types of UI elements, for example the text box:
+```fsharp
+input [
+  Class "input is-medium"
+  valueOrDefault state.NewTodo
+  OnChange (fun ev -> dispatch (SetNewTodo ev.Value)
+] 
+```
+Can be rewritten into the follows:
+```fsharp
+Input.input [
+  Input.Size IsMedium 
+  Input.ValueOrDefault state.NewTodo
+  Input.OnChange (fun ev -> dispatch (SetNewTodo ev.Value)) 
+]
+```
+Looks much cleaner in my opinion. In this exercise, you are tasked to refactor the To-Do list application using Fulma instead of Bulma's stringy classes. To get started, you need to install Fulma into your project. Fulma is just a nuget package that you can add to your `App.fsproj` as follows:
+```bash
+cd src
+dotnet add package Fulma
+```
+Now inside `App.fs`, just `open Fulma` and start refactoring mercilessly! You can consult the very comprehensive [documentation](https://fulma.github.io/Fulma/) when you need to know how the different classes such as "field" and whatnot translate to Fulma's elements.  
