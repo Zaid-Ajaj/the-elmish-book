@@ -16,3 +16,4 @@ Aside from The Elm Architecture, we will look at the tools use are using, the ro
  - [To-Do List Application: Part 2](todo-app-part2.md)
  - [To-Do List Application: Part 3](todo-app-part3.md)
  - [To-Do List Application: Exercises](todo-app-exercises.md)
+ - [Basic Elmish Project Structure](project-structure.md)
