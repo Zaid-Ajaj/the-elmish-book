@@ -14,8 +14,8 @@
     <script>
       // make images work using absolute urls both in developement and when published to github
       Vue.component("ResolvedImage", {
-          props: ["source"], 
-          template: "<img :src='resolvedUrl' />", 
+          props: ["source"],
+          template: "<img :src='resolvedUrl' />",
           computed: {
               resolvedUrl: function() {
                 let path = window.location.pathname;
@@ -35,18 +35,18 @@
         sidebar: [{
               title: "The Elmish Book",
               links: [
-                  { title: "Introduction", link: "/" }, 
-                  { title: "Audience", link: "/chapters/audience" }, 
+                  { title: "Introduction", link: "/" },
+                  { title: "Audience", link: "/chapters/audience" },
                   { title: "Overview", link: "/chapters/overview" }
               ]
             }, {
               title: "Understanding Fable",
               links: [
                   { title: "Introduction", link: "/chapters/fable/" },
-                  { title: "Hello World", link: "/chapters/fable/hello-world" }, 
+                  { title: "Hello World", link: "/chapters/fable/hello-world" },
                   { title: "Development Mode", link: "/chapters/fable/development-mode" },
-                  { title: "Counter Application", link: "/chapters/fable/counter" }, 
-                  { title: "Observations", link: "/chapters/fable/observations" }, 
+                  { title: "Counter Application", link: "/chapters/fable/counter" },
+                  { title: "Observations", link: "/chapters/fable/observations" },
                   { title: "Compatibility with .NET", link: "/chapters/fable/compatibility" },
                   { title: "Fable Packages", link: "/chapters/fable/fable-packages" },
                   { title: "Fable Bindings", link: "/chapters/fable/fable-bindings" },
@@ -56,9 +56,10 @@
             }, {
               title: "The Elm Architecture",
               links: [
-                { title: "Introduction", link: "/chapters/elm/" }, 
+                { title: "Introduction", link: "/chapters/elm/" },
                 { title: "The Elm Architecture", link: "/chapters/elm/the-architecture" },
-                { title: "Counter with Elmish", link: "/chapters/elm/counter" }, 
+                { title: "Counter with Elmish", link: "/chapters/elm/counter" },
+                { title: "Rendering HTML", link: "/chapters/elm/render-html" },
                 { title: "Conditional Rendering", link: "/chapters/elm/conditional-rendering" },
                 { title: "Using CSS", link: "/chapters/elm/using-css" },
                 { title: "Text Inputs and Check Boxes", link: "/chapters/elm/form-inputs" },
@@ -70,6 +71,11 @@
                 { title: "To-Do List Application: Exercises", link: "/chapters/elm/todo-app-exercises" },
                 { title: "Basic Elmish Project Structure", link: "/chapters/elm/project-structure" }
               ]
+            }, {
+                title: "Commands In Elmish",
+                links: [
+                    { title: "Introduction", link: "/chapters/commands/" }
+                ]
             }
         ]
       });
