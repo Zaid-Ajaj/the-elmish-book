@@ -15,5 +15,36 @@ val update : Msg -> State -> State * Cmd<Msg>
 // Computes how the user interface looks like based on the current state
 val render : State -> (Msg -> unit) -> ReactElement
 ```
-Here `render` has the same signature but `init` and `update` now return a tuple `State * Cmd<Msg>`. This means when initialising or updating the state, we don't just return state but also a command. This command executes a side-effect which in turn may trigger other event at some point in the future.
+Here `render` has the same signature but `init` and `update` now return a tuple of the type `State * Cmd<Msg>`. This means when initialising or updating the state, we don't just return a state but also a command. This command is a function that may trigger (i.e. dispatch) a message.
 
+### Counter With Commands
+The Elmish library includes many built-in commands under the `Cmd` module. A very useful command is `Cmd.none` which is a command that doesn't do anything, i.e. doesn't dispatch any message. Following here is the [Counter](/chapters/elm/counter.md) example but with commands:
+
+```fsharp {highlight: [9, 13, 14, 23]}
+open Elmish
+
+type State = { Count : int }
+
+type Msg =
+  | Increment
+  | Decrement
+
+let init() = { Count = 0 }, Cmd.none
+
+let update msg state =
+    match msg with
+    | Increment -> { state with Count = state.Count + 1 }, Cmd.none
+    | Decrement -> { state with Count = state.Count - 1 }, Cmd.none
+
+let render state dispatch =
+    div [ ] [
+        h1 [ ] [ ofInt state.Count ]
+        button [ OnClick (fun _ -> dispatch Increment) ] [ str "Increment" ]
+        button [ OnClick (fun _ -> dispatch Decrement) ] [ str "Decrement" ]
+    ]
+
+Program.mkProgram init update render
+|> Program.withReactSynchronous "elmish-app"
+|> Program.run
+```
+Notice above a couple of things: returning `Cmd.none` as the second item of the tuple when returning the state, both in `init` and `update` functions. Also the use of `Program.mkProgram` instead of `Program.mkSimple` to construct an Elmish program that has commands.
