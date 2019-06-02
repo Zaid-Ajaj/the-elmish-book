@@ -17,4 +17,9 @@ One caveat though, the type above in Elmish is technically *not* exactly of type
 ```fsharp
 let none : Cmd<Msg> = Cmd.ofSub (fun (dispatch: Msg -> unit) -> ())
 ```
-From now I will be using `Cmd.ofSub` when implementing our own commands.
+
+<div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
+The current container type for commands is a list. This means the Cmd.ofSub just takes the input function and puts in a list and it becomes a proper command. However, this is an implementation detail that *we*, consumers of the library, shouldn't be concerned with.
+</div>
+
+Although there are many built-in commands in the `Cmd` module, I have decided that we will write the commands we need from *scratch* because this is the best way to learn and understand them. In my experience commands are always seen as black boxes without really knowing what is going on under the hood. I want to remedy that by tackling them on a neccesity basis: no abstractions will be used unless needed.
