@@ -4,7 +4,7 @@ A command in Elmish is a function with side-effects that can trigger events into
 ```fsharp
 val command : Cmd<'Msg>
 ```
-This type signifies that the value `command` is a command that can trigger events of type `'Msg`. An Elmish program using `Cmd<Msg>` is no longer a "simple program" and has an extended definition of the triplet `init`, `update` and `render`:
+This type signifies that the value `command` is a command that can trigger events of type `'Msg`. An Elmish program using `Cmd<'Msg>` is no longer a "simple program" and has an extended definition of the triplet `init`, `update` and `render`:
 ```fsharp
 // Returns the initial state along with an initial command to execute
 val init : unit -> State * Cmd<Msg>

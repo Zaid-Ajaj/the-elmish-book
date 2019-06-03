@@ -4,13 +4,15 @@ Consider the signature of the `update` function:
 ```fsharp
 val update : Msg -> State -> State * Cmd<Msg>
 ```
-`update` is by definition a synchronous function: it returns the next state *immediately*. Synchoronous state updates are known to be easier to think about and easier to unit-test. This requirement is enforced by The Elm Architecture. Consequently, asynchronous state updates are simply not possible to do in the `update` function.
+`update` is by definition a synchronous function: it returns the next state *immediately*. This requirement is enforced by The Elm Architecture which means that asynchronous state updates are simply not possible to do in the `update` function.
 
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 Asynchronous operations are any operation that will take some *time* to finish such as timer delays or HTTP requests.
 </div>
 
-Instead of updating the state asynchronously, we utilize commands to issue separate events: one is triggered in the beginning of the asynchronous operation and another issued at the end of operation. Updating the state in reaction to the "delayed" message, i.e. the latter event, simulates an asynchronous update.
+Instead of updating the state asynchronously, we utilize commands to issue separate events: one is triggered in the beginning of the asynchronous operation and another issued at the end of the operation. Updating the state in reaction to the "delayed" message, i.e. the latter event, simulates an asynchronous update. The consequence is that state updates stay synchronous but the *dispatching* of events is done asynchronously.
+
+Why is it like this in Elmish I hear you say? Synchoronous state updates are very easy both in implementation and in the way we think about them. Asynchronous updates on the other hand can become very tricky to implement and concurrent updates can lead to very "interesting" bugs. Not to mention that synchronous updates are a lot easier to unit test.
 
 Let's see this in action, consider the following counter application where it has a "delayed increment" button. Clicking this button will update the state after a delay of one second, this is an example of an asynchronous update:
 

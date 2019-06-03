@@ -14,7 +14,7 @@ val render : State -> (Msg -> unit) -> ReactElement
 ```
 Here, `State` represents the the type that holds data we want to keep track of while the application is running and `Msg` encodes the different events that can be triggered.
 
-Notice here when we mention "events" we are talking about events that are triggered from the user interface. This is because the only way we can trigger an event is by using the `dispatch` function available as an argument of `render`:
+When we mention "events" we are talking about events that are triggered from the user interface. This is because the only way we can trigger an event is by using the `dispatch` function available as an argument of `render`:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
     button [ OnClick (fun _ -> dispatch Clicked) ] [
@@ -23,7 +23,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 ```
 We say a function "can trigger events" because "it has control over the dispatch function". When you break the `render` function in smaller pieces, you pass the `dispatch` function over to these smaller parts so that they too can trigger events, i.e. they have control over the dispatch function.
 
-Following from the definition of a "simple program" is the fact that only `render` can trigger events. This means that nothing can happen in the application unless the user interacts with elements on the page. This might make sense for very simple and limited applications like the ones we built in the previous chapter. We even constructed the program using the function `mkSimple`, which is short for "make simple":
+Following from the definition of a "simple program" is the fact that only `render` can trigger events. This means that nothing can happen in the application unless the user interacts with elements on the page. Moreover, the signature of the `update` function is synchronous by nature which means updating the state from asynchronous operations is not accounted for. This might make sense for very simple and limited applications like the ones we built in the previous chapter. We even constructed the program using the function `mkSimple`, which is short for "make simple":
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
