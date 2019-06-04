@@ -56,7 +56,7 @@ let update msg state =
     | IncrementDelayed -> state, delayedMsg 1000 Increment
     | DecrementDelayed -> state, delayedMsg 1000 Decrement
 ```
-But we are not done yet, if you examine the function `delayedMsg` again you will notice that we are hardcoding something: the delay itself with the `Async.Sleep` function:
+But we are not done yet, if you examine the function `delayedMsg` again you will notice that we are hardcoding some functionality: the `Async.Sleep` function itself
 ```fsharp {highlight: [4]}
 let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
     let incrementDelayedCmd (dispatch: Msg -> unit) : unit =
@@ -87,7 +87,7 @@ let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
 ```
 Here `delayedMsg` is rewritten in terms of another function `delayedSleepMsg`, that function takes two inputs of type `Async<unit>` and `Msg`, simply dispatching the input `Msg` after `sleep` finishes.
 
-We are almost there because we can now combine `Async<unit>` and `Msg` into a generic `Async<Msg>`: an async operation that returns the message that will dispatched:
+We are almost there because we can now combine `Async<unit>` and `Msg` into a single parameter of type `Async<Msg>` to make up the function that takes `Async<Msg>` to `Cmd<Msg>`:
 ```fsharp
 let fromAsync (operation: Async<Msg>) : Cmd<Msg> =
     let delayedCmd (dispatch: Msg -> unit) : unit = =
@@ -99,6 +99,36 @@ let fromAsync (operation: Async<Msg>) : Cmd<Msg> =
         Async.StartImmediate delayedDispatch
 
     Cmd.ofSub delayedCmd
-
-let delayedMsg (delay: int) (msg: Msg) : Cmd
 ```
+There we have it! Now we can take any async operation that returns a *message* and turn into a command, dispatching that message as a result of the async operation. The function `delayedMsg` can now be re-written in terms of `fromAsync`:
+```fsharp
+let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
+    let delay = async {
+        do! Async.Sleep delay
+        return msg
+    }
+
+    fromAsync delay
+```
+### Making `fromAsync` a library function
+We implemented `fromAsync` to take a concrete `Msg` type, if you had named your `Msg` something else like `Event` or `Message` then you would need to change the function signature as well. A better approach is to modify the function slightly and make it a *generic* function for some type `'msg` such that you could use it across your projects:
+```fsharp
+let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
+    let delayedCmd (dispatch: 'msg -> unit) : unit = =
+        let delayedDispatch = async {
+            let! msg = operation
+            dispatch msg
+        }
+
+        Async.StartImmediate delayedDispatch
+
+    Cmd.ofSub delayedCmd
+```
+You could even add it as an extension of the existing `Cmd` module:
+```fsharp
+module Cmd =
+    let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
+        (* implementation here *)
+```
+
+### Accounting for failures in asynchronous operations
