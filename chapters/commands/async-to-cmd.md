@@ -138,25 +138,3 @@ module Cmd =
 
         Cmd.ofSub delayedCmd
 ```
-
-### Accounting for failures in asynchronous operations
-
-The function `Cmd.fromAsync` we implemented above works nicely when the `Async<'t>` are pure and they can't possibly fail such as `async { return Increment }` but in F# it possible to throw exceptions inside `async` expressions and `Cmd.fromAsync` doesn't account for it.
-
-When creating a command from an `Async<'t>` that can fail, we treat this failure as an event: in case of failure, dispatch a message to communicate back to the Elmish program that something went wrong, in which case you could change the state and re-render to tell the user that something went wrong.
-
-Here is one possible implementation of an async command that handles errors:
-```fsharp
-let fromAsyncSafe (operation: Async<Msg>) (onError: exn -> Msg) : Cmd<Msg> =
-    let delayedCmd (dispatch: Msg -> unit) : unit =
-        let delayedDispatch = async {
-            match! Async.Catch operation with
-            | Choice1Of2 msg -> dispatch msg
-            | Choice2Of2 error -> dispatch (onError error)
-        }
-
-        Async.StartImmediate delayedDispatch
-
-    Cmd.ofSub delayedCmd
-```
-Here `fromAsyncSafe` takes another parameter `onError : exn -> Msg` which maps an exception (if it occurs) to a message that will eventually be dispatched back into the dispatch loop and your program can handle it.
