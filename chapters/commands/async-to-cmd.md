@@ -1,6 +1,8 @@
 # From `Async<'t>` to `Cmd<'t>`
 
-In the previous section, we implemented a command that dispatches a message after a delay. A delay is one example of an asynchronous operation. In F# we usually encode these operations using `Async<'t>` expressions. Instead of creating custom commands every time we use `Async<'t>`, we can try to abstract it away into generic commands that convert `Async<'t>` to `Cmd<'t>`. Let's take the example from last example and put it in it's own function, say `incrementDelayed()`:
+In the previous section, we implemented a command that dispatches a message after a delay. A delay is one example of an asynchronous operation. In F# we usually encode these operations using `Async<'t>` expressions.
+
+Instead of creating custom commands every time we use `Async<'t>`, we can try to abstract it away into generic commands that convert any `Async<'t>` to `Cmd<'t>`. Let's take the example from last example and put it in it's own function, say `incrementDelayed()`:
 ```fsharp
 let incrementDelayed() : Cmd<Msg> =
     let incrementDelayedCmd (dispatch: Msg -> unit) : unit =
@@ -26,7 +28,7 @@ let incrementDelayed (delay: int) (msg: Msg) : Cmd<Msg> =
 
     Cmd.ofSub incrementDelayedCmd
 ```
-Now the function shouldn't be called `incrementDelayed` anymore because the message is parameterized and isn't necessarily the `Increment` message anymore. Maybe `delayedMsg` is more appropriate?
+Now the function shouldn't be called `incrementDelayed` anymore because the message is parameterized and isn't necessarily `Increment` anymore. Maybe `delayedMsg` is more appropriate?
 ```fsharp
 let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
     let incrementDelayedCmd (dispatch: Msg -> unit) : unit =
@@ -69,12 +71,12 @@ let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
 
     Cmd.ofSub incrementDelayedCmd
 ```
-Since `delay` and `Async.Sleep` are used together, we can extract both of them away in a parameter such that `delayedMsg` can be rewritten as follows:
+The functionality of `Async.Sleep` can also be extracted into a parameter:
 ```fsharp {highlight: [4, 13]}
 let delayedSleepMsg (sleep: Async<unit>) (msg: Msg) : Cmd<Msg> =
     let delayedCmd (dispatch: Msg -> unit) : unit =
         let delayedDispatch = async {
-            do! sleep()
+            do! sleep
             dispatch msg
         }
 
@@ -85,9 +87,7 @@ let delayedSleepMsg (sleep: Async<unit>) (msg: Msg) : Cmd<Msg> =
 let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
     delayedSleepMsg (Async.Sleep delay) msg
 ```
-Here `delayedMsg` is rewritten in terms of another function `delayedSleepMsg`, that function takes two inputs of type `Async<unit>` and `Msg`, simply dispatching the input `Msg` after `sleep` finishes.
-
-We are almost there because we can now combine `Async<unit>` and `Msg` into a single parameter of type `Async<Msg>` to make up the function that takes `Async<Msg>` to `Cmd<Msg>`:
+Here `delayedMsg` is rewritten in terms of another function `delayedSleepMsg`, that function takes two inputs of type `Async<unit>` and `Msg`, simply dispatching the input `Msg` after `sleep` finishes. But this `delayedSleepMsg` is quite ugly and doesn't seem really useful since the `sleep` can be anything. The parameters are begging to be combined into a single `Async<Msg>`:
 ```fsharp
 let fromAsync (operation: Async<Msg>) : Cmd<Msg> =
     let delayedCmd (dispatch: Msg -> unit) : unit = =
@@ -128,7 +128,35 @@ You could even add it as an extension of the existing `Cmd` module:
 ```fsharp
 module Cmd =
     let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
-        (* implementation here *)
+        let delayedCmd (dispatch: 'msg -> unit) : unit =
+            let delayedDispatch = async {
+                let! msg = operation
+                dispatch msg
+            }
+
+            Async.StartImmediate delayedDispatch
+
+        Cmd.ofSub delayedCmd
 ```
 
 ### Accounting for failures in asynchronous operations
+
+The function `Cmd.fromAsync` we implemented above works nicely when the `Async<'t>` are pure and they can't possibly fail such as `async { return Increment }` but in F# it possible to throw exceptions inside `async` expressions and `Cmd.fromAsync` doesn't account for it.
+
+When creating a command from an `Async<'t>` that can fail, we treat this failure as an event: in case of failure, dispatch a message to communicate back to the Elmish program that something went wrong, in which case you could change the state and re-render to tell the user that something went wrong.
+
+Here is one possible implementation of an async command that handles errors:
+```fsharp
+let fromAsyncSafe (operation: Async<Msg>) (onError: exn -> Msg) : Cmd<Msg> =
+    let delayedCmd (dispatch: Msg -> unit) : unit =
+        let delayedDispatch = async {
+            match! Async.Catch operation with
+            | Choice1Of2 msg -> dispatch msg
+            | Choice2Of2 error -> dispatch (onError error)
+        }
+
+        Async.StartImmediate delayedDispatch
+
+    Cmd.ofSub delayedCmd
+```
+Here `fromAsyncSafe` takes another parameter `onError : exn -> Msg` which maps an exception (if it occurs) to a message that will eventually be dispatched back into the dispatch loop and your program can handle it.

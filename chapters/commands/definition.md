@@ -12,7 +12,7 @@ let none (dispatch: Msg -> unit) : unit = ()
 ```
 Yup, that's it!
 
-One caveat though, the type above in Elmish is technically *not* exactly of type `Cmd<'Msg>`. To make it a proper `Cmd<'Msg>` you need to *lift* the command into it's appropriate container type. The library function `Cmd.ofSub` does exactly that:
+One caveat though, the type `(Msg -> unit) -> unit` in Elmish is technically *not* exactly of type `Cmd<'Msg>`. To make it a proper `Cmd<'Msg>` you need to *lift* the command into it's appropriate container type. The library function `Cmd.ofSub` does exactly that:
 
 ```fsharp
 let none : Cmd<Msg> = Cmd.ofSub (fun (dispatch: Msg -> unit) -> ())
