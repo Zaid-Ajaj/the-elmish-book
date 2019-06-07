@@ -166,3 +166,59 @@ let update msg state =
         let nextState = { state with Loading = false; Value = Error errorMsg }
         nextState, Cmd.none
 ```
+
+### Final Implementation
+
+Now we know that there at least two types of async expressions:
+ - Pure that don't fail
+ - Impure that can throw exceptions
+
+We handled the former using `Cmd.fromAsync` and the latter using `Cmd.fromAsyncSafe`. However, `Cmd.fromAsync` can still fail if we give it a failing impure async expression by mistake. If our intenion is that the expression used with `Cmd.fromAsync` should *always* return and not fail then `Cmd.fromAsync` should *never* throw either: ignoring exceptions if they occur
+```fsharp {highlight: [6]}
+let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
+    let delayedCmd (dispatch: 'msg -> unit) : unit =
+        let delayedDispatch = async {
+            match! Async.Catch operation with
+            | Choice1Of2 msg -> dispatch msg
+            | Choice2Of2 error -> ignore()
+        }
+
+        Async.StartImmediate delayedDispatch
+
+    Cmd.ofSub delayedCmd
+```
+As for `Cmd.fromAsyncSafe` it is OK and does what it should do. However, you might not like the API that there is a "loose" error handler `onError` as a parameter of the function. Another way of modelling the success or failure of the operation is using the `Result` type in F# that can represnt the success or failure of the operation:
+```fsharp
+let fromAsyncSafe (operation: Async<'t>) (hanlder: Result<'t, exn> -> 'msg) : Cmd<'msg> =
+    let delayedCmd (dispatch : 'msg -> unit) : unit =
+        let delayedDispatch = async {
+            match! Async.Catch operation with
+            // success
+            | Choice1Of2 msg -> dispatch (handler (Ok msg))
+            // error
+            | Choice2Of2 ex -> dispatch (handler (Error ex))
+        }
+
+        Async.StartImmediate delayedDispatch
+
+    Cmd.ofSub delayedCmd
+```
+Notice here that operation `Async<'t>` doens't necessarily return a message, instead it returns a value that the `handler` will turn into a message which is dispatch subsequently. The same happens if an exception is thrown, `handler` turns the error into a message that gets dispatched afterwards. Here is an example of using the function:
+```fsharp
+let handler = function
+    | Ok number -> RandomNumberSuccesfullyGenerated number
+    | Error ex -> FailedToGenerateRandomNumber ex.Message
+
+let randomOp : Async<float> =
+    async {
+      do! Async.Sleep 1000
+      let random = rnd.NextDouble()
+      if random > 0.5 then
+        return random
+      else
+        return! failwithf "Could not generate a 'good' random number: %f" random
+    }
+
+let nextCmd = Cmd.fromAsyncSafe randomOp handler
+```
+Here the async expression `randomOp` is of type `Async<float>` and not `Async<Msg>` it is the job of the `handler` to convert the *result* of that operation (whether succeeding or failing) into a message like it is doing in the above example. This message is eventually dispatched back into the program and be reacted upon.
