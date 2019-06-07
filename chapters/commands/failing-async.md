@@ -20,7 +20,7 @@ let fromAsyncSafe (operation: Async<Msg>) (onError: exn -> Msg) : Cmd<Msg> =
 ```
 Here `fromAsyncSafe` is very similar to `Cmd.fromAsync` except that it takes another parameter `onError : exn -> Msg` which maps an exception (if any occur) to a message that will eventually be communicated back into the dispatch loop and your program can handle it.
 
-Let's implement an example program that has a possibly failing operation. Remember that failure is something we want to account for and react upon when it happens. This means we need to have messages that convey the fact the something failed.
+Let's implement an example program that has a possibly failing operation. Remember that failure is something we want to account for and react upon when it happens. This means we need to dispatch messages that convey the fact the something failed. These messages typically contain information about failure which is usually an exception but could also be a simple error message of type string.
 
 Here I thought of a simple async operation that generates a random number between 0.0 and 1.0 after a delay, if then number is less than 0.5 then the operation fails and an exception is thrown but otherwise a normal message is dispatched.
 
@@ -109,3 +109,60 @@ The example looks like this:
     <resolved-image source="/images/commands/failing-random.gif" />
   </div>
 </div>
+
+### Avoid Throwing Exceptions
+
+We were able to handle an exception that was thrown during the execution of the asynchronous operation and dispatch an event in reaction to it. However, this was an incorrect use of error handling with commands because we are catching an exception that we threw ourselves, just to extract the exception message out of it in the `update` function. If you think about it we are just using exception handling as means to control the flow of the function, jumping into the "failure" state directly. This is of course not what exceptions are for: we handle exceptions to gain control over operations which can throw *unexpectedly*.
+
+Let's refactor the program above to eliminate the use of exceptions. First of all, the event that signals the failure should not take an exception anymore as input. Instead, we will use a string that will represent the error message:
+```fsharp {highlight: [4]}
+type Msg =
+  | GenerateRandomNumber
+  | RandomNumberSuccesfullyGenerated of float
+  | FailedToGenerateRandomNumber of string
+```
+Next, the async operation `randomOp` can refactored into:
+```fsharp
+// pure async expression -> does not throw
+let randomOp : Async<Msg> = async {
+    do! Async.Sleep 1000
+    let random = rnd.NextDouble()
+    if random > 0.5 then
+      return RandomNumberSuccesfullyGenerated random
+    else
+      let errorMsg = (sprintf "Could not generate a 'good' random number: %f" random)
+      return FailedToGenerateRandomNumber errorMsg
+}
+```
+Finally we don't need to use `Cmd.ofAsyncSafe`, instead `Cmd.fromAsync` should be enough to handle the async expression becuase it is now pure and doesn't throw. The rest of the `update` becomes stays the same, and it becomes:
+```fsharp {highlight: [14, 15, 27, 28]}
+let rnd = System.Random()
+
+let update msg state =
+    match msg with
+    | GenerateRandomNumber when state.Loading -> state, Cmd.none
+
+    | GenerateRandomNumber ->
+        let randomOp : Async<Msg> = async {
+            do! Async.Sleep 1000
+            let random = rnd.NextDouble()
+            if random > 0.5 then
+              return RandomNumberSuccesfullyGenerated random
+            else
+              let errorMsg = (sprintf "Could not generate a 'good' random number: %f" random)
+              return FailedToGenerateRandomNumber errorMsg
+        }
+
+        let nextCmd = Cmd.fromAsync randomOp
+        let nextState = { state with Loading = true }
+
+        nextState, nextCmd
+
+    | RandomNumberSuccesfullyGenerated number ->
+        let nextState = { state with Loading = false; Value = Ok number }
+        nextState, Cmd.none
+
+    | FailedToGenerateRandomNumber errorMsg ->
+        let nextState = { state with Loading = false; Value = Error errorMsg }
+        nextState, Cmd.none
+```
