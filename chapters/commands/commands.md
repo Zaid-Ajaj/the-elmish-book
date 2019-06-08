@@ -1,6 +1,6 @@
 # Elmish Commands
 
-A command in Elmish is a function with side-effects that can trigger events into the dispatch loop. Being able to trigger events means that a command has control over a dispatch function. Before we dive into examples and implementation, let us look at the signature of an Elmish command:
+A command in Elmish is a function that can trigger events into the dispatch loop. Being able to trigger events means that a command has control over a dispatch function. Before we dive into examples and implementation, let us look at the signature of an Elmish command:
 ```fsharp
 val command : Cmd<'Msg>
 ```
@@ -15,7 +15,7 @@ val update : Msg -> State -> State * Cmd<Msg>
 // Computes how the user interface looks like based on the current state
 val render : State -> (Msg -> unit) -> ReactElement
 ```
-Here `render` has the same signature but `init` and `update` now return a tuple of the type `State * Cmd<Msg>`. This means when initialising or updating the state, we don't just return a state but also a command. This command is a function that may trigger (i.e. dispatch) a message.
+Here `render` has the same signature but `init` and `update` now return a tuple of the type `State * Cmd<Msg>`. This means when initializing or updating the state, we don't just return a state but also a command. This command is a function that may trigger (i.e. dispatch) a message.
 
 ### Counter With Commands
 The Elmish library includes many built-in commands under the `Cmd` module. A very useful command is `Cmd.none` which is a command that doesn't do anything, i.e. doesn't dispatch any message. Following here is the [Counter](/chapters/elm/counter.md) example but with commands:
