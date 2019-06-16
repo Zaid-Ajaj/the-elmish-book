@@ -12,7 +12,7 @@ Asynchronous operations are any operation that will take some *time* to finish s
 
 Instead of updating the state asynchronously, we utilize commands to issue separate events: one is triggered in the beginning of the asynchronous operation and another issued at the end of the operation. Updating the state in reaction to the "delayed" message, i.e. the latter event, simulates an asynchronous update. The consequence is that state updates stay synchronous but the *dispatching* of events is done asynchronously.
 
-Why is it like this in Elmish I hear you say? Synchoronous state updates are very easy both in implementation and in the way we think about them. Asynchronous updates on the other hand can become very tricky to implement and concurrent updates can lead to very "interesting" bugs. Not to mention that synchronous updates are a lot easier to unit test.
+Why is it like this in Elmish I hear you say? Synchronous state updates are very easy both in implementation and in the way we think about them. Asynchronous updates on the other hand can become very tricky to implement and concurrent updates can lead to very "interesting" bugs. Not to mention that synchronous updates are a lot easier to unit test.
 
 Let's see this in action, consider the following counter application where it has a "delayed increment" button. Clicking this button will update the state after a delay of one second, this is an example of an asynchronous update:
 

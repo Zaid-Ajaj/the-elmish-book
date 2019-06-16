@@ -1,6 +1,6 @@
 # Basic Elmish Project Structure
 
-We have talked about how Elmish makes use of the native React javascript library to handle the user interface part of the The Elm Architecture, but how are these libraries connected and what makes the project structure of [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository different than that of [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) we used in the very first Hello World example? 
+We have talked about how Elmish makes use of the native React Javascript library to handle the user interface part of the The Elm Architecture, but how are these libraries connected and what makes the project structure of [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository different than that of [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) we used in the very first Hello World example?
 
 To answer the question, we take a look at the `App.fsproj` of an Elmish project:
 ```xml {highlight: [9]}

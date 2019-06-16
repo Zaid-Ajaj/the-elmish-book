@@ -1,6 +1,6 @@
 # What Are Commands?
 
-I will spare you the confusion and vagueness of metaphores of commands, let's just get to the implementation already because it is a lot simpler than one might think in the beginning. A command is *essentially* a function takes a `dispatch` function as input and returns `unit`:
+I will spare you the confusion and vagueness of metaphors of commands, let's just get to the implementation already because it is a lot simpler than one might think in the beginning. A command is *essentially* a function takes a `dispatch` function as input and returns `unit`:
 ```fsharp
 //           dispatch function
 //                 ↓
