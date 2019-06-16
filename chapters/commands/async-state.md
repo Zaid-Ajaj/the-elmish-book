@@ -142,7 +142,7 @@ To see both in action, let's rewrite the random number generator program but wit
 Like always, we start with `State` and `Msg`:
 ```fsharp
 type State = {
-  RandomNumber : Deferred<double, string>
+  RandomNumber : Deferred<Result<double, string>>
 }
 
 type Msg =
@@ -184,7 +184,26 @@ let update msg state =
         nextState, Cmd.none
 ```
 The first case that handles `GenerateRandomNumber Started` disallows from issuing a new command if one is already in progress, otherwise async operation will be started by issuing a command. Once the command is issued, the state of the operation `RandomNumber` turns into the `InProgress` mode. Finally when the operation finished with a result, we simply put that result in the `Resolved` state of the operation. In fact, the last two cases can be simplified into the following:
-```fsharp
+```fsharp {highlight: [20, 21, 22]}
+let rnd = System.Random()
+
+let update msg state =
+    match msg with
+    | GenerateRandomNumber Started when state.RandomNumber = InProgress -> state, Cmd.none
+
+    | GenerateRandomNumber Started ->
+        let randomOp : Async<Msg> = async {
+          do! Async.Sleep 1000
+          let random = rnd.NextDouble()
+          if random > 0.5 then
+            return GenerateRandomNumber (Finished (Ok random))
+          else
+            let errorMsg = sprintf "Failed! Random number %f was < 0.5" random
+            return GenerateRandomNumber (Finished (Error errorMsg))
+        }
+
+        { state with RandomNumber = InProgress }, Cmd.fromAsync randomOp
+
     | GenerateRandomNumber (Finished result) ->
         let nextState = { state with RandomNumber = Resolved result }
         nextState, Cmd.none
@@ -210,3 +229,18 @@ let render (state: State) (dispatch: Msg -> unit) =
            [ str "Generate Random" ]
   ]
 ```
+
+### Conclusion
+
+Getting the types right makes writing Elmish application pleasant as you account for the different states of the application using proper discriminated unions such as `Deferred<'t>` and `AsyncEventOperation<'t>` that work together really well:
+```
+type Deferred<'t> =
+  | HasNotStartedYet
+  | InProgress
+  | Resolved of 't
+
+type AsyncOperationEvent<'t> =
+  | Started
+  | Finished of 't
+```
+When you use these in your application, feel free to change the terminology to your and to your team's liking as the as names of the types and the separate union cases is not as important as the concepts they represent. I personally find the name `Deferred<'t>` to be OK, but I am not entirely convinced about the naming pf `AsyncOperationEvent<'t>`. In any case, we will be using these types in the next sections when we start working with Http.
