@@ -22,4 +22,8 @@ let none : Cmd<Msg> = Cmd.ofSub (fun (dispatch: Msg -> unit) -> ())
 The current container type for commands is a list. This means the Cmd.ofSub just takes the input function and puts in a list and it becomes a proper command. However, this is an implementation detail that *we*, consumers of the library, shouldn't be concerned with.
 </div>
 
+Another simple command is one that simply dispatches a message immediately:
+```fsharp
+let ofMsg (msg: Msg) : Cmd<Msg> = Cmd.ofSub (fun (dispatch: Msg -> unit) -> dispatch msg)
+```
 Although there are many built-in commands in the `Cmd` module, I have decided that we will write the commands we need from *scratch* because this is the best way to learn and understand them.
