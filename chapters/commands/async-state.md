@@ -21,7 +21,7 @@ The union cases `StartOperationOne`, `FinishOperationOneSuccesfully` and `Finish
 
 ### Operations that always succeed
 Events for operations of type (1) can be encoded in a type. Since an asynchronous operation almost always is coupled with a a start and finish events, then we could describe such types nicely as a discriminated union where the finish event carries information about the result of the operation:
-```
+```ocaml
 type AsyncOperationEvent<'t> =
     | Started
     | Finished of 't
@@ -121,7 +121,7 @@ We can deduce from these questions that for any given asynchronous operation, it
  - Finished with an error
 
 These cases map nicely into a discriminated union that I will generically call `Deferred<'t>`. This type describes the state of any asynchronous operation that generates `'t` when it finishes:
-```
+```ocaml
 type Deferred<'t> =
     | HasNotStartedYet
     | InProgress
@@ -233,7 +233,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 ### Conclusion
 
 Getting the types right makes writing Elmish application pleasant as you account for the different states of the application using proper discriminated unions such as `Deferred<'t>` and `AsyncEventOperation<'t>` that work together really well:
-```
+```ocaml
 type Deferred<'t> =
   | HasNotStartedYet
   | InProgress
@@ -243,4 +243,4 @@ type AsyncOperationEvent<'t> =
   | Started
   | Finished of 't
 ```
-When you use these in your application, feel free to change the terminology to your and to your team's liking as the as names of the types and the separate union cases is not as important as the concepts they represent. I personally find the name `Deferred<'t>` to be OK, but I am not entirely convinced about the naming pf `AsyncOperationEvent<'t>`. In any case, we will be using these types in the next sections when we start working with Http.
+When you use these in your application, feel free to change the terminology to your and to your team's liking as the as names of the types and the separate union cases is not as important as the concepts they represent. I personally find the name `Deferred<'t>` to be OK, but I am not entirely convinced about the naming pf `AsyncOperationEvent<'t>`. In any case, we will be using these types in the next sections when we start working with HTTP.

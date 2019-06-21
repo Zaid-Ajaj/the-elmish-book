@@ -134,7 +134,7 @@ let randomOp : Async<Msg> = async {
       return FailedToGenerateRandomNumber errorMsg
 }
 ```
-Finally we don't need to use `Cmd.ofAsyncSafe`, instead `Cmd.fromAsync` should be enough to handle the async expression becuase it is now pure and doesn't throw. The rest of the `update` becomes stays the same, and it becomes:
+Finally we don't need to use `Cmd.fromAsyncSafe`, instead `Cmd.fromAsync` should be enough to handle the async expression because it is now pure and doesn't throw. The rest of the `update` becomes stays the same, and it becomes:
 ```fsharp {highlight: [14, 15, 27, 28]}
 let rnd = System.Random()
 
@@ -173,8 +173,8 @@ Now we know that there at least two types of async expressions:
  - Pure that don't fail
  - Impure that can throw exceptions
 
-We handled the former using `Cmd.fromAsync` and the latter using `Cmd.fromAsyncSafe`. However, `Cmd.fromAsync` can still fail if we give it a failing impure async expression by mistake. If our intenion is that the expression used with `Cmd.fromAsync` should *always* return and not fail then `Cmd.fromAsync` should *never* throw either: ignoring exceptions if they occur
-```fsharp {highlight: [6]}
+We handled the former using `Cmd.fromAsync` and the latter using `Cmd.fromAsyncSafe`. However, `Cmd.fromAsync` can still fail if we give it a failing impure async expression by mistake. If our intention is that the expression used with `Cmd.fromAsync` should *always* return and not fail then `Cmd.fromAsync` should *never* throw either: ignoring exceptions if they occur
+```ocaml {highlight: [6]}
 let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
     let delayedCmd (dispatch: 'msg -> unit) : unit =
         let delayedDispatch = async {
@@ -187,8 +187,8 @@ let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
 
     Cmd.ofSub delayedCmd
 ```
-As for `Cmd.fromAsyncSafe` it is OK and does what it should do. However, you might not like the API that there is a "loose" error handler `onError` as a parameter of the function. Another way of modelling the success or failure of the operation is using the `Result` type in F# that can represnt the success or failure of the operation:
-```fsharp
+As for `Cmd.fromAsyncSafe` it is OK and does what it should do. However, you might not like the API that there is a "loose" error handler `onError` as a parameter of the function. Another way of modelling the success or failure of the operation is using the `Result` type in F# that can represents the success or failure of the operation:
+```ocaml
 let fromAsyncSafe (operation: Async<'t>) (hanlder: Result<'t, exn> -> 'msg) : Cmd<'msg> =
     let delayedCmd (dispatch : 'msg -> unit) : unit =
         let delayedDispatch = async {
@@ -203,7 +203,7 @@ let fromAsyncSafe (operation: Async<'t>) (hanlder: Result<'t, exn> -> 'msg) : Cm
 
     Cmd.ofSub delayedCmd
 ```
-Notice here that operation `Async<'t>` doens't necessarily return a message, instead it returns a value that the `handler` will turn into a message which is dispatch subsequently. The same happens if an exception is thrown, `handler` turns the error into a message that gets dispatched afterwards. Here is an example of using the function:
+Notice here that operation `Async<'t>` doesn't necessarily return a message, instead it returns a value that the `handler` will turn into a message which is dispatch subsequently. The same happens if an exception is thrown, `handler` turns the error into a message that gets dispatched afterwards. Here is an example of using the function:
 ```fsharp
 let handler = function
     | Ok number -> RandomNumberSuccesfullyGenerated number
