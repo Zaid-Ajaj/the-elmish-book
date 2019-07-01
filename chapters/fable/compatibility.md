@@ -55,5 +55,3 @@ let usd = moneyFormatter "en-US" "USD"
 euro.format 1000.0 // € 1.000,00
 usd.format 1000.0 // $1,000.00
 ```
-
-The above snippet uses native javascript and is another example of a binding. Don't worry if you do not understand this right away because of the `Emit` attribute or the `jsNative` value, there will a whole chapter devoted to interoperability from Fable. The take away from this is that it is really simple and easy to use native functionality when needed.

@@ -62,7 +62,9 @@ async {
 
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 
-`Async.Sleep` with Fable is implemented using `setTimeout` under the hood, however the implementation is more advanced that it provides built-in support for cancellation 
+`Async.Sleep` with Fable is implemented using `setTimeout` under the hood, however the implementation is more advanced that it provides built-in support for cancellation.
+
+The above snippet uses native javascript. Don't worry if you do not understand this right away because of the `Emit` attribute or the `jsNative` value, there will a whole chapter devoted to interoperability from Fable. The take away from this is that it is really simple and easy to use native functionality when needed.
 
 </div>
 
