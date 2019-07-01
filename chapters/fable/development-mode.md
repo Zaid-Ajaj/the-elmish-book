@@ -36,4 +36,4 @@ The command `npm start` will start the development server, compiles the project 
 
 Once you start modifying your F# source code, only a subset of the project will be recompiled: the code you changed and other pieces and other pieces that depend on the code you changed. After a succesful recompilation cycle, the browser is refreshed. 
 
-These recompilation cycles are very fast, a lot faster that a full build and make for a pleasant development workflow. From now on, I will assume that we will be working in development mode. 
+These recompilation cycles are very fast, a lot faster than a full build and make for a pleasant development workflow. From now on, I will assume that we will be working in development mode. 

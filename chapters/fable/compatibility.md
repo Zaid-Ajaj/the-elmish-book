@@ -8,7 +8,7 @@ Supporting *all* of the base class library is not a goal of Fable and when certa
 
 Fable tries to support certain BCL functions and classes when *'it makes sense'* because Fable compiles F# with the idea in mind that the code will run inside a javascript runtime, like V8 in the browser or node.js on the server. In many cases, the APIs provided from the BCL don't work out of the box in these javascript environments. For example, multi-threading APIs within the `System.Threading.Tasks` namespace are not supported because javascript environments are usually single-threaded.
 
-Likewise, APIs from `System.IO` are not supported because javascript in the browser cannot access the file system by default. However, Javascript on the server *should* be able to access the file system and do all crazy things on the hosting machine and in such cases we will use javascript-specific APIs from node.js. Again, we would use a binding to the access these APIs, the binding `Fable.Node` covers most built-in modules from node.js.
+Likewise, APIs from `System.IO` are not supported because javascript in the browser cannot access the file system by default. However, Javascript on the server *should* be able to access the file system and do all crazy things on the hosting machine and in such cases we will use javascript-specific APIs from node.js. Again, we would use a binding to access these APIs, the binding `Fable.Node` covers most built-in modules from node.js.
 
 That said, there are many supported APIs from the base class library that Fable compiles while maintaining the same behavior you would expect if you were running the code from F# on dotnet. So let us go through a quick tour of these APIs.
 
@@ -37,7 +37,7 @@ Although the dotnet API for `Regex` is supported, the code compiles down to the 
 
 ### Globalization
 
-Although the numeric and date types are supported, the formatting APIs of these types using `CultureInfo` is *not*. There are a couple of reasons for this, most importantly is that such feature would inflate the bundle size of the generated javascript because it includes a lot of static information about the different `CultureInfo` instances: names of days, months, currencies, digit separators and a lot more that you most likely will never use. Besides the bundle size, implementing globalization from scratch is a daunting task with high maintenance costs. Luckily though, there exists native and standard globalization support in javascript runtimes, that, funny enough is called [Internalization](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl). Both browser and node.js that you can easily make use of through the interoperability features of Fable:
+Although the numeric and date types are supported, the formatting APIs of these types using `CultureInfo` is *not*. There are a couple of reasons for this, most importantly is that such feature would inflate the bundle size of the generated javascript because it includes a lot of static information about the different `CultureInfo` instances: names of days, months, currencies, digit separators and a lot more that you most likely will never use. Besides the bundle size, implementing globalization from scratch is a daunting task with high maintenance costs. Luckily though, there exists native and standard globalization support in javascript runtimes, that, funny enough is called [Internationalization](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl). In both browser and node.js you can easily make use of this through the interoperability features of Fable:
 
 ```fsharp
 open Fable.Core
@@ -55,5 +55,3 @@ let usd = moneyFormatter "en-US" "USD"
 euro.format 1000.0 // € 1.000,00
 usd.format 1000.0 // $1,000.00
 ```
-
-The above snippet uses native javascript and it is another example of a binding. Don't worry if you don't this right away because of the `Emit` attribute or the `jsNative` value, there will a whole chapter devoted to interoperability from Fable. The take away from this is that is it really simple and easy to use native functionality when needed.

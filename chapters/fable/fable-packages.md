@@ -14,7 +14,7 @@ From the template we started with in the [Hello World](hello-world.md) section, 
   </ItemGroup>
 </Project>
 ```
-Now take a closer look at the highlighted line: a package reference is included that points to `Fable.Browser.Dom`. This package was restored from [nuget](http://www.nuget.org). From dotnet's perspective it is a normal dotnet package but in fact this is a *Fable-specific* package and it is meant to only be used within Fable projects. Using this package, we were able to `open Browser.Dom` namespace and gain access to some of the browser's APIs, specifically the DOM APIs that allows us to reference and manipulate elements on the page, what make a Fable-specifc package different than those meant to be used from dotnet?
+Now take a closer look at the highlighted line: a package reference is included that points to `Fable.Browser.Dom`. This package was restored from [nuget](http://www.nuget.org). From dotnet's perspective it is a normal dotnet package but in fact this is a *Fable-specific* package and it is meant to only be used within Fable projects. Using this package, we were able to open the`Browser.Dom` namespace and gain access to some of the browser's APIs, specifically the DOM APIs that allows us to reference and manipulate elements on the page. What makes a Fable-specifc package different than those meant to be used from dotnet?
 
 ### Fable-specific Packages
 
