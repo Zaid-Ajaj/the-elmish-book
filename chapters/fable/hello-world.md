@@ -31,13 +31,13 @@ The most important parts of the template are these directories:
 - `package.json` is used by node.js to give information to the node package manager (npm for short) that allows it to identify the project as well as handle the project's *dependencies*
 - `webpack.config.js` will contain our "compiler configuration" with [webpack](https://webpack.js.org/). We will talk about Webpack in great detail at a later chapter because it is an advanced topic.
 
-The only F# source file in the project is `App.fs` and it contains the following:
+The only F# source file in the project is `App.fs` and it contains the following code:
 ```fsharp
 module App
 
 printfn "Hello world from Fable" 
 ```
-When the F# project is compiled using Fable, a single javascript file called `bundle.js` will be output in the `public` directory, the `bundle.js` file in turn, is referenced by `index.html` , also in the `public` directory:
+When the F# project is compiled using Fable, a single javascript file called `bundle.js` will be output in the `public` directory, the `bundle.js` file in turn, is referenced by `index.html`, also in the `public` directory:
 ```html {highlight:[9]}
 <!doctype html>
 <html>
@@ -51,7 +51,7 @@ When the F# project is compiled using Fable, a single javascript file called `bu
 </body>
 </html>
 ```
-Which F# project to compile and where the output goes is defined within the configuration file `webpack.config.js`, in the following snippet I have hightlighted the relevant configured options:
+Which F# project to compile and where the output goes is defined within the configuration file `webpack.config.js`, in the following snippet I have highlighted the relevant configured options:
 
 ```js {highlight:['5-9']}
 var path = require("path");
@@ -83,7 +83,7 @@ In order to get your F# code to run in the browser, you will first need to compi
 - [.NET Core](https://www.microsoft.com/net/download) 2.2 or later, both SDK and runtime
 - [Node.js](https://nodejs.org/en/) 10.0 or later
 
-Ofcourse having a code editor is not a requirement for building the project but rather for developement. To edit F# code, it is highly recommended to have [VS Code](https://code.visualstudio.com/) installed (along with the [Ionide](http://ionide.io/) extension).
+Of course having a code editor is not a requirement for building the project but rather for developement. To edit F# code, it is highly recommended to have [VS Code](https://code.visualstudio.com/) installed (along with the [Ionide](http://ionide.io/) extension).
 
 once you have installed both dotnet and node.js, you can verify that you have the correct versions by running these commands in your terminal:
 ```bash
@@ -159,8 +159,8 @@ printMsgButton.onclick <- fun eventArgs ->
 ```
 At line 3, we open the namespace `Browser.Dom`: this is the first example of a Fable *binding*: a library that allows our code to access native javascript API's. In the example above, we use `document` with which we can reference and manipulate elements on the page, see [full docs here](https://developer.mozilla.org/en-US/docs/Web/API/Document) of `document`. 
 
-Then at line 5, we ask `document` to give us a reference for the HTML element that has id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element: a function that will run when the button is clicked. 
+Then at line 5, we ask `document` to give us a reference for the HTML element that has the id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element: a function that will run when the button is clicked. 
 
-Now you can save `App.fs` and recompile using `build` or `./build.sh`, refresh the page and you should get something that looks like this:
+Now you can save `App.fs` and recompile using `npm run build`, refresh the page and you should get something that looks like this:
 
 <resolved-image source="/images/fable/button-click.gif" />

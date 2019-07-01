@@ -4,7 +4,7 @@ Let us now try to build something that not only has multiple elements, but also 
 
 <resolved-image source="/images/fable/counter.gif" />
 
-We will need buttons that change the contents of a text element every time you click one of them. To build this from the template, we will add two button tags to the `index.html` page and give them identities `"increase"` and `"decrease"`. We will also add a header element with id `"countViewer"` where we will show the current count, here is how  `index.html` will look like:
+We will need buttons that change the contents of a text element every time you click one of them. To build this from the template, we will add two button tags to the `index.html` page and give them identities `"increase"` and `"decrease"`. We will also add a header element with id `"countViewer"` where we will show the current count, here is how `index.html` will look like:
 
 ```html {highlight:[10, 11, 12]}
 <!doctype html>
@@ -132,4 +132,4 @@ increaseDelayed.onclick <- fun _ ->
 
 <resolved-image source="/images/fable/random-counter-delayed.gif" />
 
-Alright, we got our counter up and running and had it increase or decrease the count value randomly and even used an asynchronous function in the mix, now it is time to take a step back and think about what we actually did in this section to better understand Fable. 
+Alright, we got our counter up and running, had it increase or decrease the count value randomly and even used an asynchronous function in the mix. Now it is time to take a step back and think about what we actually did in this section to better understand Fable. 

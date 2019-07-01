@@ -68,4 +68,4 @@ async {
 
 ### Unsupported Features
 
-At the time of writing, a couple of F# features are not yet supported. For example F# code quotations and `query` computation expression because it depends on quotations feature. 
+At the time of writing, a couple of F# features are not yet supported, for example F# code quotations and `query` computation expression because it depends on quotations feature. 
