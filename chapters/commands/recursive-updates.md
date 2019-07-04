@@ -54,9 +54,9 @@ That's right, even if the `update` function itself isn't recursive, the function
 
 It is very important to recognize and identify this pattern as it can become very problematic: even though we didn't explicitly define `update` as a recursive function, it ends up with an implicit recursive behavior because of the way it is hooked up with the Elmish runtime.
 
-There is only one alternative to `Cmd.ofMsg`: not using this command at all!
+There is only one alternative to `Cmd.ofMsg`: not using this command at all inside the update function!
 
-There is never a good reason to use `Cmd.ofMsg` because in reality it is a command that changes the control flow of the `update` function. Instead of telling the Elmish runtime: "Hey, dispatch message `X` for me", you factor out the branch of of the `update` function that handles message `X` into a utility function and call that function from where you issue the command.
+There is never a good reason to use `Cmd.ofMsg` in `update` because in reality it is a command that changes the control flow of the `update` function. Instead of telling the Elmish runtime: "Hey, dispatch message `X` for me", you factor out the branch of of the `update` function that handles message `X` into a utility function and call that function from where you issue the command.
 
 ### Eliminating `Cmd.ofMsg` Usage
 
@@ -144,4 +144,3 @@ let update msg state =
         parseInput nextState, Cmd.none
 ```
 There you have it, `Cmd.ofMsg` removed for good!
-
