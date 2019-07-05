@@ -30,8 +30,8 @@ let update (msg: Msg) (state: State) =
     | Tick ->
         let nextState = { state with CurrentTime = DateTime.Now }
         let step = async {
-            do! Async.Sleep 1000
-            return Tick
+          do! Async.Sleep 1000
+          return Tick
         }
 
         nextState, Cmd.fromAsync step
@@ -51,3 +51,54 @@ let render (state: State) (dispatch: Msg -> unit) =
       h1 [ ] [ str (formatTime state.CurrentTime) ]
   ]
 ```
+That's it! Let's now look at another example where the asynchronous workflow terminates when it satisfies a condition, a countdown application.
+
+### Implementing Countdown
+
+The following application starts counting from an initial number (5 in this case) and decrements 1 every second until it reaches the base condition which is zero:
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:75%;">
+    <resolved-image source="/images/commands/countdown.gif" />
+  </div>
+</div>
+
+The data model is very similar to that of the timer. We keep track of the current count and the finish number. As for the messages, there is the message `Startcountdown` to kick off the recursive workflow and the `Tick` message that updates the state every second and calls itself again until the `Count` has reached zero:
+```fsharp
+type State = {
+  Count : int
+}
+
+type Msg =
+  | StartCountdown
+  | Tick
+```
+When the application starts up, we dispatch `StartCountdown` immediately:
+```fsharp
+let init() = { Count = 5 }, Cmd.ofMsg StartCountdown
+```
+Then within the `update` function, the messages are handled as follows:
+```fsharp { highlight: [11, 12] }
+let update (msg: Msg) (state: State) =
+    match msg with
+    | StartCountdown ->
+        let step = async {
+            do! Async.Sleep 1000
+            return Tick
+        }
+
+        state, Cmd.fromAsync step
+
+    | Tick when state.Count <= 0 ->
+        state, Cmd.none
+
+    | Tick ->
+        let nextState = { state with Count = state.Count - 1 }
+        let step = async {
+            do! Async.Sleep 1000
+            return Tick
+        }
+
+        nextState, Cmd.fromAsync step
+```
+Notice the highlighted lines, here is where the program decides whether it has satisfied the base condition upon which it terminates the recursion returning the state as is without executing any further commands.
