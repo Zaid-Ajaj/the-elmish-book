@@ -101,4 +101,31 @@ let update (msg: Msg) (state: State) =
 
         nextState, Cmd.fromAsync step
 ```
-Notice the highlighted lines, here is where the program decides whether it has satisfied the base condition upon which it terminates the recursion returning the state as is without executing any further commands.
+Notice the highlighted lines, here is where the program decides whether it has satisfied the base condition upon which it terminates the recursion. If that is the case, the state is returned as is without executing any further commands.
+
+### Alternatives To Recursion
+
+You might have thought: "there is definitely an easier way to do this" at the end of the day, we are just dispatching a bunch of messages one after the other with a delay in between. The only restriction we have at hand is the fact the `Cmd.fromAsync` only dispatches a single message that results from the asynchronous expression `Async<'Msg>` but nothing is stopping us from implementing a command that for example dispatches a message indefinitely:
+```ocaml
+module Cmd =
+  let indefinite (timeout: int) (msg: 'Msg) =
+    let command (dispatch: 'Msg -> unit) : unit =
+      let workflow = async {
+        while true do
+          do! Async.Sleep timeout
+          dispatch msg
+      }
+
+      Async.StartImmediate workflow
+
+    Cmd.ofSub command
+```
+Using this command, the timer program can be simplified into the following:
+```fsharp {highlight: [1]}
+let init() = { CurrentTime =  DateTime.Now }, Cmd.indefinite 1000 Tick
+
+let update msg update =
+  match msg with
+  | Tick -> { CurrentTime = DateTime.Now }, Cmd.none
+```
+Notice how we kick off the indefinite ticking in `init()` so that the `update` function doesn't need to implement any recursive behavior.
