@@ -105,7 +105,7 @@ Notice the highlighted lines, here is where the program decides whether it has s
 
 ### Alternatives To Recursion
 
-You might have thought: "there is definitely an easier way to do this" at the end of the day, we are just dispatching a bunch of messages one after the other with a delay in between. The only restriction we have at hand is the fact the `Cmd.fromAsync` only dispatches a single message that results from the asynchronous expression `Async<'Msg>` but nothing is stopping us from implementing a command that for example dispatches a message indefinitely:
+You might have thought: "there is definitely an easier way to do this" at the end of the day, we are just dispatching a bunch of messages one after the other with a delay in between. The only restriction we have at hand is the fact the `Cmd.fromAsync` only dispatches a single message that results from the asynchronous expression `Async<'Msg>` but nothing is stopping us from implementing a command that for example dispatches a message indefinitely between a delay of sleep:
 ```ocaml
 module Cmd =
   let indefinite (timeout: int) (msg: 'Msg) =
@@ -129,3 +129,20 @@ let update msg update =
   | Tick -> { CurrentTime = DateTime.Now }, Cmd.none
 ```
 Notice how we kick off the indefinite ticking in `init()` so that the `update` function doesn't need to implement any recursive behavior.
+
+Likewise for the recursion with a base condition, we can implement a command that keeps dispatching a message until a certain criteria, a base condition is satisfied:
+```ocaml
+module Cmd =
+  let indefiniteUntil (condition: unit -> bool) timeout msg =
+      let command (dispatch: 'Msg -> unit) : unit =
+          let workflow = async {
+            while condition() do
+              do! Async.Sleep timeout
+              dispatch msg
+          }
+
+          Async.StartImmediate workflow
+
+      Cmd.ofSub command
+```
+Theoretically, this could work but there is a big problem: how should we define the `condition: unit -> bool` parameter? If we provide a predicate that depends on the state (i.e. stop when `state.Count = 10`) then we would need to issue this command every time the state is updated which in itself brings more problems because that will start a separate asynchronous workflow on every state update! This problem is closely related to Elmish subscription, especially the types of subscriptions that can be canceled. This topic will be explored in-depth in a later section.
