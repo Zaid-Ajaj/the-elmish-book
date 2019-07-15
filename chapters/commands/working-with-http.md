@@ -43,7 +43,7 @@ First of all we created an instance of the `XMLHttpRequest` object using the sta
 ```fsharp
 let xhr = XMLHttpRequest.Create()
 ```
-We create an instance per request we want to send. It is common to give the value of the created instance the name `xhr`. Next we open up the communication using the `open` function, giving it two parameters: the HTTP "*method*" and the url that points to the resource we want to load, in this case the `index.html` file:
+We create an instance per request we want to send. It is common to give the value of the created instance the name `xhr`. Next we open up the communication using the `open` function, giving it two parameters: the HTTP "*method*" and the url that points to the resource we want to load, in this case the resource at path `/index.html` which points to the `index.html` file inside the `public` directory:
 ```fsharp
 xhr.``open``(method="GET", url="/index.html")
 ```
@@ -58,3 +58,36 @@ An "OK" from the server is status code 200 for the client which is what was prin
 </div>
 
 Now the server responded with the infamous 404 status code, telling the client that it could not find the specified file we requested. This makes sense because the file does not exist. Also notice that the server still returned a HTML page that shows the error.
+
+Notice that the `url` parameter contains a *relative* path: we no specify the full url with the host or port etc. When using relative paths, the request is sent to the same "domain" from which the application was loaded in the first place. This means that when we request the resource at path `/index.html`, a HTTP request will be made to `http://localhost:8080/index` because `http://localhost:8080` is the "domain" from which we loaded our application. In other words, the request is sent to the "same origin" of the application itself.
+
+### Cross-Origin HTTP Requests
+
+This then begs the question, can we use absolute paths in our HTTP requests? It depends, unlike desktop and mobile applications that can make HTTP requests to any website/domain, HTTP requests made from a browser application cannot reach any website unless that website in subject *allows* it! When a browsers tries to communicate via HTTP with an external website or application, is it making a "cross origin" request. These "cross origin" requests are blocked by default in most web applications and authors have to explicitly enable them. You can give it a try yourself by trying to get the home page of Google:
+```fsharp
+xhr.``open``(method="GET", url="http://www.google.com")
+```
+You will get the following error, along with a status code of zero and an empty response text
+
+<div style="width:100%;">
+  <div style="margin: 0 auto; width:100%;">
+    <resolved-image source="/images/commands/cross-origin-error.png" />
+  </div>
+</div>
+
+This goes to say that you should not assume that a web applications can talk to each other freely. However, there are some external web applications that *do* allow cross-origin HTTP request, one of which will be very important in this chapter which is the [Hacker News Web API](https://github.com/HackerNews/API). Let us give it a try to load the latest top stories:
+
+```fsharp
+xhr.``open``(method="GET", url="https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
+```
+
+This is the response you get back:
+
+<div style="width:100%;">
+  <div style="margin: 0 auto; width:100%;">
+    <resolved-image source="/images/commands/hacker-news-api.png" />
+  </div>
+</div>
+
+We get a status code of 200 (OK) and the response text containing an array of the identities of the latest top stories which you can load in subsequent requests. The data returned from Hacker News API is formatted as JSON, the de-facto data format of the web. We will learn how to process JSON data into typed F# entities and vice-versa in the following sections of this chapter.
+
