@@ -20,12 +20,14 @@ module App
 
 open Elmish
 open Elmish.React
-open Fable.React
-open Fable.React.Props
+open Feliz
 ```
-Then we define the `State` type, also known is the model of the application:
+Here, the namespaces `Elmish` and `Elmish.React` give us access to the `Program` module which is used to bootstrap the Elmish application. `Feliz` is a library and DSL for writing the user interface code as we will see in a moment.
+
+Then we define the `State` type, also known is the data model of the application:
 ```fsharp
-type State = { Count: int }
+type State =
+    { Count : int }
 ```
 Within every Elmish application, the very first part to think about it the `State` type. This type captures the data model we want to keep track of while the application is running. In the case of our simple counter application, we want to keep track of the current count which happens to be an integer.
 
@@ -36,15 +38,16 @@ The next question we ask ourselves follows: "Which events need to occur for the 
 The answer to these questions is a type that encodes the different events which can cause the state to change. This type is usually called `Msg` and it is usually modelled as a discriminated union:
 ```fsharp
 type Msg =
-  | Increment
-  | Decrement
+    | Increment
+    | Decrement
 ```
 The events within the `Msg` type can be triggered while application is running. In the case of the counter app, they are triggered through user interactions: clicking different buttons cause event triggers.
 
 Next up is the `init` function that returns the initial state of the application when it starts up, in our case the initial state is when the count is 0.
 ```fsharp
 // init : unit -> State
-let init() = { Count = 0 }
+let init() =
+    { Count = 0 }
 ```
 Notice that when we think about the "initial application state", we only think about how the *data* is initialized, *not* how the application looks like from the user interface perspective.
 
@@ -52,33 +55,43 @@ This distinction is important because in Elmish applications, the data model is 
 
 Afterwards, it is time to implement how the state changes based on the events that have been triggered. This is where the `update` function comes into play. This function takes the event that has been triggered and *current* state and computes the *next* state of the application:
 ```fsharp
-let update (msg: Msg) (currentState: State) =
-  match msg with
-  | Increment ->
-      let nextState = { currentState with Count = currentState.Count + 1 }
-      nextState
+let update (msg: Msg) (state: State): State =
+    match msg with
+    | Increment ->
+        { state with Count = state.Count + 1 }
 
-  | Decrement ->
-      let nextState = { currentState with Count = currentState.Count - 1 }
-      nextState
+    | Decrement ->
+        { state with Count = state.Count - 1 }
 ```
-the `update` function handles all possible events that can occur based on the incoming `Msg`.
+The `update` function handles all possible events that can occur based on the incoming `Msg`.
 
 Now that we have a way to update the state based on triggered events, we need the last piece of the puzzle: rendering the user interface based on the state and having the ability to trigger events from it: this is the role of the `render` function:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
-  div []
-      [ button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-        div [] [ str (string state.Count) ]
-        button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ] ]
+    Html.div [
+        prop.id "counter"
+        prop.children [
+            Html.button [
+                prop.onClick (fun _ -> dispatch Increment)
+                prop.children [ Html.text "Decrement" ]
+            ]
+
+            Html.button [
+                prop.onClick (fun _ -> dispatch Decrement)
+                prop.children [ Html.text "Decrement" ]
+            ]
+
+            Html.h1 state.Count
+        ]
+    ]
 ```
 > This is function is also commonly known as the `view` function. I will use `render` and `view` interchangeably throughout the book.
 
-The `render` function computes the user interface of the application based on the *current* state of the application (i.e. the first parameter) and the second parameter ("dispatch") is function that *translates* UI events into Elmish messages.
+The `render` function computes the user interface of the application based on the *current* state of the application (i.e. the first parameter) and the second parameter ("dispatch") is function that *translates* UI events into Elmish messages or events.
 
-The `render` function returns a tree-like structure similar to that of HTML that can be built using just functions. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. This DSL consists of functions that represent Html tags, such as `div` and `button`. The first argument of these functions is a list of attributes such as `OnClick` and the second argument is a list of the children elements. With this DSL in place, you can easily build Html trees in F# code. More on the `render` function in the next section.
+The `render` function returns a tree-like structure similar to that of HTML that can be built using just functions. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. This DSL consists of functions that represent Html tags, such as `div` and `button`. These function take a list of "properties", also known as "props". These properties dictate the various properties that the elements can have such there `id`, `class` and `style` that correspond the Html attributes the associated tags have. Alongside attributes, these props also include the event handlers for the elements such as the `onClick` event handler. Using this DSL in place, you can easily build Html trees in F# code. More on the `render` function in the next section.
 
-What's more important is the `dispatch` function, the second argument of `render`. It is responsible for triggering the events of the `Msg` type from within the user interface. We call `dispatch` on a specific message after attaching it to certain event handlers of the user interface such as the `OnClick` handlers of buttons. This effectively translates an raw event occurring at the user interface level into an Elmish event that the `update` function can respond to.
+What's more important is the `dispatch` function, the second argument of `render`. It is responsible for triggering the events of the `Msg` type from within the user interface. We call `dispatch` on a specific message after attaching it to certain event handlers of the user interface such as the `onClick` handlers of buttons. This effectively translates an raw event occurring at the user interface level into an Elmish event that the `update` function can respond to.
 
 Now that we have all the pieces in place: `init`, `update` and `render`, we can tie them together to create an Elmish "program" that will bootstraps the application:
 ```fsharp
