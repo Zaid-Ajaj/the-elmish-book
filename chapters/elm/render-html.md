@@ -72,7 +72,7 @@ Html.div [
     prop.text "Hello, world"
 ]
 ```
-The `text` property is a short-hand for `children [ Html.text "Hello, world" ]` making nicely clean and simple like it should be.
+The `text` property is a short-hand for `children [ Html.text "Hello, world" ]` making it nicely clean and simple like it should be.
 
 ### Nested Elements
 ```html

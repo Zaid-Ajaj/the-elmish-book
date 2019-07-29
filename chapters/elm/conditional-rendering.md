@@ -10,27 +10,34 @@ Very often, we want to show or hide elements of the application based on the sta
 
 There are a couple of ways to conditional rendering, the first is the obvious one with `if ... then ... else` blocks:
 
-```fsharp {highlight: ['2-5', 7, 20]}
+```fsharp {highlight: ['2-5', 7, 25]}
 let render (state: State) (dispatch: Msg -> unit) =
   let headerText =
     if state.Count % 2 = 0
     then "Count is even"
     else "Count is odd"
 
-  let oddOrEvenMessage = h1 [ ] [ str headerText ]
+  let oddOrEvenMessage = Html.h1 headerText
 
   if state.Count < 0 then
     // don't render oddOrEvenMessage
-    div []
-        [ button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-          div [ ] [ str (string state.Count) ]
-          button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ] ]
+    Htmldiv [
+        prop.children [
+            Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+            Html.div state.Count
+            Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+        ]
+    ]
+
   else
-    div []
-        [ button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-          div [ ] [ str (string state.Count) ]
-          button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-          oddOrEvenMessage ]
+    Htmldiv [
+        prop.children [
+            Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+            Html.div state.Count
+            Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+            oddOrEvenMessage
+        ]
+    ]
 ```
 Here we are creating the element `oddOrEvenMessage` and then choosing whether or not we want to add it to child elements based on the current count.
 
@@ -38,62 +45,58 @@ Here we are creating the element `oddOrEvenMessage` and then choosing whether or
 
 Using `if ... then ... else` can sometimes be tedious and repetitive. A simple way to show or hide elements is using the `display` css attribute. If an element has css attribute `display: none` then the element is hidden. To show the element you either need to remove the `display` attribute or set it to `display: block`:
 
-```fsharp {highlight: [7,8, 14]}
+```fsharp {highlight: [5, 6]}
 let render (state: State) (dispatch: Msg -> unit) =
-  let headerText =
-    if state.Count % 2 = 0
-    then "Count is even"
-    else "Count is odd"
 
-  let displayAttr = Display (if state.Count < 0 then "none" else "block")
-  let oddOrEvenMessage = h1 [ Style [ displayAttr ] ] [ str headerText ]
+  let oddOrEvenMessage =
+    Html.h1 [
+        prop.style [ (if state.Count < 0 then style.display.none else style.display.block) ]
+        prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
+    ]
 
-  div []
-      [ button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-        div [Style [ Color (textColor state) ] ] [ str (string state.Count) ]
-        button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-        oddOrEvenMessage ]
+    Htmldiv [
+        prop.children [
+            Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+            Html.div state.Count
+            Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+            oddOrEvenMessage
+        ]
+    ]
 ```
 In this example, we are always rendering the message but when the css attribute `display` is `none`, it has the same effect as if we didn't render the element.
 
-### Conditional Rendering Using `ofOption`
+The above example used a combination of `if..else..then` expression and `display` styling. Styles can be applied conditionally using the `styleWhen` property (`styleList` is an alias for it too)
+```fsharp {highlight: [2, 3, 4]}
+Html.h1 [
+    prop.styleWhen [
+        state.Count < 0, [ style.display.none ]
+    ]
 
-The user interface DSL provides a special function called `ofOption` which takes an optional element as input. If that input element is `None` then nothing is rendered:
-
-```fsharp {highlight: [2, '5-8']}
-/// An element that doesn't render anything
-let emptyElement = OfOption None
-
-let render (state: State) (dispatch: Msg -> unit) =
-  let oddOrEvenMessage =
-    if state.Count >= 0
-    then h1 [ ] [ str (if state.Count % 2 = 0 then "Count is even" else "Count is odd") ]
-    else emptyElement
-
-  div []
-      [ button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-        div [Style [ Color (textColor state) ]] [ str (string state.Count) ]
-        button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-        oddOrEvenMessage ]
+    prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
+]
 ```
+This way, you apply a bunch of style attributes based on the predicate (the first item of the tuple). The property `styleWhen` has type `((bool * IStyleAttribute list) list)` and returns `IReactAttribute` like all other attributes.
 
 ### Conditional Rendering Using `yield`
 
-Since the child elements of any Html tag is a list, we can use F#'s `yield` keyword for conditional rendering in combination with an `if ... then` block. Here is how it looks like:
+Since the child elements of any Html tag is a list, we can use F#'s `yield` keyword for conditional rendering in combination with an `if ... then ... else` block. Here is how it looks like:
 
-```fsharp {highlight: [13]}
+```fsharp {highlight: [14]}
 let render (state: State) (dispatch: Msg -> unit) =
   let headerText =
     if state.Count % 2 = 0
     then "Count is even"
     else "Count is odd"
 
-  let oddOrEvenMessage = h1 [ ] [ str headerText ]
+  let oddOrEvenMessage = Html.h1 headerText
 
-  div []
-      [ yield button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-        yield div [Style [ Color (textColor state)]] [ str (string state.Count) ]
-        yield button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-        if state.Count >= 0 then yield oddOrEvenMessage ]
+    Htmldiv [
+        prop.children [
+            yield Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+            yield Html.div state.Count
+            yield Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+            if state.Count > 0 then yield oddOrEvenMessage
+        ]
+    ]
 ```
 The only downside of this approach is that all other elements need to be `yield`ed as well. Because this pattern is used a lot in Fable/F# projects, there are discussions of making `yield` implicit in the coming versions of F#, see [F# RFC FS-1069 - Implicit yields](https://github.com/fsharp/fslang-design/blob/master/RFCs/FS-1069-implicit-yields.md).
