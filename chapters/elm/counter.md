@@ -66,6 +66,7 @@ let update (msg: Msg) (state: State): State =
 The `update` function handles all possible events that can occur based on the incoming `Msg`.
 
 Now that we have a way to update the state based on triggered events, we need the last piece of the puzzle: rendering the user interface based on the state and having the ability to trigger events from it: this is the role of the `render` function:
+
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
     Html.div [
@@ -73,12 +74,12 @@ let render (state: State) (dispatch: Msg -> unit) =
         prop.children [
             Html.button [
                 prop.onClick (fun _ -> dispatch Increment)
-                prop.children [ Html.text "Decrement" ]
+                prop.text "Increment"
             ]
 
             Html.button [
                 prop.onClick (fun _ -> dispatch Decrement)
-                prop.children [ Html.text "Decrement" ]
+                prop.text "Decrement"
             ]
 
             Html.h1 state.Count
