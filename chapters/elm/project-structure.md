@@ -13,6 +13,7 @@ To answer the question, we take a look at the `App.fsproj` of an Elmish project:
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
+    <PackageReference Include="Feliz" Version="0.38.0" />
   </ItemGroup>
 </Project>
 ```
@@ -31,15 +32,15 @@ Since `Fable.Elmish` and `Fable.React` are both *transitive* dependencies of `Fa
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zaid-Ajaj/elmish-todo-fulma.git"
+    "url": "https://github.com/Zaid-Ajaj/elmish-todo-part3.git"
   },
   "dependencies": {
     "@babel/core": "^7.1.2",
-    "fable-compiler": "^2.3.3",
-    "fable-loader": "^2.1.6",
+    "fable-compiler": "^2.3.17",
+    "fable-loader": "^2.1.8",
     "gh-pages": "^2.0.1",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.2.1"

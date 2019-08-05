@@ -172,8 +172,8 @@ Also notice that every "smaller part" of the root `render` function: the functio
 ```fsharp
 let renderEditForm (todoBeingEdited: TodoBeingEdited) (dispatch: Msg -> unit) =
   div [ "box" ] [
-    div [ "field is-grouped" ] [
-      div [ "control is-expanded" ] [
+    div [ "field"; "is-grouped" ] [
+      div [ "control"; "is-expanded" ] [
         Html.input [
           prop.classes [ "input"; "is-medium" ]
           prop.valueOrDefault todoBeingEdited.Description;

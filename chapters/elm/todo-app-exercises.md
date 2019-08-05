@@ -14,43 +14,37 @@ Your first exercise is a fairly simple one, adding filter tabs to your list that
 
 As shown above, the filter tabs are buttons which have a "currently selected filter" feature as well. To give you a head start, this is how your `render` function will look like in the beginning:
 
-```fsharp {highlight: [1, 8]}
+```fsharp {highlight: [1, 10]}
 let renderFilterTabs (state: State) (dispatch: Msg -> unit) =
   (* . . *)
 
 let render (state: State) (dispatch: Msg -> unit) =
-    div [ Style [ Padding 20 ] ] [
-    h3 [ Class "title" ] [ str "Elmish To-Do list" ]
-    createTodoTextbox state dispatch
-    renderFilterTabs state dispatch
-    div [ Class "content" ] [
-      for todo in state.TodoList ->
-        match state.TodoBeingEdited with
-        | Some todoBeingEdited when todoBeingEdited.Id = todo.Id ->
-            renderEditForm todoBeingEdited dispatch
-        | otherwise ->
-            renderTodo todo dispatch
+  Html.div [
+    prop.style [ style.padding 20 ]
+    prop.children [
+      appTitle
+      inputField state dispatch
+      renderFilterTabs state dispatch
+      todoList state dispatch
     ]
   ]
 ```
 Where `renderFilterTab` has the following structure:
 ```fsharp
 let renderFilterTabs (state: State) (dispatch: Msg -> unit) =
-    div [ Class "tabs is-toggle is-fullwidth" ] [
-      ul [ ] [
-        li [ Class "is-active" ] [
-          a [ ] [ str "All" ]
+  div [ "tabs"; "is-toggle"; "is-fullwidth" ] [
+    Html.ul [
+      prop.children [
+        Html.li [
+          prop.className "is-active"
+          prop.text
         ]
 
-        li [ ] [
-          a [ ] [ str "Completed" ]
-        ]
-
-        li [ ] [
-          a [ ] [ str "Not Completed" ]
-        ]
+        Html.li "Completed"
+        Html.li "Not Completed"
       ]
     ]
+  ]
 ```
 Notice that this implementation doesn't do or check anything with the state. It is currently static and the "All" tab will always be selected. Aside from the the user interface for the tabs, you also need to implement the actual filtering of the list.
 
@@ -96,8 +90,10 @@ Fulma is a library that allows us to write UI code that makes use of Bulma class
 
 For example, the following snippet:
 ```fsharp
-button [ Class "button is-primary is-medium"; OnClick (fun _ -> dispatch CancelEdit) ] [
-  str "Add"
+Html.button [
+    prop.classes [ "button"; "is-primary"; "is-medium" ]
+    prop.onClick (fun _ -> dispatch CancelEdit)
+    prop.text "Add"
 ]
 ```
 Can be rewritten using Fulma's modules as follows:
@@ -113,10 +109,10 @@ Notice how Bulma's classes such as `is-primary` and `is-medium` are grouped in t
 
 The same applies for most types of UI elements, for example the text box:
 ```fsharp
-input [
-  Class "input is-medium"
-  valueOrDefault state.NewTodo
-  OnChange (fun ev -> dispatch (SetNewTodo ev.Value)
+Html.input [
+  prop.classes ["input"; "is-medium"]
+  prop.valueOrDefault state.NewTodo
+  prop.onTextChange (SetNewTodo >> dispatch)
 ]
 ```
 Can be rewritten into the follows:
@@ -127,7 +123,7 @@ Input.input [
   Input.OnChange (fun ev -> dispatch (SetNewTodo ev.Value))
 ]
 ```
-Looks much cleaner in my opinion. In this exercise, you are tasked to refactor the To-Do list application using Fulma instead of Bulma's stringy classes. To get started, you need to install Fulma into your project. Fulma is just a nuget package that you can add to your `App.fsproj` as follows:
+In this exercise, you are tasked to refactor the To-Do list application using Fulma instead of Bulma's stringy classes. To get started, you need to install Fulma into your project. Fulma is just a nuget package that you can add to your `App.fsproj` as follows:
 ```bash
 cd src
 dotnet add package Fulma
