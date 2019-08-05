@@ -10,22 +10,21 @@ let render (state: State) (dispatch: Msg -> unit) : ReactElement = (* . . . *)
 ```
 Notice here the output type of the function: it returns a `ReactElement`. This type is very important because it is determined by which *rendering engine* we chose to use in our Elmish applications. In our case, the rendering engine is [React.js](https://reactjs.org/).
 
-In the previous examples we opened the namespaces
+In the previous examples we opened the namespace
 ```fsharp
-open Fable.React
-open Fable.React.Props
+open Feliz
 ```
-And we were able to use the Elmish DSL to create `ReactElement`s from the functions `div`, `span`, `button` etc. `ReactElement` is in fact the output type of these functions:
+And we were able to use the included DSL in the `Feliz` library to create `ReactElement`s from the functions `Html.div`, `Html.span`, `Html.button` etc. `ReactElement` is in fact the output type of these functions:
 ```fsharp
-let title : ReactElement = h1 [ ] [ str "Happy coding!" ]
+let title : ReactElement = Html.h1 "Happy coding!"
 ```
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 
-[React.js](https://reactjs.org) is a native javascript library and Fable.React is the binding for it that allows us to use it from Fable and Elmish applications
+[React.js](https://reactjs.org) is a native javascript library and Fable.React is the binding for it that allows us to use React from Fable and Elmish applications. Feliz is a library built on top of Fable.React and provides an alternaltive DSL than the one included by default in Fable.React.
 
 </div>
 
-Now understanding the `render` function comes down to understanding a bit of React and these `ReactElement`s.
+Now understanding the `render` function comes down to understanding a bit of React and these ReactElements.
 
 ### What is React?
 
@@ -33,8 +32,15 @@ React is a Javascript library and framework for building web application. From J
 
 React starts doing it's magic when the `render` function is evaluated for the first time and a `ReactElement` is returned. Suppose the evaluated element looked something as follows regardless of the state:
 ```fsharp
-div [ Id "content"; Class "full-width" ] [
-    h1 [ Id "header" ] [ str "Hello from Fable" ]
+Html.div [
+    prop.id "content"
+    prop.className "full-width"
+    prop.children [
+        Html.h1 [
+            prop.id "header"
+            prop.text "Hello from Fable"
+        ]
+    ]
 ]
 ```
 This `ReactElement` will be given to React and it will create the equivalent user interface of:
@@ -46,9 +52,16 @@ This `ReactElement` will be given to React and it will create the equivalent use
 Which is the *real* user interface you ultimately see on screen. This is of course only on the *initial* render at the start up of the application.
 
 Now suppose that the state has changed and a *re-render* is triggered where the `render` function now evaluates to the following output:
-```fsharp
-div [ Id "content"; Class "hidden" ] [
-    h1 [ Id "header" ] [ str "Hello from Fable" ]
+```fsharp {highlight: [3]}
+Html.div [
+    prop.id "content"
+    prop.className "hidden"
+    prop.children [
+        Html.h1 [
+            prop.id "header"
+            prop.text "Hello from Fable"
+        ]
+    ]
 ]
 ```
 Notice here that only the `class` of the main `div` element has changed from "full-width" to "hidden".
@@ -59,7 +72,7 @@ let content = document.getElementById "content"
 content.classList.remove("full-width")
 content.classList.add("hidden")
 ```
-The process of comparing `ReactElement`s to determine the required modifications is called [Reconciliation](https://reactjs.org/docs/reconciliation.html) and it is one of the most important concepts in React. Although reconciliation is internal to React's implementation, getting an idea of how it works will help you optimize your user interface code and avoid certain UI bottlenecks.
+The process of comparing React element to determine the required modifications is called [Reconciliation](https://reactjs.org/docs/reconciliation.html) and it is one of the most important concepts in React. Although reconciliation is internal to React's implementation, getting an idea of how it works will help you optimize your user interface code and avoid certain UI bottlenecks.
 
 Think about reconciliation as if it had the type:
 ```fsharp

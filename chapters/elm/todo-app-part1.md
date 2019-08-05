@@ -78,74 +78,85 @@ Now that we have everything we need (`State` and `Msg`) we can start building th
  - The text box and the add button
  - The list of the todo items
 
-The title is the easiest:
+We will deal with each part separately and starting with the title will be the easiest:
 ```fsharp
-p [ Class "title" ] [ str "Elmish To-Do list" ]
+let appTitle =
+  Html.p [
+    prop.className "title"
+    prop.text "Elmish To-Do List"
+  ]
 ```
-Here the class `title` is a bulma class that changes the font size of the paragraph to a certain value that represents the title of a page which is what we need.
+Here the class `title` is a bulma class that changes the font size of the paragraph to a certain value that represents the title of a page which is what we need. Notice that I have bound the element into a value so that I can use it later in the application.
 
 The text box and add button are implemented as follows:
-```fsharp {highlight: [ '3-7', '10-12' ]}
-div [ Class "field has-addons" ] [
-  div [ Class "control is-expanded" ] [
-    input [
-      Class "input is-medium"
-      valueOrDefault state.NewTodo
-      OnChange (fun ev -> dispatch (SetNewTodo ev.Value))
-    ]
-  ]
-  div [ Class "control" ] [
-    button [ Class "button is-primary is-medium"; OnClick (fun _ -> dispatch AddNewTodo) ] [
-      i [ Class "fa fa-plus" ] [ ]
-    ]
-  ]
-]
-```
-We are using Bulma's [form fields](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo` and whenever the user types in, the `OnChange` event is triggered which in turn triggers (i.e. "dispatches") the `SetNewTodo` event giving it the current value of the input. The add button is trivial, just dispatches the `AddTodo` event when clicked.
-
-Notice the part `i [ Class "fa fa-plus" ] [ ]`. This is how we use icons from the Font Awesome library that we referenced in the beginning. Using the class `fa fa-plus` gives the "plus" icon. See [here](https://fontawesome.com/icons?d=gallery) all the icons you can use.
-
-Lastly, we have to render the To-Do items themselves in a list. We do it using a list comprehension:
-```fsharp
-ul [ ] [
-  for todo in state.TodoList ->
-  li [ Class "box" ] [
-    p [ Class "subtitle" ] [ str todo ]
-  ]
-]
-```
-Here we rendering an "unordered list", the `ul` element, inside of which we render every todo item in `state.TodoList` into a "list item": the `li` element. The content of every list item is simply the todo item itself rendered as text using `str` function.
-
-Now to put the parts together, we get to define the `render` function as follows:
-```fsharp
-let render (state: State) (dispatch: Msg -> unit) =
-  div [ Style [ Padding 30 ] ] [
-    p [ Class "title" ] [ str "Elmish To-Do list" ]
-
-    div [ Class "field has-addons" ] [
-      div [ Class "control is-expanded" ] [
-        input [
-          Class "input is-medium"
-          valueOrDefault state.NewTodo
-          OnChange (fun ev -> dispatch (SetNewTodo ev.Value))
+```fsharp {highlight: [ '8-12', '19-25']}
+let inputField (state: State) (dispatch: Msg -> unit) =
+  Html.div [
+    prop.classes [ "field"; "has-addons" ]
+    prop.children [
+      Html.div [
+        prop.classes [ "control"; "is-expanded"]
+        prop.children [
+          Html.input [
+            prop.classes [ "input"; "is-medium" ]
+            prop.valueOrDefault state.NewTodo
+            prop.onTextChange (SetNewTodo >> dispatch)
+          ]
         ]
       ]
-      div [ Class "control" ] [
-        button [ Class "button is-primary is-medium"; OnClick (fun _ -> dispatch AddTodo) ] [
-          i [ Class "fa fa-plus" ] [ ]
+
+      Html.div [
+        prop.className "control"
+        prop.children [
+          Html.button [
+            prop.classes [ "button"; "is-primary"; "is-medium" ]
+            prop.onClick (fun _ -> dispatch AddTodo)
+            prop.children [
+              Html.i [ prop.classes [ "fa"; "fa-plus" ] ]
+            ]
+          ]
         ]
       ]
     ]
+  ]
+```
+We are using Bulma's [form fields](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo` and whenever the user types in, the `onTextChange` event is triggered which in turn triggers (i.e. "dispatches") the `SetNewTodo` event giving it the current value of the input. The add button is trivial, just dispatches the `AddTodo` event when clicked.
 
-    ul [ ] [
+Notice the part `Html.i [ prop.classes [ "fa"; "fa-plus" ] ]`. This is how we use icons from the Font Awesome library that we referenced in the beginning. Using the class `fa fa-plus` gives the "plus" icon. See [here](https://fontawesome.com/icons?d=gallery) all the icons you can use.
+
+An important part of the code snippet above is that is it implemented inside it's own function `inputField` which has *exactly* the same signature as that of the `render` function. It is basically a smaller render function that is responsible for a single part of the user interface, in this case the input fields and the "Add" button:
+```fsharp
+let inputField (state: State) (dispatch: Msg -> unit) = (* . . . *)
+```
+This function can be used later inside the main `render` function and this way we are able to break down the user interface into smaller chunks instead of putting *everything* within the `render` function.
+
+As for the last part of the UI, we have to render the To-Do items themselves in a list. We do it using a list comprehension, mapping each `todo` in the `state.TodoList` into a `Html.listItem` element:
+```fsharp {highlight: [4]}
+let todoList (state: State) (dispatch: Msg -> unit) =
+  Html.unorderedList [
+    prop.children [
       for todo in state.TodoList ->
-      li [ Class "box" ] [
-        p [ Class "subtitle" ] [ str todo ]
-      ]
+        Html.listItem [
+          prop.classes ["box"; "subtitle"]
+          prop.text todo
+        ]
     ]
   ]
 ```
-Here we also use a simple `div` as the container of the entire application and give it a bit of padding of 30 pixels.
+
+Now we can put the parts together as a whole to define the `render` function as follows:
+```fsharp {highlight: [5,6,7]}
+let render (state: State) (dispatch: Msg -> unit) =
+  Html.div [
+    prop.style [ style.padding 20 ]
+    prop.children [
+      appTitle
+      inputField state dispatch
+      todoList state dispatch
+    ]
+  ]
+```
+Here we also use a simple `div` as the container of the entire application and give it a bit of padding of 20 pixels. The `render` function passes it's `state` and `dispatch` parameters down to the smaller parts `inputField` and `todoList` so that these parts too can use the state to render information on screen or trigger events with the dispatch function. The `appTitle` didn't need the state, nor the ability to trigger events so we just used it as a value.
 
 Finally, to bootstrap the application and actually bring it to life, we use instruct Elmish to do so using:
 ```fsharp
