@@ -21,7 +21,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 
   if state.Count < 0 then
     // don't render oddOrEvenMessage
-    Htmldiv [
+    Html.div [
         prop.children [
             Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
             Html.div state.Count
@@ -30,7 +30,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
 
   else
-    Htmldiv [
+    Html.div [
         prop.children [
             Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
             Html.div state.Count
@@ -54,7 +54,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
     ]
 
-    Htmldiv [
+    Html.div [
         prop.children [
             Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
             Html.div state.Count
@@ -90,7 +90,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 
   let oddOrEvenMessage = Html.h1 headerText
 
-    Htmldiv [
+    Html.div [
         prop.children [
             yield Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
             yield Html.div state.Count

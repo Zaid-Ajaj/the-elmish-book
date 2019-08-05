@@ -113,7 +113,7 @@ Html.div [
 ```
 Notice here, the `style` property takes a list of styles. These styles are easy to find using the `style` type where you could just "dot through" the type and your IDE will tell you all the things you can use. The [Feliz](https://github.com/Zaid-Ajaj/Feliz) library includes overloads for most of the css properties and they fully type-safe and well documented.
 
-# Self-closing Tags
+### Self-closing Tags
 
 In Html, there are a couple of elements that can have no nested children: self-closing element tags such as `input`, `br` `hr`, `img` etc. In the React DSL provided by Feliz, there is no difference. Simply do not specify any children for them because they wouldn't have any meaning:
 ```html
