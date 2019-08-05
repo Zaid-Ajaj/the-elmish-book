@@ -137,18 +137,16 @@ Notice here the use of `Option.map` and `List.tryFind` when working with `state.
 ### Rendering The User Interface
 
 Back to the `render` function. This time it is actually more interesting because here we will have to decide when to show edit form while we are in edit mode or show the To-Do item otherwise. I have left the function `renderTodo` from Part 2 as is except for the edit button that starts the edit mode. To render the edit form (text box, save and cancel button) I have added another function called `renderEditForm` and the root `render` function has to decide which on of these to call when rendering each todo as follows:
-```fsharp {highlight: ['13-17']}
+```fsharp {highlight: [1, '11-15']}
 let renderEditForm (todoBeingEdited: TodoBeingEdited) (dispatch: Msg -> unit) =
   (* . . . *)
 
 let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
   (* . . . *)
 
-let render (state: State) (dispatch: Msg -> unit) =
-  div [ Style [ Padding 20 ] ] [
-    h3 [ Class "title" ] [ str "Elmish To-Do list" ]
-    createTodoTextbox state dispatch
-    div [ Class "content" ] [
+let todoList (state: State) (dispatch: Msg -> unit) =
+  Html.ul [
+    prop.children [
       for todo in state.TodoList ->
         match state.TodoBeingEdited with
         | Some todoBeingEdited when todoBeingEdited.Id = todo.Id ->
@@ -157,55 +155,85 @@ let render (state: State) (dispatch: Msg -> unit) =
             renderTodo todo dispatch
     ]
   ]
+
+let render (state: State) (dispatch: Msg -> unit) =
+  Html.div [
+    prop.style [ style.padding 20 ]
+    prop.children [
+      appTitle
+      inputField state dispatch
+      todoList state dispatch
+    ]
+  ]
 ```
 The highlighted part is very important: for every item in `state.TodoList` we check whether we are editing *that* item. If that is the case, we render the "edit form". We do so by testing whether `state.TodoBeingEdited` has a value and that value (of `todoBeingEdited`) has an `Id` equal to the `Id` of the item we are rendering. For all other cases, simply render the `todo`.
 
-Also notice that every "smaller part" of the root `render` function: the functions `renderTodo` and `renderEditForm` only take in the *minimal* amount of information they need. This makes it easier to think about these parts in separation and avoids information redundancy. The implementation of both functions is trivial as well:
+Also notice that every "smaller part" of the root `render` function: the functions `renderTodo` and `renderEditForm` only take in the *minimal* amount of information they need. This makes it easier to think about these parts in separation and avoids information redundancy. The implementation of both functions is trivial as well, first the new `renderEditForm` function:
 ```fsharp
 let renderEditForm (todoBeingEdited: TodoBeingEdited) (dispatch: Msg -> unit) =
-  div [ Class "box" ] [
-    div [ Class "field is-grouped" ] [
-      div [ Class "control is-expanded" ] [
-        input [
-          Class "input is-medium";
-          valueOrDefault todoBeingEdited.Description;
-          OnChange (fun ev -> dispatch (SetEditedDescription ev.Value))
+  div [ "box" ] [
+    div [ "field is-grouped" ] [
+      div [ "control is-expanded" ] [
+        Html.input [
+          prop.classes [ "input"; "is-medium" ]
+          prop.valueOrDefault todoBeingEdited.Description;
+          prop.onTextChange (SetEditedDescription >> dispatch)
         ]
       ]
-      div [ Class "control buttons" ] [
-        button [ Class "button is-primary"; OnClick (fun _ -> dispatch ApplyEdit)  ] [
-          i [ Class "fa fa-save" ] [ ]
+
+      div [ "control"; "buttons" ] [
+        Html.button [
+          prop.classes [ "button"; "is-primary"]
+          prop.onClick (fun _ -> dispatch ApplyEdit)
+          prop.children [
+            Html.i [ prop.classes ["fa"; "fa-save" ] ]
+          ]
         ]
-        button [ Class "button is-warning"; OnClick (fun _ -> dispatch CancelEdit) ] [
-          i [ Class "fa fa-arrow-right" ] [ ]
+
+        Html.button [
+          prop.classes ["button"; "is-warning"]
+          prop.onClick (fun _ -> dispatch CancelEdit)
+          prop.children [
+            Html.i [ prop.classes ["fa"; "fa-arrow-right"] ]
+          ]
         ]
       ]
     ]
   ]
-
+```
+Then `renderTodo` is the same as from part 2 but with an addition of the button that turns the items into the edit mode:
+```fsharp {highlight: ['18-24']}
 let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
-  let checkButtonStyle =
-    classList [
-      "button", true
-      "is-success", todo.Completed
-      "is-outlined", not todo.Completed
-    ]
-
-  div [ Class "box" ] [
-    div [ Class "columns is-mobile" ] [
-      div [ Class "column" ] [
-        p [ Class "subtitle" ] [ str todo.Description ]
+  div [ "box" ] [
+    div [ "columns"; "is-mobile" ] [
+      div [ "column"; "subtitle"] [
+        Html.text todo.Description
       ]
-      div [ Class "column is-5" ] [
-        div [ Class "buttons is-right" ] [
-          button [ checkButtonStyle; OnClick(fun _ -> dispatch (ToggleCompleted todo.Id))  ] [
-            i [ Class "fa fa-check" ] [ ]
+
+      div [ "column"; "is-4" ] [
+        div [ "buttons"; "is-right" ] [
+          Html.button [
+            prop.classList [ true, "button"; todo.Completed, "is-success"]
+            prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
+            prop.children [
+              Html.i [ prop.classes [ "fa"; "fa-check" ] ]
+            ]
           ]
-          button [ Class "button is-primary"; OnClick (fun _ -> dispatch (StartEditingTodo todo.Id))  ] [
-            i [ Class "fa fa-edit" ] [ ]
+
+          Html.button [
+            prop.classes [ "button"; "is-primary" ]
+            prop.onClick (fun _ -> dispatch (StartEditingTodo  todo.Id))
+            prop.children [
+              Html.i [ prop.classes [ "fa"; "fa-edit" ] ]
+            ]
           ]
-          button [ Class "button is-danger"; OnClick (fun _ -> dispatch (DeleteTodo todo.Id)) ] [
-            i [ Class "fa fa-times" ] [ ]
+
+          Html.button [
+            prop.classes [ "button"; "is-danger" ]
+            prop.onClick (fun _ -> dispatch (DeleteTodo todo.Id))
+            prop.children [
+              Html.i [ prop.classes [ "fa"; "fa-times" ] ]
+            ]
           ]
         ]
       ]
