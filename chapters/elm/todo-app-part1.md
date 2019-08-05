@@ -133,10 +133,10 @@ This function can be used later inside the main `render` function and this way w
 As for the last part of the UI, we have to render the To-Do items themselves in a list. We do it using a list comprehension, mapping each `todo` in the `state.TodoList` into a `Html.listItem` element:
 ```fsharp {highlight: [4]}
 let todoList (state: State) (dispatch: Msg -> unit) =
-  Html.unorderedList [
+  Html.ul [
     prop.children [
       for todo in state.TodoList ->
-        Html.listItem [
+        Html.li [
           prop.classes ["box"; "subtitle"]
           prop.text todo
         ]
