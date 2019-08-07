@@ -32,13 +32,27 @@ type Msg =
   | IncrementDelayed
 ```
 The state type is kept the same, only now we have another `Msg` case: `IncrementDelayed`. This message is dispatched from the `render` function as usual:
-```fsharp {highlight: [6]}
+```fsharp {highlight: ['16-19']}
 let render (state: State) (dispatch: Msg -> unit) =
-  div [ ] [
-    h1 [ ] [ ofInt state.Count ]
-    button [ OnClick (fun _ -> dispatch Increment) ] [ str "Increment" ]
-    button [ OnClick (fun _ -> dispatch Decrement) ] [ str "Decrement" ]
-    button [ OnClick (fun _ -> dispatch IncrementDelayed) ] [ str "Increment Delayed" ]
+  Html.div [
+    prop.children [
+      Html.h1 state.Count
+
+      Html.button [
+        prop.onClick (fun _ -> dispatch Increment)
+        prop.text "Increment"
+      ]
+
+      Html.button [
+        prop.onClick (fun _ -> dispatch Decrement)
+        prop.text "Decrement"
+      ]
+
+      Html.button [
+        prop.onClick (fun _ -> dispatch IncrementDelayed)
+        prop.text "Increment Delayed"
+      ]
+    ]
   ]
 ```
 The interesting part is the `update` function:
@@ -98,14 +112,27 @@ Then the user interface can show the text "LOADING" when the `Loading` is enable
 let render (state: State) (dispatch: Msg -> unit) =
   let content =
     if state.Loading
-    then str "LOADING..."
-    else ofInt state.Count
+    then Html.h1 "LOADING..."
+    else Html.h1 state.Count
 
-  div [ ] [
-    h1 [ ] [ content ]
-    button [ OnClick (fun _ -> dispatch Increment) ] [ str "Increment" ]
-    button [ OnClick (fun _ -> dispatch Decrement) ] [ str "Decrement" ]
-    button [ OnClick (fun _ -> dispatch IncrementDelayed) ] [ str "Increment Delayed" ]
+  Html.div [
+    prop.children [
+      content
+      Html.button [
+        prop.onClick (fun _ -> dispatch Increment)
+        prop.text "Increment"
+      ]
+
+      Html.button [
+        prop.onClick (fun _ -> dispatch Decrement)
+        prop.text "Decrement"
+      ]
+
+      Html.button [
+        prop.onClick (fun _ -> dispatch IncrementDelayed)
+        prop.text "Increment Delayed"
+      ]
+    ]
   ]
 ```
 You end up with the following user interface
@@ -117,18 +144,32 @@ You end up with the following user interface
 </div>
 
 Going even further, you can disallow the user to trigger certain events while there is an ongoing asynchronous operation. For example, if the user clicks `IncrementDelayed`, they shouldn't be allowed to trigger it again until the operation has finished (i.e. when `Loading` is `false`). There are two ways of implementing this, first is from user interface itself by disabling the "Increment Delayed" button until the operation finishes. The second option is in the `update` function, returning the state as is without commands if the operation is still ongoing (i.e. `Loading` is `true`). Let's do both, the `render` functions becomes:
-```fsharp {highlight: [11]}
+```fsharp {highlight: [21]}
 let render (state: State) (dispatch: Msg -> unit) =
   let content =
     if state.Loading
-    then str "LOADING..."
-    else ofInt state.Count
+    then Html.h1 "LOADING..."
+    else Html.h1 state.Count
 
-  div [ ] [
-    h1 [ ] [ content ]
-    button [ OnClick (fun _ -> dispatch Increment) ] [ str "Increment" ]
-    button [ OnClick (fun _ -> dispatch Decrement) ] [ str "Decrement" ]
-    button [ Disabled state.Loading; OnClick (fun _ -> dispatch IncrementDelayed) ] [ str "Increment Delayed" ]
+  Html.div [
+    prop.children [
+      content
+      Html.button [
+        prop.onClick (fun _ -> dispatch Increment)
+        prop.text "Increment"
+      ]
+
+      Html.button [
+        prop.onClick (fun _ -> dispatch Decrement)
+        prop.text "Decrement"
+      ]
+
+      Html.button [
+        prop.disabled state.Loading
+        prop.onClick (fun _ -> dispatch IncrementDelayed)
+        prop.text "Increment Delayed"
+      ]
+    ]
   ]
 ```
 Here we say that the button is disabled when `state.Loading` is true and will not be able to trigger/dispatch `IncrementDelayed` anymore. Now to enforce the requirement from the `update` function as well, we do it as follows

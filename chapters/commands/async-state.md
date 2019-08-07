@@ -211,23 +211,36 @@ let update msg state =
 The icing on the cake will be the `render` function, because now it can handle the different states of the async operation is a succinct and concise manner:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
-  let content =
-    match state.RandomNumber with
-    | HasNotStartedYet ->
-        h1 [ ] [ str "Hasn't started yet!" ]
-    | InProgress ->
-        h1 [ ] [ str "LOADING..." ]
-    | Resolved (Ok number) ->
-        h1 [ Style [ Color "green" ] ] [ str (sprintf "Succesfully generated random number: %f" number)  ]
-    | Resolved (Error errorMsg) ->
-        h1 [ Style [ Color "crimson" ] ] [ str errorMsg ]
+    let content =
+        match state.RandomNumber with
+        | HasNotStartedYet ->
+            Html.h1 "Hasn't started yet!"
 
-  div [ ] [
-    content
-    button [ Disabled (state.RandomNumber = InProgress)
-             OnClick (fun _ -> dispatch (GenerateRandomNumber Started)) ]
-           [ str "Generate Random" ]
-  ]
+        | InProgress ->
+            Html.h1 "LOADING..."
+
+        | Resolved (Ok number) ->
+            Html.h1 [
+                prop.style [ style.color.green ]
+                prop.text (sprintf "Succesfully generated random number: %f" number)
+            ]
+
+        | Resolved (Error errorMsg) ->
+            Html.h1 [
+                prop.style [ style.color.crimson ]
+                prop.text errorMsg
+            ]
+
+    Html.div [
+        prop.children [
+            content
+            Html.button [
+                prop.disabled (state.RandomNumber = InProgress)
+                prop.onClick (fun _ -> dispatch (GenerateRandomNumber Started))
+                prop.text  "Generate Random"
+            ]
+        ]
+    ]
 ```
 
 ### Conclusion

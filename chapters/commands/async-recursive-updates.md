@@ -47,9 +47,12 @@ let formatTime (time: DateTime) =
     sprintf "%s:%s:%s" (padZero time.Hour) (padZero time.Minute) (padZero time.Second)
 
 let render (state: State) (dispatch: Msg -> unit) =
-  div [ Style [ Padding 20 ] ] [
-      h1 [ ] [ str (formatTime state.CurrentTime) ]
-  ]
+    Html.div [
+        prop.style [ style.padding 20 ]
+        prop.children [
+            Html.h1 (formatTime state.CurrentTime)
+        ]
+    ]
 ```
 That's it! Let's now look at another example where the asynchronous workflow terminates when it satisfies a condition, a countdown application.
 

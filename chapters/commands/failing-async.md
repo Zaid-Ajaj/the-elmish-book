@@ -83,24 +83,32 @@ Lastly we render the `Value` onto the user interface. Green when it is `Ok` of s
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
   let content =
-    if state.Loading
-    then h1 [ ] [ str "LOADING..." ]
-    else match state.Value with
-         | Ok number ->
-            h1 [ Style [ Color "green" ] ] [
-                str (sprintf "Succesfully generated random number: %f" number)
-            ]
-         | Error errMsg ->
-            h1 [ Style [ Color "crimson" ] ] [
-                str errMsg
+    if state.Loading then
+        Html.h1 "LOADING..."
+    else
+        match state.Value with
+        | Ok number ->
+            Html.h1 [
+                prop.style [ style.color.green ]
+                prop.text (sprintf "Succesfully generated random number: %f" number)
             ]
 
-  div [ ] [
-    content
-    button [ Disabled state.Loading;
-             OnClick (fun _ -> dispatch GenerateRandomNumber) ]
-           [ str "Generate Random" ]
-  ]
+        | Error errorMsg ->
+            Html.h1 [
+                prop.style [ style.color.crimson ]
+                prop.text errorMsg
+            ]
+
+    Html.div [
+        prop.children [
+            content
+            Html.button [
+                prop.disabled state.Loading
+                prop.onClick (fun _ -> dispatch GenerateRandomNumber)
+                prop.text "Generate Random"
+            ]
+        ]
+    ]
 ```
 The example looks like this:
 

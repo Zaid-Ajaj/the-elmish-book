@@ -1,16 +1,16 @@
 # Working with HTTP
 
-A common question beginners ask when getting started with Fable is "How to work with HTTP in Elmish?" The short answer is to use Elmish commands and asynchronous workflows, but before getting into any of that we should rephrase the question into "How to work with HTTP in vanilla Javascript?" It is easy to forget that Fable compiles to plain old Javascript and that the techniques used in vanilla Javascript are still very much applicable in Fable and Elmish applications.
+A common question beginners ask when getting started with Fable is "How to work with HTTP in Elmish?" The short answer is to use Elmish commands and asynchronous workflows, but before getting into any of that we should rephrase the question into "How to work with HTTP in vanilla Javascript?" It is easy to forget that Fable compiles to plain old Javascript and that the techniques used in plain old Javascript are still very much applicable in Fable and Elmish applications.
 
 There are many libraries in the javascript world to work with HTTP but they all depend upon a single foundational building block which is the so-called `XMLHttpRequest` object available in all browsers.
 
 ### Working with `XMLHttpRequest`
 
-The object `XMLHttpRequest` can be used to make HTTP requests from the browser to a web server and make it possible to process the HTTP responses returned from that server. Despite the historical name, `XMLHttpRequest` is not tied to just XML and it can make any generic HTTP request. To get started with `XMLHttpRequest` we need to install the API bindings for it in our Elmish application, so `cd` your way into the `src` directory and install the nuget package `Fable.Browser.XMLHttpRequest` into the project:
+The object `XMLHttpRequest` can be used to make HTTP requests from the browser to a web server and make it possible to process the HTTP responses returned from that server. Despite the historical name, `XMLHttpRequest` is not tied to just XML and it can make any generic HTTP request. To get started with `XMLHttpRequest` we need to install the API bindings for it in our application, so `cd` your way into the `src` directory and install the nuget package `Fable.Browser.XMLHttpRequest` into the project:
 ```bash
 dotnet add package Fable.Browser.XMLHttpRequest
 ```
-Here is an example on how to work with `XMLHttpRequest` in a non-Elmish context where we request the the contents of a file from the webpack development server and log it to the console, remember that the development server is a static file server so we can ask for the contents of any file in the `public` directory, such as the `index.html` file:
+Here is an example on how to work with `XMLHttpRequest` in a non-Elmish context where we request the the contents of a file from the webpack development server that is running locally and log the response to the console. Remember that the development server is a static file server so we can ask for the contents of any file in the `public` directory, such as the `index.html` file itself:
 ```fsharp
 open Browser.Types
 open Browser
@@ -63,7 +63,9 @@ Notice that the `url` parameter contains a *relative* path: we no specify the fu
 
 ### Cross-Origin HTTP Requests
 
-This then begs the question, can we use absolute paths in our HTTP requests? It depends, unlike desktop and mobile applications that can make HTTP requests to any website/domain, HTTP requests made from a browser application cannot reach any website unless that website in subject *allows* it! When a browsers tries to communicate via HTTP with an external website or application, is it making a "cross origin" request. These "cross origin" requests are blocked by default in most web applications and authors have to explicitly enable them. You can give it a try yourself by trying to get the home page of Google:
+This then begs the question, can we use absolute URLs in our HTTP requests, such that we can access content from other external websites? It depends, unlike desktop and mobile applications that can make HTTP requests to any website or domain, HTTP requests made from a browser application cannot reach any website unless that website *allows* it to: when a browsers tries to communicate via HTTP with an external website or application, is it making a "cross origin" request. There requests are called "cross origin" because the web page initiating the request is trying to access a resource that is not from the same server that the web page was served from.
+
+These "cross origin" requests are blocked by default in most web applications and authors have to explicitly enable them. You can give it a try yourself by trying to get the home page of Google:
 ```fsharp
 xhr.``open``(method="GET", url="http://www.google.com")
 ```
@@ -75,7 +77,7 @@ You will get the following error, along with a status code of zero and an empty 
   </div>
 </div>
 
-This goes to say that you should not assume that a web applications can talk to each other freely. However, there are some external web applications that *do* allow cross-origin HTTP request, one of which will be very important in this chapter which is the [Hacker News Web API](https://github.com/HackerNews/API). Let us give it a try to load the latest top stories:
+This goes to say that you should not assume that a web page can access any arbitrary website freely. However, there are some external web applications that *do* allow cross-origin HTTP requests, one of which will be very important in this chapter which is the [Hacker News Web API](https://github.com/HackerNews/API). Let us give it a try to load the latest top stories:
 
 ```fsharp
 xhr.``open``(method="GET", url="https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty")
@@ -89,5 +91,4 @@ This is the response you get back:
   </div>
 </div>
 
-We get a status code of 200 (OK) and the response text containing an array of the identities of the latest top stories which you can load in subsequent requests. The data returned from Hacker News API is formatted as JSON, the de-facto data format of the web. We will learn how to process JSON data into typed F# entities and vice-versa in the following sections of this chapter.
-
+We get a status code of 200 (OK) and the response text containing an array of the identities of the latest top stories which you then can load in subsequent requests. The data returned from Hacker News API is formatted as JSON, the de-facto data format of the web. We will learn how to process JSON data into typed F# entities and vice-versa in the following sections of this chapter.
