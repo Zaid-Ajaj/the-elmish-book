@@ -232,13 +232,16 @@ When working with a CSS framework like Bulma or similar, you will find yourself 
 ```fsharp
 let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
   div [ "box" ] [
-    div [ "columns"; "is-mobile" ] [
-      div [ "column"; "subtitle"] [
-        Html.text todo.Description
+    div [ "columns"; "is-mobile"; "is-vcentered" ] [
+      div [ "column" ] [
+        Html.p [
+          prop.className "subtitle"
+          prop.text todo.Description
+        ]
       ]
 
-      div [ "column"; "is-4" ] [
-        div [ "buttons"; "is-right" ] [
+      div [ "column"; "is-narrow" ] [
+        div [ "buttons" ] [
           Html.button [
             prop.classList [ true, "button"; todo.Completed, "is-success"]
             prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
@@ -266,7 +269,7 @@ The layout can be visualized roughly as follows:
 
 > Yes, this is MS Paint.
 
-To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two columns. But in the example above, I want the description to have more real estate, so I use the `is-4` class on the second column such that the columns will share the width in the ratio 8/12 to 4/12 or simply 2 : 1. The number 12 is not arbitrary, many CSS frameworks including Bulma divide the width of the page into 12 portions, so when we add `is-4` to one of the columns we are saying that the column takes 4/12 of the width.
+To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two columns. But in the example above, I want the description to have more real estate, so I use the `is-narrow` class on the second column such that the second column only takes the spaces it needs for the two buttons and the first column will automatically take up the rest of the space for the To-Do item description.
 
 An interesting part of this layout is how the buttons are implemented:
 ```fsharp {highlight: [3, 11]}

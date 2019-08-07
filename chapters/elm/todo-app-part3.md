@@ -202,16 +202,19 @@ let renderEditForm (todoBeingEdited: TodoBeingEdited) (dispatch: Msg -> unit) =
   ]
 ```
 Then `renderTodo` is the same as from part 2 but with an addition of the button that turns the items into the edit mode:
-```fsharp {highlight: ['18-24']}
+```fsharp {highlight: ['21-27']}
 let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
   div [ "box" ] [
-    div [ "columns"; "is-mobile" ] [
-      div [ "column"; "subtitle"] [
-        Html.text todo.Description
+    div [ "columns"; "is-mobile"; "is-vcentered" ] [
+      div [ "column" ] [
+        Html.p [
+          prop.className "subtitle"
+          prop.text todo.Description
+        ]
       ]
 
-      div [ "column"; "is-4" ] [
-        div [ "buttons"; "is-right" ] [
+      div [ "column"; "is-narrow" ] [
+        div [ "buttons" ] [
           Html.button [
             prop.classList [ true, "button"; todo.Completed, "is-success"]
             prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
