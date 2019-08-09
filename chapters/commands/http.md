@@ -1,10 +1,10 @@
 # Introducing HTTP
 
-In the first chapter, we were introduced to the webpack development server, the server that starts when we run the command `npm start`. This server runs locally on your machine using port 8080 by default, which is why we navigate to it using a browser to the link `http://localhost:8080`. Notice here the link starts with `http://`, this instructs the browser to communicate with the server using HTTP: a communication protocol for applications to talk to each other via a shared network.
+So far in this chapter, we have learnt a lot about asynchronous operations in Elmish. Using commands, we are able to initiate these operations from our `update` function and process the events triggered by them. This was in preparation for understanding how to work with HTTP within the context of Elmish programs.
 
-Communication is always in the context of two parties, one that *initiates* the communication, *requesting* data and one that *answers* to these requests returning *responses* that contain the requested data. We call the party the initiates the communication the "client" and the party that responds to requests, the "server".
+In any modern single page application, HTTP is the at core of the web application as the front-end exchanges data back and forth with a back-end by sending HTTP requests and processing HTTP responses.
 
-In the case of the webpack development server, the browser is the client because it requested the server for the page, which the server returned so that the browser could render it on screen, here the webpack development server acts as a *static file server*, it serves the files that are present in the `public` directory (except for `bundle.js` because it generates that dynamically and returns it to the browser, i.e. the client)
+Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack developement server for the content of static files inside the `public` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
 
 <div style="margin-top: 40px; margin-bottom:40px; width:100%">
   <div style="margin: 0 auto; width:75%;">
@@ -13,5 +13,3 @@ In the case of the webpack development server, the browser is the client because
 </div>
 
 In the same way that the browser sends HTTP requests to the server, our Elmish application too can make HTTP requests, send them to webpack development server and process the HTTP responses it gets back. In the following sections, we will look into how that actually works and how we can can integrate HTTP communication into our Elmish applications from the very scratch.
-
-We will apply the techniques we have learned in this chapter to model HTTP requests and responses in terms of Elmish commands and asynchronous workflows.
