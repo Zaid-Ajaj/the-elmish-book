@@ -1,23 +1,23 @@
 {
-  "name": "the-elmish-book",
-  "version": "1.0.0",
-  "description": "Build advanced client apps in F#",
-  "dependencies": {
-    "live-server": "^1.2.1"
-  },
-  "scripts": {
-    "start": "live-server . --port=4000"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Zaid-Ajaj/the-elmish-book.git"
-  },
-  "keywords": [
-    "elmish",
-    "fable",
-    "fsharp",
-    "F#"
-  ],
-  "author": "Zaid Ajaj",
-  "license": "MIT"
+    "name": "the-elmish-book",
+    "version": "1.0.0",
+    "description": "Build advanced front-end applications in F#",
+    "dependencies": {
+        "live-server": "^1.2.1"
+    },
+    "scripts": {
+        "start": "live-server . --port=4000"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Zaid-Ajaj/the-elmish-book.git"
+    },
+    "keywords": [
+        "elmish",
+        "fable",
+        "fsharp",
+        "F#"
+    ],
+    "author": "Zaid Ajaj",
+    "license": "MIT"
 }
