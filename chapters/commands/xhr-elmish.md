@@ -54,3 +54,64 @@ let httpRequest (request: Request) (responseHandler: Response -> 'Msg) : Cmd<'Ms
 
     Cmd.ofSub command
 ```
+Let us make a sample application using the command above to make something that looks like the following
+
+<div style="margin-top: 40px; margin-bottom:40px; width:100%">
+  <div style="margin: 0 auto; width:100%;">
+    <resolved-image source="/images/commands/lorem-ipsum.gif" />
+  </div>
+</div>
+
+As you can see, the application loads, the screen turns into the "loading" state and after a short delay, the famous [lorem ipsum](https://www.lipsum.com/) text is shown on screen.
+
+We start building the application by adding the lorem ipsum text into a `.txt` file inside the `public` directory called `lorem-ipsum.txt`:
+```{highlight: [4]}
+public
+  ├─── index.html
+  ├─── fable.ico
+  └─── lorem-ipsum.txt
+```
+We will load the contents of this file when the application starts using HTTP. Like always, we starting building the Elmish application by modelling the state of the application, for that we will use two important types we came up with in the [Modelling Asynchronous State](async-state.md) section:
+```ocaml
+type Deferred<'t> =
+  | HasNotStartedYet
+  | InProgress
+  | Resolved of 't
+
+type AsyncOperationEvent<'t> =
+  | Started
+  | Finished of 't
+```
+The `Deferred<'t>` type is used to model the state and the `AsyncOperationEvent<'t>` type is used for the events, they can be used as follows:
+```fsharp
+type State = {
+    LoremIpsum : Deferred<Result<string, string>>
+}
+
+type Msg =
+    | LoadLoremIpsum of AsyncOperationEvent<Result<string, string>>
+```
+I use `Result<string, string>` for the generic `'t` type argument because when making a HTTP request, you could either get a successful result when the status code is 200 or an error otherwise.
+
+When the application starts up, the loading starts as well, so we implement `init()` as follows:
+```fsharp
+let init() = { LoremIpsum = HasNotStartedYet }, Cmd.ofMsg (LoadLoremIpsum Started)
+```
+Notice the initial command is `Cmd.ofMsg (LoadLoremIpsum Started)` which triggers the `LoadLoremIpsum Started` message. This message is responsible for initialing the HTTP request in the `update` function, let's see that is done and discuss the individual parts afterwards
+```fsharp
+let update msg state =
+    match msg with
+    | LoadLoremIpsum Started ->
+        let nextState = { state with LoremIpsum = InProgress }
+        let request = { url = "/lorem-ipsum.txt"; method = "GET"; body = "" }
+        let responseMapper (response: Response) =
+            if response.statusCode = 200
+            then LoadLoremIpsum (Finished (Ok response.body))
+            else LoadLoremIpsum (Finished (Error "Could not load the content"))
+
+        nextState, httpRequest request responseMapper
+
+    | LoadLoremIpsum (Finished result) ->
+        let nextState = { state with LoremIpsum = Resolved result }
+        nextState, Cmd.none
+```
