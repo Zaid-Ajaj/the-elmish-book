@@ -1,8 +1,6 @@
 # XMLHttpRequest in Elmish
 
-In the previous chapter, we have seen how to use `XMLHttpRequest` in a non-Elmish context where we just execute the HTTP request and log the results to the console. In this section, we will examine a number of techniques to integrating `XMLHttpRequest` into an Elmish program. In this section, we refere back to two important sections of this chapter and use what we learned from there:
- - [From Async<'t> to Cmd<'t>](async-to-cmd.md)
- - [Modelling Asynchronous State](async-state.md)
+In the previous chapter, we have seen how to use `XMLHttpRequest` in a non-Elmish context where we just execute the HTTP request and log the results to the console. In this section, we will examine a number of techniques to integrating `XMLHttpRequest` into an Elmish program.
 
 ### From `XMLHttpRequest` To Commands
 
@@ -115,3 +113,56 @@ let update msg state =
         let nextState = { state with LoremIpsum = Resolved result }
         nextState, Cmd.none
 ```
+Inside the branch of `LoadLoremIpsum Started` we make a GET request to `/lorem-ipsum.txt` to load the contents of the text file we added to the `public` directory, changing the state of `LoremIpsum` to `InProgress` and when the response comes back, we map it to a `LoadLoremIpsum (Finished result)` where `result` is either `Ok response.body` when the status code is 200 or `Error "Could not load the content"` otherwise.
+
+Lastly, the easiest part of this Elmish program is the `render` function which is self-explanatory:
+```fsharp
+let render (state: State) (dispatch: Msg -> unit) =
+    match state.LoremIpsum with
+    | HasNotStartedYet ->
+        Html.div ""
+
+    | InProgress ->
+        Html.div "Loading..."
+
+    | Resolved (Ok content) ->
+        Html.div [
+            prop.style [ style.color.green ]
+            prop.text content
+        ]
+
+    | Resolved (Error errorMsg) ->
+        Html.div [
+            prop.style [ style.color.red ]
+            prop.text errorMsg
+        ]
+```
+This program will always succeed, i.e. the HTTP request will always find the contents of the file and the status code will be 200 assuming there are no network errors. To make the status code return something else other than 200 to see how the program behaves, change the url of the HTTP request to a non-exitent resource such as `/non-existent.txt`:
+```fsharp
+let request = { url = "/non-existent.txt"; method = "GET"; body = "" }
+```
+The application ends up as follows:
+
+<div style="margin-top: 40px; margin-bottom:40px; width:100%">
+  <div style="margin: 0 auto; width:100%;">
+    <resolved-image source="/images/commands/http-error.png" />
+  </div>
+</div>
+
+### Composability problems with `httpRequest`
+
+In the section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multipe responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implementing an asynchronous function:
+```fsharp
+type httpRequest : Request -> Async<Response>
+```
+Using this function, we can make multiple HTTP requests in a single `Async<'T>` expression:
+```fsharp
+async {
+  let! response1 = httpRequest request1
+  let! response2 = httpRequest request2
+  let! response3 = httpRequest request3
+  // etc.
+  return ResponsesLoaded (response1, response2, response3)
+}
+```
+This way we could do things with responses and map their results into Elmish messages. Not to mention that we could parallelize the execution of the requests and do all the fancy things you could do with `Async` expressions. In the next section, we will look closely into asynchronous `XMLHttpRequest`.
