@@ -166,3 +166,7 @@ async {
 }
 ```
 This way we could do things with responses and map their results into Elmish messages. Not to mention that we could parallelize the execution of the requests and do all the fancy things you could do with `Async` expressions. In the next section, we will look closely into asynchronous `XMLHttpRequest`.
+
+### Source code reference
+
+You can find the source code used in this section in [this repository](https://github.com/Zaid-Ajaj/xmlhttprequest-in-elmish)

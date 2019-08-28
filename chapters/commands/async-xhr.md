@@ -142,3 +142,8 @@ let update msg state =
         let nextState = { state with LoremIpsum = Resolved result }
         nextState, Cmd.none
 ```
+There we have it, HTTP requests with Elmish in an idiomatic F# API. By this time, I hope we have gained a better understanding applying HTTP in Elmish applications but more importantly how to work with Javascript callbacks and turn them into F# `async` expressions.
+
+### Semantic differences between `Async<'T>` and Promises
+
+TO BE ADDED
