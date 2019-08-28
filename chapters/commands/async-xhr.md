@@ -144,6 +144,73 @@ let update msg state =
 ```
 There we have it, HTTP requests with Elmish in an idiomatic F# API. By this time, I hope we have gained a better understanding applying HTTP in Elmish applications but more importantly how to work with Javascript callbacks and turn them into F# `async` expressions.
 
+Now that we seen how to implement a simple HTTP request, we are only scratching the surface of the full API provided by `XMLHttpRequest`, you might have the idea of implementing a nice F#/Fable library that covers that API but yours truly has already done it for you, so sit back, relax and enjoy [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp).
+
+### Introducing `Fable.SimpleHttp`
+
+In our implementation of `httpRequest : Request -> Async<Response>` we had defined the request and response types as the following:
+```fsharp
+type Request = { url: string; method: string; body: string }
+type Response = { statusCode: int; body: string }
+```
+We also talked about their limitations such as the fact that they don't account for request and response headers, nor do they account for different request and response body types, i.e. string vs raw binary blob etc. Of course, these `Request` and `Response` types where used for demonstration purposes. Going forward, we will be using a library called [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) that fully supports operations of `XMLHttpRequest` implemented with F# asynchronous expressions that can be easily incorporated in our Elmish applicatios.
+
+Let us see the library in action replacing the `httpRequest` we used in the above `update` function. First of all, install the library from nuget:
+```
+dotnet add package Fable.SimpleHttp
+```
+Now use it in your application:
+```fsharp {highlight: [1, 9]}
+open Fable.SimpleHttp
+
+let update msg state =
+    match msg with
+    | LoadLoremIpsum Started ->
+        let nextState = { state with LoremIpsum = InProgress }
+        let loadLoremInpsum =
+            async {
+                let! (statusCode, responseText) = Http.get "/lorem-ipsum.txt"
+                if statusCode = 200
+                then return LoadLoremIpsum (Finished (Ok responseText))
+                else return LoadLoremIpsum (Finished (Error "Could not load the content"))
+            }
+
+        nextState, Cmd.fromAsync loadLoremInpsum
+
+    | LoadLoremIpsum (Finished result) ->
+        let nextState = { state with LoremIpsum = Resolved result }
+        nextState, Cmd.none
+```
+Issuing a GET request is as simple as `Http.get "/lorem-ipsum.txt"`, this function returns `Async<int * string>` where `int` is the status code of the response and `string` is the response body. All of the functions included in the `Http` module *do not throw exceptions* and that makes it a perfect fit in combination with `Cmd.fromAsync`.
+
+Module functions of `Http` such as `get`, `post`, `patch` etc. all account for the simple cases of HTTP requests where you are only interested in the status code and response text which the case for a lot of cases but the moment you want to configure a more complex request, adding headers and modifying body content types, then you can use the `Http.request` function that allows you to chain the configuration of the request, let us see how to use it instead of `Http.get`
+```fsharp {highlight: ['9-12']}
+open Fable.SimpleHttp
+
+let update msg state =
+    match msg with
+    | LoadLoremIpsum Started ->
+        let nextState = { state with LoremIpsum = InProgress }
+        let loadLoremInpsum =
+            async {
+                let! response =
+                    Http.request "/lorem-ipsum.txt"
+                    |> Http.method GET
+                    |> Http.send
+
+                if response.statusCode = 200
+                then return LoadLoremIpsum (Finished (Ok response.responseText))
+                else return LoadLoremIpsum (Finished (Error "Could not load the content"))
+            }
+
+        nextState, Cmd.fromAsync loadLoremInpsum
+
+    | LoadLoremIpsum (Finished result) ->
+        let nextState = { state with LoremIpsum = Resolved result }
+        nextState, Cmd.none
+```
+To learn more, refere to the documentation of [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) available in the README section of the repository.
+
 ### Semantic differences between `Async<'T>` and Promises
 
 TO BE ADDED
