@@ -144,7 +144,7 @@ let update msg state =
 ```
 There we have it, HTTP requests with Elmish in an idiomatic F# API. By this time, I hope we have gained a better understanding applying HTTP in Elmish applications but more importantly how to work with Javascript callbacks and turn them into F# `async` expressions.
 
-Now that we seen how to implement a simple HTTP request, we are only scratching the surface of the full API provided by `XMLHttpRequest`, you might have the idea of implementing a nice F#/Fable library that covers that API but yours truly has already done it for you, so sit back, relax and enjoy [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp).
+Now that we seen how to implement a simple HTTP request, we are only scratching the surface of the full API provided by `XMLHttpRequest`, you might have the idea of implementing a nice F#/Fable library that covers that API but yours truly has already done it for you, let us take a look at [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) for working with HTTP.
 
 ### Introducing `Fable.SimpleHttp`
 
@@ -181,9 +181,9 @@ let update msg state =
         let nextState = { state with LoremIpsum = Resolved result }
         nextState, Cmd.none
 ```
-Issuing a GET request is as simple as `Http.get "/lorem-ipsum.txt"`, this function returns `Async<int * string>` where `int` is the status code of the response and `string` is the response body. All of the functions included in the `Http` module *do not throw exceptions* and that makes it a perfect fit in combination with `Cmd.fromAsync`.
+Issuing a GET request is as simple as `Http.get "/lorem-ipsum.txt"`, this function returns `Async<int * string>` where `int` is the status code of the response and `string` is the response body. All of the functions included in the `Http` module *do not throw exceptions* and that makes them fit perfectly in combination with `Cmd.fromAsync`.
 
-Module functions of `Http` such as `get`, `post`, `patch` etc. all account for the simple cases of HTTP requests where you are only interested in the status code and response text which the case for a lot of cases but the moment you want to configure a more complex request, adding headers and modifying body content types, then you can use the `Http.request` function that allows you to chain the configuration of the request, let us see how to use it instead of `Http.get`
+Module functions of `Http` such as `get`, `post`, `patch` etc. all account for the simple cases of HTTP requests where you are only interested in the status code and response text which the case for a lot of cases but the moment you want to configure a more complex request, adding headers and modifying body content types, then you can use the `Http.request` function that allows you to configure the request by chaining configuration functions of `Http` module, let us see how to use it instead of `Http.get`
 ```fsharp {highlight: ['9-12']}
 open Fable.SimpleHttp
 
@@ -209,8 +209,21 @@ let update msg state =
         let nextState = { state with LoremIpsum = Resolved result }
         nextState, Cmd.none
 ```
-To learn more, refere to the documentation of [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) available in the README section of the repository.
+To learn more, refere to the documentation of [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) available in the README section of the repository. From now on, we will be using this library when it comes to making HTTP requests.
 
-### Semantic differences between `Async<'T>` and Promises
+### `Fable.Fetch` as an alternative to `Fable.SimpleHttp`
 
-TO BE ADDED
+The use of `XMLHttpRequests` API directly in modern Javascript applications is nowadays considered "too old school" and in some cases, not even recommended! This is because `XMLHttpRequest` mainly uses callbacks for handling the requests and responses. We have seen how callbacks cannot be easily composed, making it hard to issue multiple requests in sequence without bloating the code with noise.
+
+Modern Javascript application will opt for the so-called `fetch()` API when it comes to working with HTTP because it uses Promises for chaining and processing requests and because the API of `fetch` is relatively simpler compared to that of `XMLHttpRequest`. Of course, since this `fetch()` thing is really cool, the Fable community has built a binding library around it which is the `Fable.Fetch` package. Since `fetch` uses Promises, `Fable.Fetch` uses `Fable.Promise` as a dependency to implement the API to implement the binding because `Fable.Promise` provides a `promise` computation expression to work with Promises as a generic `Promise<'t>` similar to how the `async` computation expression makes it easy to work with `Async<'t>`. This means that with `Fable.Fetch` we are able to compose requests just as easy as with `Fable.SimpleHttp`.
+
+However, I would still recommend using `Fable.SimpleHttp` over `Fable.Fetch` and here is why
+
+> No, not because I built `Fable.SimpleHttp` thank you very much ;)
+
+First of all, Promises follow different semantics (meaning) than `async` expressions of F#: once a value of type `Promise<'t>` is created which is basically a description of an asynchronous operation just like that of `Async<'t>`, the operation is immediately started. This is a different behavior than that of `Async<'t>` with which you need to initiate the asynchronous operation yourself by calling `Async.StartImmediate`. This behavior of Promises is usually referred to as "hot" tasks as opposed to the "cold" tasks of F# with `Async<'t>` expressions that separate the instantiation of the asynchronous operation and actually starting it. This is not to say that "`Async<'t>` is better than `Promise<'t>`" but it is a difference that will confuse most F# developers at first sight, especially those who will assume similar execution semantincs when using `Promise<'t>`.
+
+The second reason which is of most importance is that the `fetch` API mainly uses *exceptions* for error handling and so does `Fable.Fetch` as opposed to using standards of handling HTTP errors by checking the status code of the response which is what `Fable.SimpleHttp` does by never throwing an exception and always returning a status code and a response text (or a full response value with all the metadata when you use `Http.request`).
+
+The last reason which could be of importance to those who need to support old browsers such as IE11, the `fetch` API in these browsers will require a [polyfill](https://github.com/github/fetch) to be added to the page in order to use `fetch` where as `Fable.SimpleHttp` only relies on `XMLHttpRequest` under the hood which is supported in all browsers without requiring additional polyfills.
+
