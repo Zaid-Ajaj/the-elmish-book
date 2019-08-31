@@ -10,7 +10,7 @@ Very often, we want to show or hide elements of the application based on the sta
 
 There are a couple of ways to conditional rendering, the first is the obvious one with `if ... then ... else` blocks:
 
-```fsharp {highlight: ['2-5', 7, 25]}
+```fsharp {highlight: ['2-5', 7, 22]}
 let render (state: State) (dispatch: Msg -> unit) =
   let headerText =
     if state.Count % 2 = 0
@@ -22,21 +22,17 @@ let render (state: State) (dispatch: Msg -> unit) =
   if state.Count < 0 then
     // don't render oddOrEvenMessage
     Html.div [
-        prop.children [
-            Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
-            Html.div state.Count
-            Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
-        ]
+        Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+        Html.div state.Count
+        Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
     ]
 
   else
     Html.div [
-        prop.children [
-            Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
-            Html.div state.Count
-            Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
-            oddOrEvenMessage
-        ]
+        Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+        Html.div state.Count
+        Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+        oddOrEvenMessage
     ]
 ```
 Here we are creating the element `oddOrEvenMessage` and then choosing whether or not we want to add it to child elements based on the current count.
@@ -55,33 +51,55 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
 
     Html.div [
-        prop.children [
-            Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
-            Html.div state.Count
-            Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
-            oddOrEvenMessage
-        ]
+        Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+        Html.div state.Count
+        Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+        oddOrEvenMessage
     ]
 ```
 In this example, we are always rendering the message but when the css attribute `display` is `none`, it has the same effect as if we didn't render the element.
 
-The above example used a combination of `if..else..then` expression and `display` styling. Styles can be applied conditionally using the `styleWhen` property (`styleList` is an alias for it too)
+The above example used a combination of `if..else..then` expression and `display` styling. Styles can be applied conditionally using the `style` property:
 ```fsharp {highlight: [2, 3, 4]}
 Html.h1 [
-    prop.styleWhen [
+    prop.style [
         state.Count < 0, [ style.display.none ]
     ]
 
     prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
 ]
 ```
-This way, you apply a bunch of style attributes based on the predicate (the first item of the tuple). The property `styleWhen` has type `((bool * IStyleAttribute list) list)` and returns `IReactAttribute` like all other attributes.
+This way, you apply a bunch of style attributes based on the predicate (the first item of the tuple). The property `style` an overload that takes type `((bool * IStyleAttribute list) list)` as input and returns `IReactAttribute` like all other attributes.
+
+### Conditional rendering using `Html.none`
+
+The value `Html.none` is special within the `Html` module. When this value is used, it tells the rendering engine (React in our case) to not render anything, for example:
+```fsharp {highlight: [11]}
+let render (state: State) (dispatch: Msg -> unit) =
+
+    let headerText =
+      if state.Count % 2 = 0
+      then "Count is even"
+      else "Count is odd"
+
+    let oddOrEvenMessage =
+      if state.Count > 0
+      then Html.h1 headerText
+      else Html.none
+
+    Html.div [
+        Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+        Html.div state.Count
+        Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+        oddOrEvenMessage
+    ]
+```
 
 ### Conditional Rendering Using `yield`
 
 Since the child elements of any Html tag is a list, we can use F#'s `yield` keyword for conditional rendering in combination with an `if ... then ... else` block. Here is how it looks like:
 
-```fsharp {highlight: [14]}
+```fsharp {highlight: [13]}
 let render (state: State) (dispatch: Msg -> unit) =
   let headerText =
     if state.Count % 2 = 0
@@ -90,13 +108,11 @@ let render (state: State) (dispatch: Msg -> unit) =
 
   let oddOrEvenMessage = Html.h1 headerText
 
-    Html.div [
-        prop.children [
-            yield Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
-            yield Html.div state.Count
-            yield Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
-            if state.Count > 0 then yield oddOrEvenMessage
-        ]
-    ]
+  Html.div [
+    yield Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
+    yield Html.div state.Count
+    yield Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
+    if state.Count > 0 then yield oddOrEvenMessage
+  ]
 ```
 The only downside of this approach is that all other elements need to be `yield`ed as well. Because this pattern is used a lot in Fable/F# projects, there are discussions of making `yield` implicit in the coming versions of F#, see [F# RFC FS-1069 - Implicit yields](https://github.com/fsharp/fslang-design/blob/master/FSharp-4.7/FS-1069-implicit-yields.md).

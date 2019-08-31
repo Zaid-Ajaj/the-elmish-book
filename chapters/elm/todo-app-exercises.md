@@ -34,15 +34,13 @@ Where `renderFilterTab` has the following structure:
 let renderFilterTabs (state: State) (dispatch: Msg -> unit) =
   div [ "tabs"; "is-toggle"; "is-fullwidth" ] [
     Html.ul [
-      prop.children [
-        Html.li [
-          prop.className "is-active"
-          prop.text
-        ]
-
-        Html.li "Completed"
-        Html.li "Not Completed"
+      Html.li [
+        prop.className "is-active"
+        prop.text
       ]
+
+      Html.li "Completed"
+      Html.li "Not Completed"
     ]
   ]
 ```

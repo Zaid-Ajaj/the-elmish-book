@@ -40,6 +40,47 @@ Translates to:
 Html.div "Hello, world"
 ```
 
+### Nested elements without properties
+```html
+<div>
+  <h1><strong>What's up?</strong></h1>
+</div>
+```
+Translates to
+```fsharp
+Html.div [
+  Html.h1 [
+    Html.strong "What's up?"
+  ]
+]
+```
+In this example, we are using a different overload for the functions in the `Html` module where the functions `div`, `h1`, `h2`, etc. accept a `ReactElement list` and return `ReactElement` instead of just accepting `IReactProperty list`. This allows for a natural translation between plain old Html and the equivalent F# code using the `Html` module.
+
+Of course, you can mix and match between the overloads of the functions in the `Html` module. For example, if a parent element doesn't have properties but the children do, then you can map it follows:
+```html
+<div>
+  <nav class="navbar">
+    <ul>
+      <li>Home</li>
+      <li>Contact</li>
+    </ul>
+  </nav>
+</div>
+```
+Translates to
+```fsharp
+Html.div [
+  Html.nav [
+    prop.className "navbar"
+    prop.children [
+      Html.ul [
+        Html.li "Home"
+        Html.li "Contact"
+      ]
+    ]
+  ]
+]
+```
 ### Using attributes
 ```html
 <div id="main" class="shiny">
@@ -153,9 +194,7 @@ let power x n =
     |> List.fold (*) 1
 
 Html.ul [
-    prop.children [
-        for i in 1 .. 5 -> Html.li (power 2 i)
-    ]
+    for n in 1 .. 5 -> Html.li (power 2 n)
 ]
 ```
 This renders the list:
@@ -174,10 +213,8 @@ let renderUserIcon user =
   match user with
   | Some loggedInUser ->
         Html.div [
-            prop.children [
-                renderUserImage loggedInUser
-                renderLogoutButton loggedInUser
-            ]
+            renderUserImage loggedInUser
+            renderLogoutButton loggedInUser
         ]
 
   | None ->
