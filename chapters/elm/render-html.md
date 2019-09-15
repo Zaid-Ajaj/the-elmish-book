@@ -1,6 +1,6 @@
 # Rendering Html
 
-In the previous section, the `render` function was introduced conas follows:
+In the previous section, the `render` function was introduced as follows:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
     Html.div [
