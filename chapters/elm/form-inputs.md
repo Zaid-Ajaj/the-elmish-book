@@ -30,25 +30,21 @@ let update msg state =
       { state with TextInput = textInput }
 ```
 What's more interesting is the `render` function:
+```fsharp {highlight: [3]}
+let render state dispatch =
+  Html.div [
+    Html.input [ prop.onChange (SetTextInput >> dispatch) ]
+    Html.span state.TextInput
+  ]
+```
+Notice here the `onChange` event handler it takes a function of type `string -> unit` where the input the current value of the input element. This function is triggered every time the value changes which in turn dispatches the `SetTextInput` message into our Elmish program and into the update function.
+
+When the state is updated with the new `TextInput`, the user interface is re-rendered and thus the `span` (highlighted below) will reflect the current value of the text input element:
 ```fsharp {highlight: [4]}
 let render state dispatch =
   Html.div [
-    prop.children [
-      Html.input [ prop.onTextChange (SetTextInput >> dispatch) ]
-      Html.span state.TextInput
-    ]
-  ]
-```
-Notice here the `onTextChange` event handler it takes a function of type `string -> unit` where the input the current value of the input element. This function is triggered every time the value changes which in turn dispatches the `SetTextInput` message into our Elmish program and into the update function.
-
-When the state is updated with the new `TextInput`, the user interface is re-rendered and thus the `span` (highlighted below) will reflect the current value of the text input element:
-```fsharp {highlight: [5]}
-let render state dispatch =
-  Html.div [
-    prop.children [
-      Html.input [ prop.onTextChange (SetTextInput >> dispatch) ]
-      Html.span state.TextInput
-    ]
+    Html.input [ prop.onTextChange (SetTextInput >> dispatch) ]
+    Html.span state.TextInput
   ]
 ```
 
@@ -59,14 +55,12 @@ This happens because HTML input elements such a text box keep track of an *inter
 ```fsharp {highlight: [5]}
 let render state dispatch =
   Html.div [
-    prop.children [
-      Html.input [
-        prop.valueOrDefault state.TextInput
-        prop.onTextChange (SetTextInput >> dispatch)
-      ]
-
-      Html.span state.TextInput
+    Html.input [
+      prop.valueOrDefault state.TextInput
+      prop.onChange (SetTextInput >> dispatch)
     ]
+
+    Html.span state.TextInput
   ]
 ```
 Now if we had the initial state set to `{ TextInput = "Some initial text" }` then the input box would start with that text instead of starting from an empty string. So far so good, there is a lot more to input elements but for now we know how to handle the basic case of text elements. It's now time to handle numeric inputs.
@@ -99,14 +93,12 @@ And the `render` function will look like this:
 ```fsharp {highlight: [6]}
 let render state dispatch =
   Html.div [
-    prop.children [
-      Html.input [
-        prop.valueOrDefault state.NumberInput
-        prop.onTextChange (int >> SetNumberInput >> dispatch)
-      ]
-
-      Html.span state.NumberInput
+    Html.input [
+      prop.valueOrDefault state.NumberInput
+      prop.onChange (int >> SetNumberInput >> dispatch)
     ]
+
+    Html.span state.NumberInput
   ]
 ```
 Now as you read the code snippet above, I am hoping that all kinds of alerts are going off at the back of your head because this code is very, very problematic! Can you spot the bug?
@@ -137,9 +129,9 @@ Now we know for sure that `tryParseInput` will only produce `Some` number if the
 ```fsharp
 prop.onTextChange (tryParseInt >> Option.iter (SetNumberInput >> dispatch))
 ```
-Now `SetNumberInput` will only be dispatched when we are able to parse the raw text from the input field. The lambda within `onTextChange` is just a fancy and more readable way of writing this:
+Now `SetNumberInput` will only be dispatched when we are able to parse the raw text from the input field. The lambda within `onChange` is just a fancy and more readable way of writing this:
 ```fsharp
-prop.onTextChange (fun rawText ->
+prop.onChange (fun rawText ->
     match tryParseInt rawText with
     | Some number -> dispatch (SetNumberInput number)
     | None -> ())
@@ -206,7 +198,7 @@ let render state dispatch =
     prop.children [
       Html.input [
         prop.valueOrDefault state.NumberInput.Raw
-        prop.onTextChange (tryParseInt >> SetNumberInput >> dispatch)
+        prop.onChange (tryParseInt >> SetNumberInput >> dispatch)
       ]
 
       Html.h1 [
@@ -226,15 +218,15 @@ Here I wanted to show you how you could make use of the F# type system to correc
 
 ### Built-in HTML5 Number Validation
 
-Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using thr `inputType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
+Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using thr `withType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
 ```fsharp {highlight: [2]}
 Html.input [
-  prop.inputType.number
+  prop.withType.number
   prop.valueOrDefault state.NumberInput.Raw
-  prop.onTextChange (tryParseInt >> SetNumberInput >> dispatch)
+  prop.onChange (tryParseInt >> SetNumberInput >> dispatch)
 ]
 ```
-Now we can't type any non-numeric values into the input field and the browser adds custom validation such that the `onTextChange` does not get triggerd when the input is not a proper number, even if you paste text from the clipboard. However, is it not enough because the browser seems to be happy let an empty string through as a valid number so you still have to do this validation business.
+Now we can't type any non-numeric values into the input field and the browser adds custom validation such that the `onChange` does not get triggerd when the input is not a proper number, even if you paste text from the clipboard. However, is it not enough because the browser seems to be happy let an empty string through as a valid number so you still have to do this validation business.
 
 ### Check Boxes
 
@@ -277,38 +269,36 @@ let render state dispatch =
     prop.children [
       Html.input [
         prop.valueOrDefault state.TextInput
-        prop.onTextChange (SetTextInput >> dispatch)
+        prop.onChange (SetTextInput >> dispatch)
       ]
 
       Html.div [
-        prop.children [
-          Html.label [
-            prop.htmlFor "checkbox-capitalized"
-            prop.text "Capitalized"
-          ]
+        Html.label [
+          prop.htmlFor "checkbox-capitalized"
+          prop.text "Capitalized"
+        ]
 
-          Html.input [
-            prop.style [ style.margin 5 ]
-            prop.id "checkbox-capitalized"
-            prop.inputType.checkbox
-            prop.valueOrDefault state.Capitalized
-            prop.onCheckedChange (SetCapitalized >> dispatch)
-          ]
+        Html.input [
+          prop.style [ style.margin 5 ]
+          prop.id "checkbox-capitalized"
+          prop.withType.checkbox
+          prop.valueOrDefault state.Capitalized
+          prop.onChange (SetCapitalized >> dispatch)
         ]
       ]
 
       Html.span (
-          if state.Capitalized
-          then state.TextInput.ToUpper()
-          else state.TextInput
+        if state.Capitalized
+        then state.TextInput.ToUpper()
+        else state.TextInput
       )
     ]
   ]
 ```
 Notice here the following:
- - A check box is simply an `Html.input` element with property `prop.inputType.checkbox`
+ - A check box is simply an `Html.input` element with property `prop.withType.checkbox`
  - The function `prop.valueOrDefault` accepts a boolean input to set the value at start-up
- - The event handler `onCheckedChange : bool -> unit` gives a nice way to retrieve the value
+ - The event handler `onChange : bool -> unit` gives a nice way to retrieve the value
 
 Also there is the `span` as the last element where it renders it's content based on whether the `Capitalized` field was set to true or not.
 
