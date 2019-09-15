@@ -218,7 +218,7 @@ Here I wanted to show you how you could make use of the F# type system to correc
 
 ### Built-in HTML5 Number Validation
 
-Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using thr `withType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
+Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using the `withType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
 ```fsharp {highlight: [2]}
 Html.input [
   prop.withType.number
