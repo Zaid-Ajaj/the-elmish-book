@@ -4,7 +4,7 @@ Clicking a button is one way for users to interact with your application. Anothe
 
 ### Textual Inputs
 
-The simplist input fields is a text box to collect raw textual information. Imagine we are building the following sample program:
+The simplest input field is a text box to collect raw textual information. Imagine we are building the following sample program:
 
 <resolved-image source="/images/elm/text-input.gif" />
 
@@ -218,7 +218,7 @@ Here I wanted to show you how you could make use of the F# type system to correc
 
 ### Built-in HTML5 Number Validation
 
-Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using thr `withType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
+Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using the `withType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
 ```fsharp {highlight: [2]}
 Html.input [
   prop.withType.number
@@ -226,11 +226,11 @@ Html.input [
   prop.onChange (tryParseInt >> SetNumberInput >> dispatch)
 ]
 ```
-Now we can't type any non-numeric values into the input field and the browser adds custom validation such that the `onChange` does not get triggerd when the input is not a proper number, even if you paste text from the clipboard. However, is it not enough because the browser seems to be happy let an empty string through as a valid number so you still have to do this validation business.
+Now we can't type any non-numeric values into the input field and the browser adds custom validation such that the `onChange` does not get triggered when the input is not a proper number, even if you paste text from the clipboard. However, is it not enough because the browser seems to be happy to let an empty string through as a valid number so you still have to do this validation business.
 
 ### Check Boxes
 
-Another type of input element is a check box. Check box inputs correspond to boolean fields of the state. Assume we want extend the example we have to the following sample application that implements a state toggle that will detemine whether or not the resulting text from text box is upper case:
+Another type of input element is a check box. Check box inputs correspond to boolean fields of the state. Assume we want to extend the example we have to the following sample application that implements a state toggle that will detemine whether or not the resulting text from text box is upper case:
 
 <resolved-image source="/images/elm/checkbox-input.gif" />
 
