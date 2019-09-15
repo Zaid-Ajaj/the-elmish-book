@@ -4,7 +4,7 @@ Clicking a button is one way for users to interact with your application. Anothe
 
 ### Textual Inputs
 
-The simplist input fields is a text box to collect raw textual information. Imagine we are building the following sample program:
+The simplest input fields is a text box to collect raw textual information. Imagine we are building the following sample program:
 
 <resolved-image source="/images/elm/text-input.gif" />
 
