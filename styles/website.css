@@ -18,9 +18,32 @@
     background: #555;
 }
 
+
 html {
     scrollbar-color: #888 #f1f1f1;
     scrollbar-width: thin;
+}
+
+@media (prefers-color-scheme: dark) {
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #26282C;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #1C1E21;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #18191B;
+    }
+
+    html {
+        scrollbar-color: #18191B #26282C;
+        scrollbar-width: thin;
+    }
 }
 
 .ItemChild {
