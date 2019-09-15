@@ -226,7 +226,7 @@ Html.input [
   prop.onChange (tryParseInt >> SetNumberInput >> dispatch)
 ]
 ```
-Now we can't type any non-numeric values into the input field and the browser adds custom validation such that the `onChange` does not get triggered when the input is not a proper number, even if you paste text from the clipboard. However, is it not enough because the browser seems to be happy let an empty string through as a valid number so you still have to do this validation business.
+Now we can't type any non-numeric values into the input field and the browser adds custom validation such that the `onChange` does not get triggered when the input is not a proper number, even if you paste text from the clipboard. However, is it not enough because the browser seems to be happy to let an empty string through as a valid number so you still have to do this validation business.
 
 ### Check Boxes
 
