@@ -26,6 +26,7 @@ countViewer.innerText = `Count is at ${count}`;
 ```
 Crazy right?! this is almost what we wrote but with F# instead. This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F# code, whatever it does, to javascript and lets your code run in any javascript runtime, whether it is the browser, [Node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others.
 
+
 ### Fable uses *bindings* to interact with native javascript APIs
 
 Already introduced in section [Hello World](/chapters/fable/hello-world), a Fable *binding* is a special F# library that contains type definitions and method signatures of native javascript APIs (similar to `.ts.d` files of typescript). In the previous samples, we used `document` from the `Fable.Browser.Dom` binding package which was included in the template, but the library includes a very large and comprehensive bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) just to name a few. Later on we will explore many other bindings that not only support native APIs like the ones from the browsers but also APIs from third-party libraries that can be seemlessly consumed from within our Fable applications.

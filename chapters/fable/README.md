@@ -9,7 +9,7 @@
 - [Counter Application](counter.md)
 - [Observations](observations.md)
 - [.NET Compatibility](compatibility.md)
-- [*Fable Pacakges](fable-packages.md)
+- [*Fable Packages](fable-packages.md)
 - [*Fable Bindings](fable-bindings.md)
 - [*Node.js Packages](node-packages.md)
 - [*Understanding How Fable Works](how-fable-works.md)
