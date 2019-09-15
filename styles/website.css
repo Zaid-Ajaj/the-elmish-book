@@ -18,6 +18,11 @@
     background: #555;
 }
 
+html {
+    scrollbar-color: #888 #f1f1f1;
+    scrollbar-width: thin;
+}
+
 .ItemChild {
     margin-top: 20px;
 }
