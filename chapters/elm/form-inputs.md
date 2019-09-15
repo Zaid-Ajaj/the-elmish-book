@@ -230,7 +230,7 @@ Now we can't type any non-numeric values into the input field and the browser ad
 
 ### Check Boxes
 
-Another type of input element is a check box. Check box inputs correspond to boolean fields of the state. Assume we want extend the example we have to the following sample application that implements a state toggle that will detemine whether or not the resulting text from text box is upper case:
+Another type of input element is a check box. Check box inputs correspond to boolean fields of the state. Assume we want to extend the example we have to the following sample application that implements a state toggle that will detemine whether or not the resulting text from text box is upper case:
 
 <resolved-image source="/images/elm/checkbox-input.gif" />
 
