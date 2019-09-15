@@ -1,6 +1,6 @@
 # Counter Application
 
-Let us now try to build something that not only has multiple elements, but also keeps track of and manipulates some local *state*. A counter application is the best candidate for these simple requirements. We can build something that looks like this: 
+Let us now try to build something that not only has multiple elements, but also keeps track of and manipulates some local *state*. A counter application is the best candidate for these simple requirements. We can build something that looks like this:
 
 <resolved-image source="/images/fable/counter.gif" />
 
@@ -16,8 +16,8 @@ We will need buttons that change the contents of a text element every time you c
   <link rel="shortcut icon" href="fable.ico" />
 </head>
 <body>
-  <button id="increase"> Increase </button> 
-  <button id="decrease"> Decrease </button> 
+  <button id="increase"> Increase </button>
+  <button id="decrease"> Decrease </button>
   <h1 id="countViewer"></h1>
 
   <script src="bundle.js"></script>
@@ -36,7 +36,7 @@ open Browser.Dom
 let increase = document.getElementById "increase"
 let decrease = document.getElementById "decrease"
 let countViewer = document.getElementById "countViewer"
- 
+
 let mutable currentCount = 0
 
 // attach event handlers
@@ -55,10 +55,10 @@ decrease.onclick <- fun ev ->
 // set the count viewer with the initial count
 countViewer.innerText <- sprintf "Count is at %d" currentCount
 ```
-There you have it, a working counter app in F# that uses vanilla javascripts APIs available in the browser. 
+There you have it, a working counter app in F# that uses vanilla javascripts APIs available in the browser.
 
 ### Random Increments and Decrements
-So far so good. We can add a slight change to the code to make the counter increase or decrease the count by a some *random number*, say between 5 and 10. For this, we will use something you probably already know from writing F# that runs in normal dotnet code: `System.Random`
+So far so good. We can add a slight change to the code to make the counter increase or decrease the count by a some *random number*, say between 5 and 10. For this, we will use something you probably already know from writing F# that runs in normal .NET code: `System.Random`
 ```fsharp {highlight: [12, 16, 20]}
 module App
 
@@ -68,7 +68,7 @@ open Browser.Dom
 let increase = document.getElementById "increase"
 let decrease = document.getElementById "decrease"
 let countViewer = document.getElementById "countViewer"
- 
+
 let mutable currentCount = 0
 
 let rnd = System.Random()
@@ -84,7 +84,7 @@ decrease.onclick <- fun ev ->
 
 // set the count viewer with the initial count
 countViewer.innerText <- sprintf "Count is at %d" currentCount
-``` 
+```
 
 <resolved-image source="/images/fable/random-counter.gif" />
 
@@ -101,8 +101,8 @@ Now, let us complicate this simple application by introducing yet another button
   <link rel="shortcut icon" href="fable.ico" />
 </head>
 <body>
-  <button id="increase"> Increase </button> 
-  <button id="decrease"> Decrease </button> 
+  <button id="increase"> Increase </button>
+  <button id="decrease"> Decrease </button>
   <button id="increaseDelayed">Increase delayed</button>
   <h1 id="countViewer"></h1>
 
@@ -114,11 +114,11 @@ Now, let us complicate this simple application by introducing yet another button
 Next we will write an `async` function that runs a callback after a delay and use it from the event handler:
 ```fsharp
 // Runs the callback after a delay
-let runAfter ms callback = 
+let runAfter ms callback =
   async {
-    do! Async.Sleep ms 
+    do! Async.Sleep ms
     do callback()
-  } 
+  }
   |> Async.StartImmediate
 
 let increaseDelayed = document.getElementById "increaseDelayed"
@@ -126,10 +126,10 @@ let increaseDelayed = document.getElementById "increaseDelayed"
 increaseDelayed.onclick <- fun _ ->
   runAfter 1000 (fun () ->
     currentCount  <- currentCount  + rnd.Next(5, 10)
-    countViewer.innerText <- sprintf "Count is at %d" currentCount 
+    countViewer.innerText <- sprintf "Count is at %d" currentCount
   )
-``` 
+```
 
 <resolved-image source="/images/fable/random-counter-delayed.gif" />
 
-Alright, we got our counter up and running, had it increase or decrease the count value randomly and even used an asynchronous function in the mix. Now it is time to take a step back and think about what we actually did in this section to better understand Fable. 
+Alright, we got our counter up and running, had it increase or decrease the count value randomly and even used an asynchronous function in the mix. Now it is time to take a step back and think about what we actually did in this section to better understand Fable.

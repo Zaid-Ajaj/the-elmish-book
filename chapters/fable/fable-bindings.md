@@ -4,9 +4,9 @@ Bindings are specialized Fable packages that allow a Fable project to access nat
 
 When we talk about bindings, we are just talking about a shell for an underlying javascript API or library. This means that a Fable binding is *always* used in combination with some specific javascript code that the binding calls or interacts with under the hood.
 
-Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs, for example the APIs available in the browser are different than those available on a node.js runtime. In the browser you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile on the node.js side of things can read file contents, call cryptographic functions or host a web server.
+Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs, for example the APIs available in the browser are different than those available on a Node.js runtime. In the browser you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile on the Node.js side of things can read file contents, call cryptographic functions or host a web server.
 
-There are more popular platforms that Fable can target, one of which is [Github Electron](https://electronjs.org/) which combines both node.js *and* the browser APIs to build powerful desktop applications. Another platform is [React Native](https://facebook.github.io/react-native/) which runs a node.js-like environment that lets you create mobile applications.
+There are more popular platforms that Fable can target, one of which is [Github Electron](https://electronjs.org/) which combines both Node.js *and* the browser APIs to build powerful desktop applications. Another platform is [React Native](https://facebook.github.io/react-native/) which runs a Node.js-like environment that lets you create mobile applications.
 
 ### Types of Bindings
 
@@ -45,10 +45,10 @@ Because there are different platforms that Fable can target, we end up with diff
 
  - Type 4: Javascript libraries published to npm which is the heart of the javascript ecosystem. These can be further divided into
   - Type 4.1: Libraries made to run inside a browser
-  - Type 4.2: Libraries made to run inside a node.js host
+  - Type 4.2: Libraries made to run inside a Node.js host
   - Type 4.3: Libraries made to run everywhere, the so-called "isomorphic" libraries.
 
-The list above it quite involved, it is a consequence of how javascript code is used and distributed throughout the different platforms. Historically, you could only use javascript inside a browser and the only libraries you could use are the ones you included in a web page using a script tag. A library included in this way becomes globally available in the page as an object under the global `window` variable. Later on, a proper package registry was introduced along with the node.js runtime, what is known today as [npm](https://www.npmjs.com/): the largest package registry of libraries in the world.
+The list above it quite involved, it is a consequence of how javascript code is used and distributed throughout the different platforms. Historically, you could only use javascript inside a browser and the only libraries you could use are the ones you included in a web page using a script tag. A library included in this way becomes globally available in the page as an object under the global `window` variable. Later on, a proper package registry was introduced along with the Node.js runtime, what is known today as [npm](https://www.npmjs.com/): the largest package registry of libraries in the world.
 
 Interacting with libraries included using a script tag in a web page is a different story than interacting with a library that is downloaded using `npm`: the former uses global variables and the latter uses javascript modules for exposing the code.
 Let's go through some example Fable bindings and explain on which target they would be compatible.
@@ -57,7 +57,7 @@ Let's go through some example Fable bindings and explain on which target they wo
 
 The first example is one we used in the very first [Hello World](hello-world.md) application, the package `Fable.Browser.Dom`. Using this package, we were able to interact with the `document` object and manipulate UI elements on the page. `Fable.Browser.Dom` is a binding for Type 2 javascript code. This package is one of the family of Fable packages under the [Fable.Browser](https://www.nuget.org/packages?q=Fable.Browser) namespace designed to be used in the browser.
 
-The packages [Thoth.Json](https://github.com/thoth-org/Thoth.Json) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson), two general purpose libraries for working with JSON are bindings of Type 1 because they both use the `JSON.*` module under the hood. These two can be used both inside the browser and node.js runtimes.
+The packages [Thoth.Json](https://github.com/thoth-org/Thoth.Json) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson), two general purpose libraries for working with JSON are bindings of Type 1 because they both use the `JSON.*` module under the hood. These two can be used both inside the browser and Node.js runtimes.
 
 <resolved-image source="/images/fable/type-one.png" />
 
@@ -69,7 +69,7 @@ As for Type 3 package, there is the package [Fable.Node](https://github.com/fabl
 
 <resolved-image source="/images/fable/type-three.png" />
 
-Type 4 packages are by far the most common bindings in Fable's ecosystem, simply because there are literally millions of useful packages distributed to npm that we want to use in Fable applications. These are further divided into those packages that can be used inside a browser and those that can be used in node.js runtimes.
+Type 4 packages are by far the most common bindings in Fable's ecosystem, simply because there are literally millions of useful packages distributed to npm that we want to use in Fable applications. These are further divided into those packages that can be used inside a browser and those that can be used in Node.js runtimes.
 
 <resolved-image source="/images/fable/type-four.png" />
 
