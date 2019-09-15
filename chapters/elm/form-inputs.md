@@ -43,7 +43,7 @@ When the state is updated with the new `TextInput`, the user interface is re-ren
 ```fsharp {highlight: [4]}
 let render state dispatch =
   Html.div [
-    Html.input [ prop.onTextChange (SetTextInput >> dispatch) ]
+    Html.input [ prop.onChange (SetTextInput >> dispatch) ]
     Html.span state.TextInput
   ]
 ```
@@ -85,9 +85,9 @@ let update msg state =
   | SetNumberInput numberInput ->
       { state with NumberInput = numberInput }
 ```
-Now to `render` function, how can we trigger `SetNumberInput` from the `Html.input` element if the `onTextChange` event takes a string? That is simple, just parse as an integer before dispatching the `SetNumberInput` event, i.e.
+Now to `render` function, how can we trigger `SetNumberInput` from the `Html.input` element if the `onChange` event takes a string? That is simple, just parse as an integer before dispatching the `SetNumberInput` event, i.e.
 ```fsharp
-prop.onTextChange (int >> SetNumberInput >> dispatch)
+prop.onChange (int >> SetNumberInput >> dispatch)
 ```
 And the `render` function will look like this:
 ```fsharp {highlight: [6]}
@@ -127,7 +127,7 @@ type tryParseInt = string -> Option<int>
 ```
 Now we know for sure that `tryParseInput` will only produce `Some` number if the number was properly parsed and otherwise the function will return `None`. You can use the function in the `render` function as follows:
 ```fsharp
-prop.onTextChange (tryParseInt >> Option.iter (SetNumberInput >> dispatch))
+prop.onChange (tryParseInt >> Option.iter (SetNumberInput >> dispatch))
 ```
 Now `SetNumberInput` will only be dispatched when we are able to parse the raw text from the input field. The lambda within `onChange` is just a fancy and more readable way of writing this:
 ```fsharp
