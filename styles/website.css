@@ -18,6 +18,28 @@
     background: #555;
 }
 
+@media (prefers-color-scheme: dark) {
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #26282C;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #1C1E21;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #18191B;
+    }
+
+    html {
+        scrollbar-color: #18191B #26282C;
+        scrollbar-width: thin;
+    }
+}
+
 .ItemChild {
     margin-top: 20px;
 }
