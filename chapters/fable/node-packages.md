@@ -36,11 +36,11 @@ The location of the `package.json` file *implies* that this directory is indeed 
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
-    "fable-compiler": "^2.3.3",
-    "fable-loader": "^2.1.6",
-    "webpack": "^4.25.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.2.0"
+    "fable-compiler": "^2.3.24",
+    "fable-loader": "^2.1.8",
+    "webpack": "^4.38.0",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
   }
 }
 ```
@@ -49,8 +49,7 @@ This `package.json` has two very important sections: the `devDependencies` and `
 
 This means your development dependencies are installed on a *per-project* basis which is really great because first, you do not to install any program to compile your project and second because the versions of these programs are maintained inside `package.json` allowing you to work on multiple projects on the same machine that use different versions of the same programs. For example you can work on a project A that uses Fable `1.x` and another project B that uses Fable `2.x` without the two interfering with each other.
 
-You must have wondered: "How did Fable compile the project if I didn't install it anywhere?" Well, there you have it. You installed it as part of your development dependencies with the package `fable-compiler`. The template uses version `2.3.3` of Fable which is the most recent version at the time of writing. I intend to keep the project template up-to-date with latest Fable versions.
-
+You must have wondered: "How did Fable compile the project if I didn't install it anywhere?" Well, there you have it. You installed it as part of your development dependencies with the package `fable-compiler`. The template uses version `2.3.24` of Fable which is the most recent version at the time of writing. I intend to keep the project template up-to-date with latest Fable versions.
 
 ### Npm scripts
 

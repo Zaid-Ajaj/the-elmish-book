@@ -20,7 +20,7 @@ We will need buttons that change the contents of a text element every time you c
   <button id="decrease"> Decrease </button>
   <h1 id="countViewer"></h1>
 
-  <script src="bundle.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
 ```
@@ -106,7 +106,7 @@ Now, let us complicate this simple application by introducing yet another button
   <button id="increaseDelayed">Increase delayed</button>
   <h1 id="countViewer"></h1>
 
-  <script src="bundle.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
 

@@ -69,22 +69,19 @@ Now that we have a way to update the state based on triggered events, we need th
 
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
-    Html.div [
-        prop.id "counter"
-        prop.children [
-            Html.button [
-                prop.onClick (fun _ -> dispatch Increment)
-                prop.text "Increment"
-            ]
-
-            Html.button [
-                prop.onClick (fun _ -> dispatch Decrement)
-                prop.text "Decrement"
-            ]
-
-            Html.h1 state.Count
-        ]
+  Html.div [
+    Html.button [
+      prop.onClick (fun _ -> dispatch Increment)
+      prop.text "Increment"
     ]
+
+    Html.button [
+      prop.onClick (fun _ -> dispatch Decrement)
+      prop.text "Decrement"
+    ]
+
+    Html.h1 state.Count
+  ]
 ```
 > This is function is also commonly known as the `view` function. I will use `render` and `view` interchangeably throughout the book.
 
@@ -134,7 +131,7 @@ For part (1), lets examine `public/index.html`, we will see the placeholder elem
 </head>
 <body>
     <div id="elmish-app"></div>
-    <script src="bundle.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
 ```

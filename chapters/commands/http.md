@@ -4,7 +4,7 @@ So far in this chapter, we have learnt a lot about asynchronous operations in El
 
 In any modern single page application, HTTP is the at core of the web application as the front-end exchanges data back and forth with a back-end by sending HTTP requests and processing HTTP responses.
 
-Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack developement server for the content of static files inside the `public` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
+Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack developement server for the content of static files inside the `dist` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
 
 <div style="margin-top: 40px; margin-bottom:40px; width:100%">
   <div style="margin: 0 auto; width:75%;">
@@ -26,7 +26,7 @@ To get started with `XMLHttpRequest` we need to install the API bindings for it 
 ```bash
 dotnet add package Fable.Browser.XMLHttpRequest
 ```
-Here is an example on how to work with `XMLHttpRequest` in a non-Elmish context where we request the the contents of a file from the webpack development server that is running locally and log the response to the console. Remember that the development server is a static file server so we can ask for the contents of any file in the `public` directory, such as the contents of the `index.html` file that initiated the request itself:
+Here is an example on how to work with `XMLHttpRequest` in a non-Elmish context where we request the the contents of a file from the webpack development server that is running locally and log the response to the console. Remember that the development server is a static file server so we can ask for the contents of any file in the `dist` directory, such as the contents of the `index.html` file that initiated the request itself:
 ```fsharp
 open Browser.Types
 open Browser
@@ -59,11 +59,11 @@ First of all we created an instance of the `XMLHttpRequest` object using the sta
 ```fsharp
 let xhr = XMLHttpRequest.Create()
 ```
-We create an instance per request we want to send. It is common to give the value of the created instance the name `xhr`. Next we open up the communication using the `open` function, giving it two parameters: the HTTP "*method*" and the url that points to the resource we want to load, in this case the resource at path `/index.html` which points to the `index.html` file inside the `public` directory:
+We create an instance per request we want to send. It is common to give the value of the created instance the name `xhr`. Next we open up the communication using the `open` function, giving it two parameters: the HTTP "*method*" and the url that points to the resource we want to load, in this case the resource at path `/index.html` which points to the `index.html` file inside the `dist` directory:
 ```fsharp
 xhr.``open``(method="GET", url="/index.html")
 ```
-The server returned a response with status code 200 for the client which is what was printed to the console of the browser because the server was able to find the specified resource. Now if we ask for a resource that does not exist, i.e. a file that is not present in the `public` directory such as `/non-existent.txt` and re-run the code, we get the following in our console:
+The server returned a response with status code 200 for the client which is what was printed to the console of the browser because the server was able to find the specified resource. Now if we ask for a resource that does not exist, i.e. a file that is not present in the `dist` directory such as `/non-existent.txt` and re-run the code, we get the following in our console:
 
 <div style="width:100%;">
   <div style="margin: 0 auto; width:100%;">
@@ -119,7 +119,7 @@ We get a status code of 200 (OK) and the response text containing an array of th
 
 ### HTTP requests without webpack development server
 
-The webpack development server is just that: a tool to use *during development*. When you compile your F# project with Fable using the command `npm run build`, the compilation generates static files like `bundle.js` inside the `public` directory and that's it, webpack is out of play after compilation has finished.
+The webpack development server is just that: a tool to use *during development*. When you compile your F# project with Fable using the command `npm run build`, the compilation generates static files like `main.js` inside the `dist` directory and that's it, webpack is out of play after compilation has finished.
 
 Now if you compile your project and run the `index.html` page directlty in your favorite web browser, it will be *unable* to send HTTP requests giving you the following error:
 
@@ -154,14 +154,14 @@ Now you should the dependency added to your development dependencies in `package
     }
 }
 ```
-Now we can add another npm script to let the `http-server` serve the files inside the `public` directory:
+Now we can add another npm script to let the `http-server` serve the files inside the `dist` directory:
 ```json {highlight: [6]}
 {
     "private": true,
     "scripts": {
         "build": "webpack",
         "start": "webpack-dev-server",
-        "serve": "http-server ./public"
+        "serve": "http-server ./dist"
     },
     "devDependencies": {
         "@babel/core": "^7.1.2",

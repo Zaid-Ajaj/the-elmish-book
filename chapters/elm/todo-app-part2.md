@@ -199,13 +199,11 @@ That was it for the `update`, now we consider the `render` function. Since the u
 ```fsharp {highlight: ['5-8']}
 let todoList (state: State) (dispatch: Msg -> unit) =
   Html.ul [
-    prop.children [
-      for todo in state.TodoList ->
-        Html.li [
-          prop.classes ["box"; "subtitle"]
-          prop.text todo
-        ]
-    ]
+    for todo in state.TodoList ->
+      Html.li [
+        prop.classes ["box"; "subtitle"]
+        prop.text todo
+      ]
   ]
 ```
 Now since the individual items will be more involved, we can introduce a function that renders a single item:

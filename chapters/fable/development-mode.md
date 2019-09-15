@@ -5,19 +5,14 @@ Before we dive any further we have to talk about the development workflow. So fa
 ### Webpack development server
 
 Along with the *full build* configuration in file `webpack.config.js` there is a section called `devServer`:
-```js {highlight: ['10-13']}
+```js {highlight: [6, 7, 8]}
 var path = require("path");
 
 module.exports = {
-    mode: "development",
+    mode: "none",
     entry: "./src/App.fsproj",
-    output: {
-        path: path.join(__dirname, "./public"),
-        filename: "bundle.js",
-    },
     devServer: {
-        contentBase: "./public",
-        port: 8080,
+        contentBase: path.join(__dirname, "./dist")
     },
     module: {
         rules: [{
@@ -27,9 +22,9 @@ module.exports = {
     }
 }
 ```
-Within the section, you see the `contentBase` options pointing to the `public` directory and there a `port` option as well. These options are the configuration for the development server of webpack. This setup says: "Start a local server that serves files from the `public` directory and run this server on port 8080". To use the development server, run the commands:
+Within the section, you see the `contentBase` options pointing to the `dist` directory. These options are the configuration for the development server of webpack. This setup says: "Start a local server that serves files from the `dist` directory". The development server runs on port 8080 by default. To use the development server, run the commands:
 ```bash
-npm install # if you haven't already
+npm install
 npm start
 ```
 The command `npm start` will start the development server, compiles the project *only once* and will keep watching the project files for any changes. You can then navigate to `http://localhost:8080` to see your project running.

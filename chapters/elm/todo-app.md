@@ -33,7 +33,7 @@ Here we will dive deeper into our amazing To-Do list application and add the fea
 
 ### Styling with Bulma, Icons with Font Awesome
 
-As I have mentioned earlier, we will be using [Bulma](https://bulma.io/) as our CSS framework and [Font Awesome](https://fontawesome.com/) for, well, the awesome icons. To start off, we clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository like we did in the [Counter](counter.md) example and work our way from there to build the application. From part 1 up to Part 3, the `index.html` page will be same, including the external CSS files. So the very first thing do after cloning is adding a couple of links to reference Bulma and Font Awesome to the `index.html` page inside the `public` directory:
+As I have mentioned earlier, we will be using [Bulma](https://bulma.io/) as our CSS framework and [Font Awesome](https://fontawesome.com/) for, well, the awesome icons. To start off, we clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository like we did in the [Counter](counter.md) example and work our way from there to build the application. From part 1 up to Part 3, the `index.html` page will be same, including the external CSS files. So the very first thing do after cloning is adding a couple of links to reference Bulma and Font Awesome to the `index.html` page inside the `dist` directory:
 ```html {highlight: ['7-12']}
 <!doctype html>
 <html>
@@ -51,7 +51,7 @@ As I have mentioned earlier, we will be using [Bulma](https://bulma.io/) as our 
 </head>
 <body>
     <div id="elmish-app"></div>
-    <script src="bundle.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
 ```

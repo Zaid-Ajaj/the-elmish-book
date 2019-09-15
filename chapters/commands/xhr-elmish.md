@@ -64,7 +64,7 @@ As you can see, the application loads, the screen turns into the "loading" state
 
 We start building the application by adding the lorem ipsum text into a `.txt` file inside the `public` directory called `lorem-ipsum.txt`:
 ```{highlight: [4]}
-public
+dist
   ├─── index.html
   ├─── fable.ico
   └─── lorem-ipsum.txt
@@ -120,7 +120,7 @@ Lastly, the easiest part of this Elmish program is the `render` function which i
 let render (state: State) (dispatch: Msg -> unit) =
     match state.LoremIpsum with
     | HasNotStartedYet ->
-        Html.div ""
+        Html.none
 
     | InProgress ->
         Html.div "Loading..."

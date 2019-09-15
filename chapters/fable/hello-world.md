@@ -16,7 +16,7 @@ fable-getting-started
   ├─── package.json
   ├─── README.md
   ├─── webpack.config.js
-  ├─── public
+  ├─── dist
   │     ├───  fable.ico
   │     ├───  index.html
   │
@@ -27,7 +27,7 @@ fable-getting-started
 
 The most important parts of the template are these directories:
 - `src` is where your F# source code lives
-- `public` is the ouput directory when you compile F# to javascript
+- `dist` is the ouput directory when you compile F# to javascript
 - `package.json` is used by Node.js to give information to the Node.js package manager (npm for short) that allows it to identify the project as well as handle the project's *dependencies*
 - `webpack.config.js` will contain our "compiler configuration" with [webpack](https://webpack.js.org/). We will talk about Webpack in great detail at a later chapter because it is an advanced topic.
 
@@ -37,7 +37,7 @@ module App
 
 printfn "Hello world from Fable"
 ```
-When the F# project is compiled using Fable, a single javascript file called `bundle.js` will be output in the `public` directory, the `bundle.js` file in turn, is referenced by `index.html`, also in the `public` directory:
+When the F# project is compiled using Fable, a single javascript file called `main.js` will be output in the `dist` directory, the `main.js` file in turn, is referenced by `index.html`, also in the `dist` directory:
 ```html {highlight:[9]}
 <!doctype html>
 <html>
@@ -47,25 +47,20 @@ When the F# project is compiled using Fable, a single javascript file called `bu
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="fable.ico" />
 </head>
-    <script src="bundle.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
 ```
 Which F# project to compile and where the output goes is defined within the configuration file `webpack.config.js`, in the following snippet I have highlighted the relevant configured options:
 
-```js {highlight:['5-9']}
+```js {highlight:[5]}
 var path = require("path");
 
 module.exports = {
-    mode: "development",
+    mode: "none",
     entry: "./src/App.fsproj",
-    output: {
-        path: path.join(__dirname, "./public"),
-        filename: "bundle.js",
-    },
     devServer: {
-        contentBase: "./public",
-        port: 8080,
+        contentBase: path.join(__dirname, "./dist")
     },
     module: {
         rules: [{
@@ -75,7 +70,7 @@ module.exports = {
     }
 }
 ```
-the `entry` options specifies which project to compile and the `output` option is self-explanatory. The other options will be discussed in a later chapter.
+the `entry` options specifies the path to the project that should be compiled. The other options will be discussed in a later chapter.
 
 ### Compiling the project
 In order to get your F# code to run in the browser, you will first need to compile the project and then open `index.html` in your browser. However, before being able to compile the project, there are a couple of requirements that you need to have installed on your machine:
@@ -103,8 +98,8 @@ I use windows, so the compilation looks as follows on my machine
 As you can see, a bunch of things happend in there. After the build is finished, there should be a `bundle.js` file in your `public` directory:
 
 ```
-public
-  ├───  bundle.js
+dist
+  ├───  main.js
   ├───  fable.ico
   ├───  index.html
 ```
@@ -134,20 +129,23 @@ After `npm run build` finished running you can refresh the `index.html` page in 
 
 Of course, printing out a message to the console is boring. We can try something slightly less boring with some user interaction, we are running our code in the browser after all. So let us add a button that will print a message in the console when clicked. First things first, add the button to the `index.html` page:
 
-```html {highlight: [7]}
+```html {highlight: [10]}
 <!doctype html>
 <html>
-<head>
-  <title>Fable Getting Started</title>
-</head>
+    <head>
+        <title>Fable</title>
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="fable.ico" />
+    </head>
 <body>
   <button id="printMsg">Print Message</button>
-  <script src="bundle.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
 ```
 Here, we have added a `button` tag to the page with identity attribute called `"printMsg"`, we will use this id to reference the button from the F# code. Modify the contents of `App.fs` to the following:
-```fsharp {highlight: [3, 5, 7, 8]}
+```fsharp
 module App
 
 open Brower.Dom
@@ -157,9 +155,9 @@ let printMsgButton = document.getElementById "printMsg"
 printMsgButton.onclick <- fun eventArgs ->
     printfn "Button clicked"
 ```
-At line 3, we open the namespace `Browser.Dom`: this is the first example of a Fable *binding*: a library that allows our code to access native javascript API's. In the example above, we use `document` with which we can reference and manipulate elements on the page, see [full docs here](https://developer.mozilla.org/en-US/docs/Web/API/Document) of `document`.
+We start by opening the namespace `Browser.Dom`: this is the first example of a Fable *binding*: a library that allows our code to access native javascript APIs. In the example above, we use `document` with which we can reference and manipulate elements on the page, see [full docs here](https://developer.mozilla.org/en-US/docs/Web/API/Document) of `document`.
 
-Then at line 5, we ask `document` to give us a reference for the HTML element that has the id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element: a function that will run when the button is clicked.
+Then, we ask `document` to give us a reference for the HTML element that has the id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element: a function that will run when the button is clicked.
 
 Now you can save `App.fs` and recompile using `npm run build`, refresh the page and you should get something that looks like this:
 
