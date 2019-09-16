@@ -36,6 +36,8 @@ On of the most important aspects of Fable is that it preserves the semantics of 
 
 In the previous example, we used two different constructs: mutability and `async` computation expressions. Although mutability is to be avoided in F# applications, sometimes it makes sense to use it for performance gains and Fable supports it.
 
+> For the full documentation on base class library compatibility, refer to [Fable docs](https://fable.io/docs/dotnet/compatibility.html)
+
 ### F# Async in Javascript
 
 As for `async`, it is natural for Fable to support such construct because javascript runtimes make heavy use of continuations, also known as callbacks. In fact, many if not all native javascript callback-based APIs can be turned into `async` expressions quite easily, for example to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in javascript into an async "sleep" function, you can write the following:
