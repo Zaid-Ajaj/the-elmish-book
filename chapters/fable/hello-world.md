@@ -85,7 +85,7 @@ once you have installed both .NET and Node.js, you can verify that you have the 
 dotnet --version
 node --version
 ```
-After you have checked the versions you can clone the starter template repository from github and compile the whole project
+After you have checked the versions you can clone the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository from github and compile the whole project
 ```bash
 cd fable-starter-template
 npm install
@@ -95,7 +95,7 @@ I use windows, so the compilation looks as follows on my machine
 
 <resolved-image source='/images/fable/compile.gif' />
 
-As you can see, a bunch of things happend in there. After the build is finished, there should be a `bundle.js` file in your `public` directory:
+As you can see, a bunch of things happend in there. After the build is finished, there should be a `main.js` file in your `dist` directory:
 
 ```
 dist

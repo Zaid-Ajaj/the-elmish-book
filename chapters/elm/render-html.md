@@ -3,22 +3,19 @@
 In the previous section, the `render` function was introduced as follows:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
-    Html.div [
-        prop.id "counter"
-        prop.children [
-            Html.button [
-                prop.onClick (fun _ -> dispatch Increment)
-                prop.innerText "Decrement"
-            ]
-
-            Html.button [
-                prop.onClick (fun _ -> dispatch Decrement)
-                prop.innerText "Decrement"
-            ]
-
-            Html.h1 state.Count
-        ]
+  Html.div [
+    Html.button [
+      prop.onClick (fun _ -> dispatch Increment)
+      prop.text "Increment"
     ]
+
+    Html.button [
+      prop.onClick (fun _ -> dispatch Decrement)
+      prop.text "Decrement"
+    ]
+
+    Html.h1 state.Count
+  ]
 ```
 We mentioned that it *computes* the HTML that will be rendered using the provided DSL. In this section, let's get familiar with the DSL by seeing how plain old HTML maps to the DSL and vice-versa. Although the DSL has different functions to create HTML, the type signature of these functions is usually the same:
 ```fsharp
@@ -167,20 +164,18 @@ In Html, there are a couple of elements that can have no nested children: self-c
 Translates to:
 ```fsharp
 Html.div [
-    prop.children [
-        Html.input [
-            prop.id "txtPass"
-            prop.className "input"
-            prop.inputType.password
-        ]
+  Html.input [
+    prop.id "txtPass"
+    prop.className "input"
+    prop.withType.password
+  ]
 
-        Html.hr [ ]
+  Html.hr [ ]
 
-        Html.img [
-            prop.src "/imgs/cute-cat.png"
-            prop.alt "An image of a cute cat"
-        ]
-    ]
+  Html.img [
+    prop.src "/imgs/cute-cat.png"
+    prop.alt "An image of a cute cat"
+  ]
 ]
 ```
 
@@ -221,3 +216,48 @@ let renderUserIcon user =
       renderSignInButton
 ```
 Here we check if the user is logged in, if that is the case we render his or her profile image and a logout button, otherwise there is no loggin user so we render the sign-in button. In the next section we will take a closer look into the many ways we can implement conditional rendering.
+
+### Feliz vs. Fable.React Comparison
+
+In all of the examples above and the examples to come in the book, we have been using the [Feliz](https://github.com/Zaid-Ajaj/Feliz) library to build our user interface inside the `render` function. However, if you look around in examples and samples from the community you will likely find code that looks like this:
+```fsharp
+open Fable.React
+
+let render (state: State) (dispatch: Msg -> unit) =
+  div [ ] [
+    button [ OnClick (fun _ -> dispatch Increment) ] [ str "Increment" ]
+    button [ OnClick (fun _ -> dispatch Decrement) ] [ str "Decrement" ]
+    h1 [ ] [ ofInt state.Count ]
+  ]
+```
+The snippet above uses the DSL provided in `Fable.React` library where there are some syntactic differences than the snippets written in Feliz.
+ - 1) Requires *two lists* for each element, one for the properties and one for the children.
+ - 2) Requires convertion functions to React elements `str` and `ofInt` when you need render primitive values such as `string` and `int`
+ - 3) Has all these functions for Html elements and properties *globally* available
+ - 4) CSS attributes are not entirely type-safe
+
+The first difference is there for historical reasons to make it look like the Elm language equivalent when it comes to rendering user interfaces but this proves to become very messy in larger snippets where there are so many unnecessary brackets that the code becomes unreadable. Developers also can't seem to decide on a convention when it comes to formatting the code having to make micro decisions of whether put the two lists in one line or in separate lines based on whether the elements have more properties than children or vice-versa. I built Feliz to solve this problem by using a single list for each element and results in a consistent formatting across your codebase, the same list is overloaded to not just take a list of properties but also a list of children if the element doesn't have properties to keep simple things simple.
+
+Because of the overloaded functions of Feliz, the conversion functions `str`, `ofInt` etc. are not needed anymore because Html elements can simply take primitive values as inputs such as `Html.div 42`, `Html.h1 "Hello"` or `Html.li 20.0`.
+
+Feliz functions are grouped by modules so that you can easily discover where every function is by using auto-complete features of your favorite editor: Html tags are explored by "dotting through" the `Html` module, element properties in the `prop` module and CSS styling in the `style` module.
+
+Moreover, Feliz uses proper types and function to model and account for CSS styles with the possible values where as `Fable.React` still uses a discriminated union for defining style properties that cannot be overloaded. This results in properties that are incorrect and not type-safe, for example `Margin of obj` and `Border of obj` will accept anything as input where as Feliz has specialized functions to work with different overloads of CSS properties:
+```fsharp
+Html.div [
+  prop.style [
+    style.margin(10)
+    style.margin(10, 10, 10, 10)
+    style.color.blue
+    style.alignContent.flexStart
+    style.display.none
+    style.border(3, borderStyle.dashed, colors.crimson)
+    style.borderColor.red
+    style.boxShadow(10, 10, 0, 5, colors.black)
+    // etc.
+  ]
+]
+```
+React elements rendered by Feliz are actually of type `ReactElement` which is the same type that elements from `Fable.React` return. This is because Feliz is built *on top* of `Fable.React` and ensures that the code used from Feliz can play nicely with existing applications and other third-party libraries built with `Fable.React` but of course I would not recommend mixing both syntaxes when building an application and instead go one of the two libraries.
+
+Personally I would always go for Feliz because I think of it as `Fable.React` with type-safe goodness on top, but don't take my work for it, try it out and see for yourself.
