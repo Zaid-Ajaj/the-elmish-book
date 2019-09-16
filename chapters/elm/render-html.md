@@ -260,4 +260,4 @@ Html.div [
 ```
 React elements rendered by Feliz are actually of type `ReactElement` which is the same type that elements from `Fable.React` return. This is because Feliz is built *on top* of `Fable.React` and ensures that the code used from Feliz can play nicely with existing applications and other third-party libraries built with `Fable.React` but of course I would not recommend mixing both syntaxes when building an application and instead go one of the two libraries.
 
-Personally I would always go for Feliz because I think of it as `Fable.React` with type-safe goodness on top, but don't take my work for it, try it out and see for yourself.
+Personally I would always go for Feliz because I think of it as `Fable.React` with type-safe goodness on top, but don't take my word for it, try it out and see for yourself.
