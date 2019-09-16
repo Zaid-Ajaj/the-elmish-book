@@ -148,7 +148,7 @@ Here, we have added a `button` tag to the page with identity attribute called `"
 ```fsharp
 module App
 
-open Brower.Dom
+open Browser.Dom
 
 let printMsgButton = document.getElementById "printMsg"
 
