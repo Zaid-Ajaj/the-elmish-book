@@ -20,7 +20,7 @@ Here `render` has the same signature but `init` and `update` now return a tuple 
 ### Counter With Commands
 The Elmish library includes many built-in commands under the `Cmd` module. A very useful command is `Cmd.none` which is a command that doesn't do anything, i.e. doesn't dispatch any message. Following here is the [Counter](/chapters/elm/counter.md) example but with commands:
 
-```fsharp {highlight: [9, 13, 14, 23]}
+```fsharp {highlight: [9, 13, 14, 31]}
 open Elmish
 
 type State = { Count : int }
@@ -36,12 +36,20 @@ let update msg state =
     | Increment -> { state with Count = state.Count + 1 }, Cmd.none
     | Decrement -> { state with Count = state.Count - 1 }, Cmd.none
 
-let render state dispatch =
-    div [ ] [
-        h1 [ ] [ ofInt state.Count ]
-        button [ OnClick (fun _ -> dispatch Increment) ] [ str "Increment" ]
-        button [ OnClick (fun _ -> dispatch Decrement) ] [ str "Decrement" ]
+let render (state: State) (dispatch: Msg -> unit) =
+  Html.div [
+    Html.button [
+      prop.onClick (fun _ -> dispatch Increment)
+      prop.text "Increment"
     ]
+
+    Html.button [
+      prop.onClick (fun _ -> dispatch Decrement)
+      prop.text "Decrement"
+    ]
+
+    Html.h1 state.Count
+  ]
 
 Program.mkProgram init update render
 |> Program.withReactSynchronous "elmish-app"

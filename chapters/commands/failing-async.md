@@ -100,13 +100,11 @@ let render (state: State) (dispatch: Msg -> unit) =
             ]
 
     Html.div [
-        prop.children [
-            content
-            Html.button [
-                prop.disabled state.Loading
-                prop.onClick (fun _ -> dispatch GenerateRandomNumber)
-                prop.text "Generate Random"
-            ]
+        content
+        Html.button [
+            prop.disabled state.Loading
+            prop.onClick (fun _ -> dispatch GenerateRandomNumber)
+            prop.text "Generate Random"
         ]
     ]
 ```

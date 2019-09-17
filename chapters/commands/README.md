@@ -17,8 +17,9 @@ Here, `State` represents the the type that holds data we want to keep track of w
 An Elmish program revolves around the state that it manages and the events that cause the state to change. When we mention "events" we are talking about events that are triggered from the user interface. This is because the only way we can trigger an event is by using the `dispatch` function available as an argument of `render`:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
-    button [ OnClick (fun _ -> dispatch Clicked) ] [
-        str "Click Me"
+    Html.button [
+        prop.onClick (fun _ -> dispatch Clicked)
+        prop.text "Click me"
     ]
 ```
 In other words, the ability to dispatch a message (i.e. trigger an event) is a matter of having control over the `dispatch` function. From our definition of an Elmish program it follows that only `render` can trigger events. This means that nothing can happen in the application unless the user interacts with elements on the page. Moreover, the signature of the `update` function is synchronous by nature which means updating the state from asynchronous operations is not accounted for. This might make sense for very simple and limited applications like the ones we built in the previous chapter. We even constructed the program using the function `mkSimple`, which is short for "make simple":
