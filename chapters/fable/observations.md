@@ -65,7 +65,7 @@ async {
 <code>Async.Sleep</code> with Fable is implemented using <code>setTimeout</code> under the hood, however the implementation is more advanced and provides built-in support for cancellation.
 </div>
 
-The above snippet uses native javascript and makes use Fable's interop capabilities. Don't worry if you do not understand this right away because of the `Emit` attribute or the `jsNative` value, there will a whole chapter devoted to interoperability from Fable. The take away from this is that it is really simple and easy to use native functionality when needed.
+The above snippet uses native javascript and makes use Fable's interop capabilities. Don't worry if you do not understand this right away because of the `Emit` attribute or the `jsNative` value, there will be a whole chapter devoted to interoperability from Fable. The take away from this is that it is really simple and easy to use native functionality when needed.
 
 
 ### Unsupported Features

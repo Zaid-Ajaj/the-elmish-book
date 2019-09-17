@@ -22,7 +22,7 @@ Dotnet has `System.DateTime` to represent dates and times, Fable supports this t
 
 ### Converters
 
-APIs from `System.Convert` and `System.BitConverter` are supported. Although I have to mention that there are some subtleties when you use these these classes in browser or node, for example the functions `Convert.FromBase64String` and `Convert.ToBase64String` use [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob) and [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa) under the hood, which are native browser functions and will not run out of the box within Node.js environments, at least at the time of writing that is. In such cases, you would have to provide a binding that *does* work with Node.js by using [Buffers](https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding):
+APIs from `System.Convert` and `System.BitConverter` are supported. Although I have to mention that there are some subtleties when you use these classes in browser or node, for example the functions `Convert.FromBase64String` and `Convert.ToBase64String` use [atob](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/atob) and [btoa](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa) under the hood, which are native browser functions and will not run out of the box within Node.js environments, at least at the time of writing that is. In such cases, you would have to provide a binding that *does* work with Node.js by using [Buffers](https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding):
 
 ```fsharp
 [<Emit("Array.prototype.slice.call(Buffer.from($0, 'base64'))")>]
