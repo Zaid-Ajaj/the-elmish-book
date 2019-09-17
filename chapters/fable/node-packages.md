@@ -18,7 +18,7 @@ fable-getting-started
   ├─── package.json
   ├─── README.md
   ├─── webpack.config.js
-  ├─── public
+  ├─── dist
   │     ├───  fable.ico
   │     ├───  index.html
   │
