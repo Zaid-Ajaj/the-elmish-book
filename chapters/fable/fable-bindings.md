@@ -4,7 +4,7 @@ Bindings are specialized Fable packages that allow a Fable project to access nat
 
 When we talk about bindings, we are just talking about a shell for an underlying javascript API or library. This means that a Fable binding is *always* used in combination with some specific javascript code that the binding calls or interacts with under the hood.
 
-Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs, for example the APIs available in the browser are different than those available on a Node.js runtime. In the browser you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile on the Node.js side of things can read file contents, call cryptographic functions or host a web server.
+Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs, for example the APIs available in the browser are different than those available on a Node.js runtime. In the browser you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile on the Node.js side of things you can read file contents, call cryptographic functions or host a web server.
 
 There are more popular platforms that Fable can target, one of which is [Github Electron](https://electronjs.org/) which combines both Node.js *and* the browser APIs to build powerful desktop applications. Another platform is [React Native](https://facebook.github.io/react-native/) which runs a Node.js-like environment that lets you create mobile applications.
 
