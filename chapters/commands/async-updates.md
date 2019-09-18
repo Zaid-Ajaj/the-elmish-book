@@ -32,26 +32,24 @@ type Msg =
   | IncrementDelayed
 ```
 The state type is kept the same, only now we have another `Msg` case: `IncrementDelayed`. This message is dispatched from the `render` function as usual:
-```fsharp {highlight: ['16-19']}
+```fsharp {highlight: ['15-18']}
 let render (state: State) (dispatch: Msg -> unit) =
   Html.div [
-    prop.children [
-      Html.h1 state.Count
+    Html.h1 state.Count
 
-      Html.button [
-        prop.onClick (fun _ -> dispatch Increment)
-        prop.text "Increment"
-      ]
+    Html.button [
+      prop.onClick (fun _ -> dispatch Increment)
+      prop.text "Increment"
+    ]
 
-      Html.button [
-        prop.onClick (fun _ -> dispatch Decrement)
-        prop.text "Decrement"
-      ]
+    Html.button [
+      prop.onClick (fun _ -> dispatch Decrement)
+      prop.text "Decrement"
+    ]
 
-      Html.button [
-        prop.onClick (fun _ -> dispatch IncrementDelayed)
-        prop.text "Increment Delayed"
-      ]
+    Html.button [
+      prop.onClick (fun _ -> dispatch IncrementDelayed)
+      prop.text "Increment Delayed"
     ]
   ]
 ```
@@ -116,22 +114,20 @@ let render (state: State) (dispatch: Msg -> unit) =
     else Html.h1 state.Count
 
   Html.div [
-    prop.children [
-      content
-      Html.button [
-        prop.onClick (fun _ -> dispatch Increment)
-        prop.text "Increment"
-      ]
+    content
+    Html.button [
+      prop.onClick (fun _ -> dispatch Increment)
+      prop.text "Increment"
+    ]
 
-      Html.button [
-        prop.onClick (fun _ -> dispatch Decrement)
-        prop.text "Decrement"
-      ]
+    Html.button [
+      prop.onClick (fun _ -> dispatch Decrement)
+      prop.text "Decrement"
+    ]
 
-      Html.button [
-        prop.onClick (fun _ -> dispatch IncrementDelayed)
-        prop.text "Increment Delayed"
-      ]
+    Html.button [
+      prop.onClick (fun _ -> dispatch IncrementDelayed)
+      prop.text "Increment Delayed"
     ]
   ]
 ```
@@ -144,7 +140,7 @@ You end up with the following user interface
 </div>
 
 Going even further, you can disallow the user to trigger certain events while there is an ongoing asynchronous operation. For example, if the user clicks `IncrementDelayed`, they shouldn't be allowed to trigger it again until the operation has finished (i.e. when `Loading` is `false`). There are two ways of implementing this, first is from user interface itself by disabling the "Increment Delayed" button until the operation finishes. The second option is in the `update` function, returning the state as is without commands if the operation is still ongoing (i.e. `Loading` is `true`). Let's do both, the `render` functions becomes:
-```fsharp {highlight: [21]}
+```fsharp {highlight: [20]}
 let render (state: State) (dispatch: Msg -> unit) =
   let content =
     if state.Loading
@@ -152,23 +148,21 @@ let render (state: State) (dispatch: Msg -> unit) =
     else Html.h1 state.Count
 
   Html.div [
-    prop.children [
-      content
-      Html.button [
-        prop.onClick (fun _ -> dispatch Increment)
-        prop.text "Increment"
-      ]
+    content
+    Html.button [
+      prop.onClick (fun _ -> dispatch Increment)
+      prop.text "Increment"
+    ]
 
-      Html.button [
-        prop.onClick (fun _ -> dispatch Decrement)
-        prop.text "Decrement"
-      ]
+    Html.button [
+      prop.onClick (fun _ -> dispatch Decrement)
+      prop.text "Decrement"
+    ]
 
-      Html.button [
-        prop.disabled state.Loading
-        prop.onClick (fun _ -> dispatch IncrementDelayed)
-        prop.text "Increment Delayed"
-      ]
+    Html.button [
+      prop.disabled state.Loading
+      prop.onClick (fun _ -> dispatch IncrementDelayed)
+      prop.text "Increment Delayed"
     ]
   ]
 ```
