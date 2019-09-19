@@ -18,7 +18,7 @@ The Elm Architecture provides a systematic approach for these problems using a n
 
  - Messages: are the types of events that can change your state, these messages can either be triggered from the user interface or from external sources. The messages are usually modeled with a discriminated union.
 
- - The Update function: is a function such that it takes a triggered message or event with the current state, then calculates the *next* state of the application.
+ - The Update function: is a function which takes a triggered message or event with the current state, then calculates the *next* state of the application.
 
  - The Render function: also known as the "view" function, takes the current state and builds user interface from it. The user interface can trigger messages or events.
 
