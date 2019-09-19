@@ -10,7 +10,7 @@ The structure of this repository is very much similar to the one we used in the 
 npm install
 npm start
 ```
-This will start Webpack's development server and hosts the application locally at http://localhost:8080. Navigate to the url and you will be presented with the same old (boring) counter application. What is interesting, is the implementation of it within the `src/App.fs` file, so lets break it down thoroughly in this section.
+This will start Webpack's development server and host the application locally at http://localhost:8080. Navigate to the url and you will be presented with the same old (boring) counter application. What is interesting, is the implementation of it within the `src/App.fs` file, so lets break it down thoroughly in this section.
 
 ### The Very Basics
 
@@ -24,7 +24,7 @@ open Feliz
 ```
 Here, the namespaces `Elmish` and `Elmish.React` give us access to the `Program` module which is used to bootstrap the Elmish application. `Feliz` is a library and DSL for writing the user interface code as we will see in a moment.
 
-Then we define the `State` type, also known is the data model of the application:
+Then we define the `State` type, also known as the data model of the application:
 ```fsharp
 type State =
     { Count : int }
@@ -83,7 +83,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     Html.h1 state.Count
   ]
 ```
-> This is function is also commonly known as the `view` function. I will use `render` and `view` interchangeably throughout the book.
+> This function is also commonly known as the `view` function. I will use `render` and `view` interchangeably throughout the book.
 
 The `render` function computes the user interface of the application based on the *current* state of the application (i.e. the first parameter) and the second parameter ("dispatch") is function that *translates* UI events into Elmish messages or events.
 
@@ -103,7 +103,7 @@ The function `Program.mkSimple` makes a "simple" program: a program with no side
 An Elmish program controls the life-cycle of the application and is responsible for calling the function triplet (`init`, `update` and `render`) in the appropriate manner, think about it roughly as follows:
  - Start with the current state (using initial state at startup)
  - Implement `dispatch` and give it along with current state to the `render` function
- - Create the user interface generated from the `render` function and attach event hanlders
+ - Create the user interface generated from the `render` function and attach event handlers
  - When `dispatch` is called (from event handlers), call `update` to get the next state and re-`render` the application based on this new state.
  - Repeat
 
@@ -135,10 +135,10 @@ For part (1), lets examine `public/index.html`, we will see the placeholder elem
 </body>
 </html>
 ```
-As for part (2), it is a bit more complicated. As we have discussed before, Elmish as an implementation of The Elm Architecture to two main concerns (1) managing and keeping track of data (= state) and (2) rendering user interface based on that state  (*re-rendering* the user interface whenever the state changes).
+As for part (2), it is a bit more complicated. As we have discussed before, Elmish as an implementation of The Elm Architecture addresses two main concerns (1) managing and keeping track of data (= state) and (2) rendering user interface based on that state  (*re-rendering* the user interface whenever the state changes).
 
 The second concern (rendering user interfaces) is commonly referred to as the "view part" of The Elm Architecture. Elmish delegates this concern to a third-party library that knows how to work with user interfaces really well, in this case it is the [React.js](https://reactjs.org/) library, one of the three most popular libraries in the javascript ecosystem to build web application. Section [React in Elmish](react-in-elmish) goes into greater details of this subject matter.
 
-Although React is only one type of these rendering engines, it is the most popular in the Fable community because of it fits really well with the functional approach and because we can use a plethora of pre-existing React components in our Elmish applications without re-implementing ourselves from scratch.
+Although React is only one type of these rendering engines, it is the most popular in the Fable community because it fits really well with the functional approach and because we can use a plethora of pre-existing React components in our Elmish applications without re-implementing them ourselves from scratch.
 
 In this section, we explored the implementation and talked about the basic constructs that make up an Elmish application. In the [next section](conditional-rendering) we will tinker with what we have, add a bit of styling and have our view show or hide elements based on the state.

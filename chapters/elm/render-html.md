@@ -21,13 +21,13 @@ We mentioned that it *computes* the HTML that will be rendered using the provide
 ```fsharp
 type htmlTag : IReactProperty list -> ReactElement
 ```
-where `htmlTag` can be any of the functions such as `div`, `h1`, `span` etc. The function takes a list of Html properties that basically represent the Html attributes. Alongside the attributes we have event handlers such as `onClick` and `onMouseEnter`, `onMouseLeave` etc. One special type of these properties is the `children` which takes and a list of child "React" elements, the output also is a "React" element which means it can be nested as a child of other elements.
+where `htmlTag` can be any of the functions such as `div`, `h1`, `span` etc. The function takes a list of Html properties that basically represent the Html attributes. Alongside the attributes we have event handlers such as `onClick` and `onMouseEnter`, `onMouseLeave` etc. One special type of these properties is the `children` which takes a list of child "React" elements, and the output also is a "React" element which means it can be nested as a child of other elements.
 
-More on `ReactElement` in [React in Elmish](react-in-elmish) but essentially this type is an  in-memory tree structure that represents how the rendered HTML will look like, it is not the *actual* rendered HTML, just a virtual representation of the HTML will look like *when* it is rendered.
+More on `ReactElement` in [React in Elmish](react-in-elmish) but essentially this type is an in-memory tree structure, it is not the *actual* rendered HTML, just a virtual representation of how the HTML will look like *when* it is rendered.
 
 ### Simple elements
 
-For simple elements, containing just textual content, the Html tags can consume strings directory. The following snippet:
+For simple elements, containing just textual content, the Html tags can consume strings directly. The following snippet:
 
 ```html
 <div>Hello, world</div>
@@ -53,7 +53,7 @@ Html.div [
 ```
 In this example, we are using a different overload for the functions in the `Html` module where the functions `div`, `h1`, `h2`, etc. accept a `ReactElement list` and return `ReactElement` instead of just accepting `IReactProperty list`. This allows for a natural translation between plain old Html and the equivalent F# code using the `Html` module.
 
-Of course, you can mix and match between the overloads of the functions in the `Html` module. For example, if a parent element doesn't have properties but the children do, then you can map it follows:
+Of course, you can mix and match between the overloads of the functions in the `Html` module. For example, if a parent element doesn't have properties but the children do, then you can map it as follows:
 ```html
 <div>
   <nav class="navbar">
@@ -110,7 +110,7 @@ Html.div [
     prop.text "Hello, world"
 ]
 ```
-The `text` property is a short-hand for `children [ Html.text "Hello, world" ]` making it nicely clean and simple like it should be.
+The `text` property is a short-hand for `children [ Html.text "Hello, world" ]` making it clean and simple like it should be.
 
 ### Nested Elements
 ```html
@@ -149,7 +149,7 @@ Html.div [
     prop.text "I got style, boi"
 ]
 ```
-Notice here, the `style` property takes a list of styles. These styles are easy to find using the `style` type where you could just "dot through" the type and your IDE will tell you all the things you can use. The [Feliz](https://github.com/Zaid-Ajaj/Feliz) library includes overloads for most of the css properties and they fully type-safe and well documented.
+Notice here, the `style` property takes a list of styles. These styles are easy to find using the `style` type where you could just "dot through" the type and your IDE will tell you all the things you can use. The [Feliz](https://github.com/Zaid-Ajaj/Feliz) library includes overloads for most of the css properties and they are fully type-safe and well documented.
 
 ### Self-closing Tags
 

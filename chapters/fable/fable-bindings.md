@@ -86,4 +86,4 @@ npm install --save date-fns
 
 ### Authoring Fable libraries and Bindings
 
-This was just a glimps of how Fable packages can integrate native javascript modules into Fable applications. In chapter 5 we will looking into interoperability in great detail and the different ways of authoring a Fable package.
+This was just a glimps of how Fable packages can integrate native javascript modules into Fable applications. In chapter 5 we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
