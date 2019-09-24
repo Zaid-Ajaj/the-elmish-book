@@ -1,2 +1,3 @@
 # Built-In Commands
 
+The `Cmd` module includes a bunch of useful built-in commands that we don't have to build ourselves. Implementing `Cmd.fromAsync` in [From Async<'t` to Cmd<'t>](async-to-cmd.md) was a special case to get a good feeling of how commands work. Another reason for implementing `Cmd.fromAsync` is because I personally am not a big fan of the API provided in the `Cmd` module to work with asynchronous expressions. Putting that aside, let us explore what the built-in commands have to offer.
