@@ -1,0 +1,7 @@
+# Book Format
+
+The book follows a *tutorial* format where we go through the code and add more features as we go to different sample applications to demonstrate different concepts. Not all of these sample will be directly useful but they will usually be sufficient to explain individual concepts. By the end of each chapter, starting from chapter 2 we build a bigger application that combines the different concepts we have learned throughout said chapter along with excercises that you should definitely practice to test your knowledge.
+
+The pacing is *deliberately* slow because learning front-end development can often be overwhelming. That is why each chapter is divided into bite-sized sections that are hopefully easy to understand on their own. As you progress through the book, the concepts start to become more clear as we keep expanding upon the things we learn along the way.
+
+Some parts of the book are *opinionated* and do not necessarily follow the tutorials and guidelines you have potentially used before. However, this is not to say that you should follow these guidelines and forget what you already know, it is in fact the opposite: my goal is that you learn enough about Elmish to draw your own conclusions and understand why one approach is better than the other.

@@ -9,9 +9,7 @@ This chapter provides a gentle introduction to Fable development by building Hel
 - [Counter Application](counter.md)
 - [Observations](observations.md)
 - [.NET Compatibility](compatibility.md)
-- [*Fable Packages](fable-packages.md)
-- [*Fable Bindings](fable-bindings.md)
-- [*Node.js Packages](node-packages.md)
-- [*Understanding How Fable Works](how-fable-works.md)
-
-> *Advanced content.
+- [Fable Packages](fable-packages.md)
+- [Fable Bindings](fable-bindings.md)
+- [Node.js Packages](node-packages.md)
+- [Understanding How Fable Works](how-fable-works.md)
