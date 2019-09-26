@@ -69,7 +69,7 @@ Html.h1 [
     prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
 ]
 ```
-This way, you apply a bunch of style attributes based on the predicate (the first item of the tuple). The property `style` an overload that takes type `((bool * IStyleAttribute list) list)` as input and returns `IReactAttribute` like all other attributes.
+This way, you apply a bunch of style attributes based on the predicate (the first item of the tuple). The property `style` is an overload that takes type `((bool * IStyleAttribute list) list)` as input and returns `IReactAttribute` like all other attributes.
 
 ### Conditional rendering using `Html.none`
 

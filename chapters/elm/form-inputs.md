@@ -16,7 +16,7 @@ type State = { TextInput : string }
 type Msg =
     | SetTextInput of string
 ```
-Notice here, to handle the input of a single field in an Elmish application, we need a field in the `State` type: the `TextInput` field and we need an event type `SetTextInput` that tells us that will be triggered when the text of the input changes. When the `SetTextInput` is triggered, we *manually* update the `TextInput` in the `State` inside the update the function. This is the big difference between The Elm Architecture and other UI architectures such as MVVM that has the so-called "two-way" binding. In The Elmish Architecture, there is only "one-way" binding and the updates have to occur manually.
+Notice here, to handle the input of a single field in an Elmish application, we need a field in the `State` type: the `TextInput` field and we need an event type `SetTextInput` that will be triggered when the text of the input changes. When the `SetTextInput` is triggered, we *manually* update the `TextInput` in the `State` inside the update function. This is the big difference between The Elm Architecture and other UI architectures such as MVVM that has the so-called "two-way" binding. In The Elmish Architecture, there is only "one-way" binding and the updates have to occur manually.
 
 > In Elmish applications, it is common to name the input fields `{FieldName}` for the `State` and `Set{FieldName}` for the event. `On{FieldName}Changed` is also another option for naming the event associated with the field.
 
@@ -37,7 +37,7 @@ let render state dispatch =
     Html.span state.TextInput
   ]
 ```
-Notice here the `onChange` event handler it takes a function of type `string -> unit` where the input the current value of the input element. This function is triggered every time the value changes which in turn dispatches the `SetTextInput` message into our Elmish program and into the update function.
+Notice here the `onChange` event handler takes a function of type `string -> unit` where the input the current value of the input element. This function is triggered every time the value changes which in turn dispatches the `SetTextInput` message into our Elmish program and into the update function.
 
 When the state is updated with the new `TextInput`, the user interface is re-rendered and thus the `span` (highlighted below) will reflect the current value of the text input element:
 ```fsharp {highlight: [4]}
@@ -67,7 +67,7 @@ Now if we had the initial state set to `{ TextInput = "Some initial text" }` the
 
 ### Numeric Inputs: Validation and Transformation
 
-At a first glance, handling numeric inputs isn't that much different than handling the textual input except for the fact that we keeping track of a number (float or integer) instead of a string but it already adds an extra step to the problem: handling validation and transformed information.
+At a first glance, handling numeric inputs isn't that much different than handling the textual input except for the fact that we keep track of a number (float or integer) instead of a string but it already adds an extra step to the problem: handling validation and transformed information.
 
 Let's start with `State` and `Msg`:
 ```fsharp
@@ -76,7 +76,7 @@ type State = { NumberInput : int }
 type Msg =
     | SetNumberInput of int
 ```
-Just like with our previous example, this one also has a field `NumberInput` on the state type and the event `SetNumberInput` on the messages type. Again, the `init` and `update` are self-explanotory:
+Just like with our previous example, this one also has a field `NumberInput` on the state type and the event `SetNumberInput` on the messages type. Again, the `init` and `update` are self-explanatory:
 ```fsharp
 let init() = { NumberInput = 0 }
 
@@ -107,11 +107,11 @@ The specified event handler above will try to parse *every* input into an intege
 
 <resolved-image source="/images/elm/int-exn.gif" />
 
-Oh my, an exception in an Elmish application?! This is definitely a worst-case scenario because it broke a bunch of stuff: the event handler errored which means the `update` function isn't called casuing the UI to go out-of-sync with the data, all of this because we tried to parse the input as an `int` in an unsafe manner without checking whether the parsing was actually successful or not.
+Oh my, an exception in an Elmish application?! This is definitely a worst-case scenario because it broke a bunch of stuff: the event handler errored which means the `update` function isn't called causing the UI to go out-of-sync with the data, all of this because we tried to parse the input as an `int` in an unsafe manner without checking whether the parsing was actually successful or not.
 
 In functional programming, the `int` function that parses the input is called a "partial" function because it only accepts a partial subset of the input type (a string) to produce a result of the output type (an integer). This means for some subset of strings, the ones that are not properly formatted as integers, the function will throw. These partial functions are considered unsafe exactly because they throw and cause unexpected behaviour in the application.
 
-To remedy partial functions, we can make them safe by turning them into "total" functions. A total function does not throw and can handle every input to produce a result whether is was succeeding or not. The output of such function usually returns an `Option<'t>` or a `Result<'t, 'err>` value but other detailed output types are possible as well. Here is a "total"/safe version of the `int` function:
+To remedy partial functions, we can make them safe by turning them into "total" functions. A total function does not throw and can handle every input to produce a result whether it was succeeding or not. The output of such function usually returns an `Option<'t>` or a `Result<'t, 'err>` value but other detailed output types are possible as well. Here is a "total"/safe version of the `int` function:
 ```fsharp
 let tryParseInt (input: string) : Option<int> =
     try Some (int input)
@@ -149,7 +149,7 @@ We were able to retrieve numeric input from the text box, but still the program 
 
 <resolved-image source="/images/elm/int-validated.gif" />
 
-To make this work, we need not only the parsed integer but also the raw text of the input in case it we weren't able to parse it. Let's introduce a `Validate<'t>` type for this purpose with some helper functions:
+To make this work, we need not only the parsed integer but also the raw text of the input in case we weren't able to parse it. Let's introduce a `Validated<'t>` type for this purpose with some helper functions:
 ```ocaml
 type Validated<'t> =
     {  Raw : string
@@ -179,7 +179,7 @@ let update msg state =
   | SetNumberInput numberInput ->
       { state with NumberInput = numberInput }
 ```
-Now before we able to implement `render` we first need to rewrite `tryParseInt` to return `Validated<int>` instead of `Option<int>` as follows:
+Now before we implement `render` we first need to rewrite `tryParseInt` to return `Validated<int>` instead of `Option<int>` as follows:
 ```fsharp
 let tryParseInt (input: string) : Validated<int> =
     try Validated.success input (int input)
