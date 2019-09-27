@@ -48,7 +48,7 @@ type Msg =
   | ToggleCompleted of int
   | DeleteTodo of int
 ```
-For example, when an event `ToggleCompleted 4` it means "Toggle the completed flag of the item with identity = 4" and the same holds for `DeleteTodo 4` which means "Delete the item that has identity = 4". Let's try to imagine how the state evolves as these events are triggered:
+For example, an event `ToggleCompleted 4` means "Toggle the completed flag of the item with identity = 4" and the same holds for `DeleteTodo 4` which means "Delete the item that has identity = 4". Let's try to imagine how the state evolves as these events are triggered:
 ```bash
 -> Initial State
   {
@@ -155,7 +155,7 @@ Let's go through each event: `DeleteTodo`
 
     { state with TodoList = nextTodoList }
 ```
-Here "deleting" a To-Do item is a matter of creating a *new* list where the To-Do item to be deleted is filtered out. This is common in Elmish, the state is immutable we create new states rather than mutating the current one.
+Here "deleting" a To-Do item is a matter of creating a *new* list where the To-Do item to be deleted is filtered out. This is common in Elmish: as the state is immutable we create new state rather than mutating the current one.
 
 As for `ToggleCompleted`:
 ```fsharp
@@ -169,7 +169,7 @@ As for `ToggleCompleted`:
 
     { state with TodoList = nextTodoList }
 ```
-We transform (map) each item in the list of our To-Do items and we check: if `todo` has the id of one we want to toggle, then we return a *new* To-Do item where the `Completed` field is toggled. Otherwise, just return the To-Do item as is unchanged. That's we get a new list where one To-Do item is toggled. Next we return a new state with the new list we just created.
+We transform (map) each item in the list of our To-Do items and we check: if `todo` has the id of one we want to toggle, then we return a *new* To-Do item where the `Completed` field is toggled. Otherwise, just return the To-Do item unchanged. That's how we get a new list where one To-Do item is toggled. Next we return a new state with the new list we just created.
 
 Event `AddTodo` now has a bit more logic to it than from the previous section:
 ```fsharp
@@ -267,7 +267,7 @@ The layout can be visualized roughly as follows:
 
 > Yes, this is MS Paint.
 
-To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two columns. But in the example above, I want the description to have more real estate, so I use the `is-narrow` class on the second column such that the second column only takes the spaces it needs for the two buttons and the first column will automatically take up the rest of the space for the To-Do item description.
+To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two columns. But in the example above, I want the description to have more space, so I use the `is-narrow` class on the second column such that the second column only takes the space it needs for the two buttons and the first column will automatically take up the rest of the space for the To-Do item description.
 
 An interesting part of this layout is how the buttons are implemented:
 ```fsharp {highlight: [3, 11]}

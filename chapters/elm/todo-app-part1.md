@@ -12,7 +12,7 @@ You can see and use the application [live here](https://zaid-ajaj.github.io/elmi
 
 ### Modelling The State
 
-Now that you have an idea of what the application has to do, the very first thing that we have to consider is the data model: the state of the application. The state is data that we want to keep track of while using the application. In our case, we have to keep track of a list of to-do items, each item is a piece of text (i.e. string). But that is not all, we also have a text box where the user can type in the contents of the a new todo item. So we have to maintain what the user is typing as well. The state comes down to the following type:
+Now that you have an idea of what the application has to do, the very first thing that we have to consider is the data model: the state of the application. The state is data that we want to keep track of while using the application. In our case, we have to keep track of a list of to-do items, each item is a piece of text (i.e. string). But that is not all, we also have a text box where the user can type in the contents of a new todo item. So we have to maintain what the user is typing as well. The state comes down to the following type:
 ```fsharp
 type State = {
     TodoList : string list
@@ -29,12 +29,12 @@ type Msg =
     | SetNewTodo of string
     | AddTodo
 ```
-Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box, that's why we need extra information `of string` which will carry the text that the user typed. `AddTodo` on the other hand will take the *current* value of `NewTodo` and adds it to `TodoList`. Notice here that `AddTodo` doesn't require extra information because we already have the text of the `NewTodo` in our state.
+Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box, that's why we need extra information `of string` which will carry the text that the user typed. `AddTodo` on the other hand will take the *current* value of `NewTodo` and add it to `TodoList`. Notice here that `AddTodo` doesn't require extra information because we already have the text of the `NewTodo` in our state.
 
 In the back of your mind, try to imagine how the state evolves from the initial state as these events are triggered:
 ```bash
 -> Initial State = { NewTodo = ""; TodoList = [ "Learn F#" ] }
--> User starts typing in
+-> User starts typing
 -> Events are triggered:
 -> SetNewTodo "L" -> State becomes { NewTodo = "L"; TodoList = [ "Learn F#" ] }
 -> SetNewTodo "Le" -> State becomes { NewTodo = "Le"; TodoList = [ "Learn F#" ] }
@@ -46,11 +46,11 @@ In the back of your mind, try to imagine how the state evolves from the initial 
 -> Event `AddTodo` is triggered
 -> State becomes { NewTodo = ""; TodoList = [ "Learn F#"; "Learn Elmish" ] }
 ```
-This gives you an idea of whether your state has enough information to evolve as these events triggered and whether the events themselves carry enough information (event arguments) to be able to update the state. An example of such event arguments is the `string` in `SetNewTodo`.
+This gives you an idea of whether your state has enough information to evolve as these events are triggered and whether the events themselves carry enough information (event arguments) to be able to update the state. An example of such event arguments is the `string` in `SetNewTodo`.
 
 ### Implementing State Updates
 
-Since we stopped to think about how state evolves, we kind of already know what the `init` and `update` functions have to do so we can start implementing them concretely:
+Since we started to think about how state evolves, we kind of already know what the `init` and `update` functions have to do so we can start implementing them concretely:
 ```fsharp
 let init() : State =
   { TodoList = [ "Learn F#" ]
@@ -158,7 +158,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 ```
 Here we also use a simple `div` as the container of the entire application and give it a bit of padding of 20 pixels. The `render` function passes it's `state` and `dispatch` parameters down to the smaller parts `inputField` and `todoList` so that these parts too can use the state to render information on screen or trigger events with the dispatch function. The `appTitle` didn't need the state, nor the ability to trigger events so we just used it as a value.
 
-Finally, to bootstrap the application and actually bring it to life, we use instruct Elmish to do so using:
+Finally, to bootstrap the application and actually bring it to life, we instruct Elmish to do so using:
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"

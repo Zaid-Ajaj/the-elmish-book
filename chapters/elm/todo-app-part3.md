@@ -74,7 +74,7 @@ type State = {
 }
 ```
 
-Now when are in editing mode, we have to know which item we are editing (which `Id`) and also the new description for that item. If the user applies the edits, the description of item being edited is replaced with the description that the user provided, otherwise when the user cancels the editing mode, we just reset `TodoBeingEdited` back to `None` like it initially was on application startup.
+Now when in editing mode, we have to know which item we are editing (which `Id`) and also the new description for that item. If the user applies the edits, the description of item being edited is replaced with the description that the user provided, otherwise when the user cancels the editing mode, we just reset `TodoBeingEdited` back to `None` like it initially was on application startup.
 
 Moving on to the events of the application: the `Msg` type. We will keep the events and their implementation from Part 2 as is because they should keep doing what they are doing. We will be be adding a couple more, namely:
 

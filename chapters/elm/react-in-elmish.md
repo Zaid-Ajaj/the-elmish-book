@@ -20,7 +20,7 @@ let title : ReactElement = Html.h1 "Happy coding!"
 ```
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 
-[React.js](https://reactjs.org) is a native javascript library and Fable.React is the binding for it that allows us to use React from Fable and Elmish applications. Feliz is a library built on top of Fable.React and provides an alternaltive DSL than the one included by default in Fable.React.
+[React.js](https://reactjs.org) is a native javascript library and Fable.React is the binding for it that allows us to use React from Fable and Elmish applications. Feliz is a library built on top of Fable.React and provides an alternaltive DSL to the one included by default in Fable.React.
 
 </div>
 
@@ -66,7 +66,7 @@ Html.div [
 ```
 Notice here that only the `class` of the main `div` element has changed from "full-width" to "hidden".
 
-Now this `ReactElement` is again given to React. Because this is a re-render cycle, React only applies the changes needed to the elements. Using advanced heuristics, React is able to *compare* the newly generated `ReactElement` with the previous one and calculates which modifications need to occur. In the example above, React will figure out that it only needs to apply the changes made to the class attribute and executes the modifications at the `document` API level. The real changes applies to the elements we see on screen could look something like this:
+Now this `ReactElement` is again given to React. Because this is a re-render cycle, React only applies the changes needed to the elements. Using advanced heuristics, React is able to *compare* the newly generated `ReactElement` with the previous one and calculates which modifications need to occur. In the example above, React will figure out that it only needs to apply the changes made to the class attribute and executes the modifications at the `document` API level. The real changes applied to the elements we see on screen could look something like this:
 ```fsharp
 let content = document.getElementById "content"
 content.classList.remove("full-width")
