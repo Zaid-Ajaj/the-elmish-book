@@ -2,7 +2,7 @@
 
 In the previous section, we implemented a command that dispatches a message after a delay. A delay is one example of an asynchronous operation. In F# we usually encode these operations using `Async<'t>` expressions.
 
-Instead of creating custom commands every time we use `Async<'t>`, we can try to abstract it away into generic commands that convert any `Async<'t>` to `Cmd<'t>`. Let's take the example from last example and put it in it's own function, say `incrementDelayed()`:
+Instead of creating custom commands every time we use `Async<'t>`, we can try to abstract it away into generic commands that convert any `Async<'t>` to `Cmd<'t>`. Let's take the last example and put it in it's own function, say `incrementDelayed()`:
 ```fsharp
 let incrementDelayed() : Cmd<Msg> =
     let incrementDelayedCmd (dispatch: Msg -> unit) : unit =

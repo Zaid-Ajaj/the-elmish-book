@@ -1,6 +1,6 @@
 # To-Do List Application: Exercises
 
-I could spend days, tediously going through code and explaining the concepts behind it but nothings helps you understand these concepts like actually trying to build something yourself. Many times one doesn't know what to build so instead of asking you to build something from scratch, I have decided that is would be nicer to work with and add features to something that you, by now hopefully, are already familiar with: our To-Do list application.
+I could spend days, tediously going through code and explaining the concepts behind it but nothings helps you understand these concepts like actually trying to build something yourself. Many times one doesn't know what to build so instead of asking you to build something from scratch, I have decided that it would be nicer to work with and add features to something that by now you should hopefully be already familiar with: our To-Do list application.
 
 ### Exercise 1: Add Filter Tabs
 
@@ -36,7 +36,7 @@ let renderFilterTabs (state: State) (dispatch: Msg -> unit) =
     Html.ul [
       Html.li [
         prop.className "is-active"
-        prop.text
+        prop.text "All"
       ]
 
       Html.li "Completed"
@@ -50,7 +50,7 @@ You can view and use the application [live here](https://zaid-ajaj.github.io/elm
 
 ### Exercise 2: Disable save button when user hasn't changed the text
 
-When in edit mode, the save button (the one with the floppy disk icon) has the class "is-primary" which gives the button the green-blue color. Your task is as follows: change the class "is-primary" to "is-outlined" when the description of `TodoBeingEdited` is equal to that of the To-Do item that is being edited. This tells the user that they their save button will have no effect. It looks like this:
+When in edit mode, the save button (the one with the floppy disk icon) has the class "is-primary" which gives the button the green-blue color. Your task is as follows: change the class "is-primary" to "is-outlined" when the description of `TodoBeingEdited` is equal to that of the To-Do item that is being edited. This tells the user that the save button will have no effect. It looks like this:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;">

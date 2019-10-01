@@ -7,7 +7,7 @@ val update : Msg -> State -> State * Cmd<Msg>
 `update` is by definition a synchronous function: it returns the next state *immediately*. This requirement is enforced by The Elm Architecture which means that asynchronous state updates are simply not possible to do in the `update` function.
 
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
-Asynchronous operations are any operation that will take some *time* to finish such as timer delays or HTTP requests.
+An asynchronous operation is any operation that will take some *time* to finish such as timer delays or HTTP requests.
 </div>
 
 Instead of updating the state asynchronously, we utilize commands to issue separate events: one is triggered in the beginning of the asynchronous operation and another issued at the end of the operation. Updating the state in reaction to the "delayed" message, i.e. the latter event, simulates an asynchronous update. The consequence is that state updates stay synchronous but the *dispatching* of events is done asynchronously.
@@ -78,7 +78,7 @@ A couple of things are going on in the code above. The most important of which i
   </div>
 </div>
 
-Despite the fact that the user only the UI change after one second, the UI was actually updated *twice*. Once immediately after `IncrementDelayed` was dispatched and another time after one second when `Increment` was dispatched from inside the command.
+Despite the fact that the user triggered the UI change only once, the UI was actually updated *twice*. Once immediately after `IncrementDelayed` was dispatched and another time after one second when `Increment` was dispatched from inside the command.
 
 We can do better than this and show the user a "loading" screen when there is an ongoing asynchronous operation in the background. To do so, we add a flag to the state called `Loading`:
 ```fsharp {highlight: [3]}
@@ -192,7 +192,7 @@ The resulting application becomes:
   </div>
 </div>
 
-The line `IncrementDelayed when state.Loading -> state, Cmd.none` is very common in Elmish application, many times you want to certain events such as `IncrementDelayed` to have no effect in certain state conditions such when there is an ongoing asynchronous operation which is why you "trap" the state into the "empty transition" or the "sink transition" that does nothing to the state and does not execute any futher commands.
+The line `IncrementDelayed when state.Loading -> state, Cmd.none` is very common in Elmish application, many times you want certain events such as `IncrementDelayed` to have no effect in certain state conditions such when there is an ongoing asynchronous operation which is why you "trap" the state into the "empty transition" or the "sink transition" that does nothing to the state and does not execute any futher commands.
 
 ### Conclusion
 
