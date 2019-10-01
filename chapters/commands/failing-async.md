@@ -20,7 +20,7 @@ let fromAsyncSafe (operation: Async<Msg>) (onError: exn -> Msg) : Cmd<Msg> =
 ```
 Here `fromAsyncSafe` is very similar to `Cmd.fromAsync` except that it takes another parameter `onError : exn -> Msg` which maps an exception (if any occur) to a message that will eventually be communicated back into the dispatch loop and your program can handle it.
 
-Let's implement an example program that has a possibly failing operation. Remember that failure is something we want to account for and react upon when it happens. This means we need to dispatch messages that convey the fact the something failed. These messages typically contain information about failure which is usually an exception but could also be a simple error message of type string.
+Let's implement an example program that has a possibly failing operation. Remember that failure is something we want to account for and react upon when it happens. This means we need to dispatch messages that convey the fact that something failed. These messages typically contain information about failure which is usually an exception but could also be a simple error message of type string.
 
 Here I thought of a simple async operation that generates a random number between 0.0 and 1.0 after a delay, if then number is less than 0.5 then the operation fails and an exception is thrown but otherwise a normal message is dispatched.
 
@@ -195,7 +195,7 @@ let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
 ```
 As for `Cmd.fromAsyncSafe` it is OK and does what it should do. However, you might not like the API that there is a "loose" error handler `onError` as a parameter of the function. Another way of modelling the success or failure of the operation is using the `Result` type in F# that can represents the success or failure of the operation:
 ```ocaml
-let fromAsyncSafe (operation: Async<'t>) (hanlder: Result<'t, exn> -> 'msg) : Cmd<'msg> =
+let fromAsyncSafe (operation: Async<'t>) (handler: Result<'t, exn> -> 'msg) : Cmd<'msg> =
     let delayedCmd (dispatch : 'msg -> unit) : unit =
         let delayedDispatch = async {
             match! Async.Catch operation with
