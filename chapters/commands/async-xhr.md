@@ -33,7 +33,7 @@ setTimeout(() => {
 ```
 Here, in every callback, we trigger another `setTimout` operation in the callback of the one before it in order to run the next print statement in sequence and we end up with the infamous "callback pyramid of hell" of Javascript where code starts to get really hard to read and confusing because of the nesting of callbacks.
 
-You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world Javascript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs also applies to any callback based API such that of the file system when running Javascript in a Node.js environment.
+You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world Javascript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs and also applies to any callback based API such that of the file system when running Javascript in a Node.js environment.
 
 Now since this is a common problem in the Javascript world, developers have found solutions to make it easier to combine multiple callbacks in a linear fashion instead of the nesting applied in the code snippet above: Enter Promises!
 
@@ -144,7 +144,7 @@ let update msg state =
 ```
 There we have it, HTTP requests with Elmish in an idiomatic F# API. By this time, I hope we have gained a better understanding applying HTTP in Elmish applications but more importantly how to work with Javascript callbacks and turn them into F# `async` expressions.
 
-Now that we seen how to implement a simple HTTP request, we are only scratching the surface of the full API provided by `XMLHttpRequest`, you might have the idea of implementing a nice F#/Fable library that covers that API but yours truly has already done it for you, let us take a look at [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) for working with HTTP.
+Now that we have seen how to implement a simple HTTP request, we are only scratching the surface of the full API provided by `XMLHttpRequest`, you might have the idea of implementing a nice F#/Fable library that covers that API but yours truly has already done it for you, let us take a look at [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) for working with HTTP.
 
 ### Introducing `Fable.SimpleHttp`
 
