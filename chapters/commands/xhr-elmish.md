@@ -1,10 +1,10 @@
 # XMLHttpRequest in Elmish
 
-In the previous chapter, we have seen how to use `XMLHttpRequest` in a non-Elmish context where we just execute the HTTP request and log the results to the console. In this section, we will examine a number of techniques to integrating `XMLHttpRequest` into an Elmish program.
+In the previous chapter, we have seen how to use `XMLHttpRequest` in a non-Elmish context where we just execute the HTTP request and log the results to the console. In this section, we will examine a number of techniques to integrate `XMLHttpRequest` into an Elmish program.
 
 ### From `XMLHttpRequest` To Commands
 
-The very first attempt to integrating any callback-based API such as that of `XMLHttpRequest` into an Elmish program is to implement them directly as commands. To turn a HTTP request into a command means that the command will be able to dispatch various messages from events that are triggered from the `XMLHttpRequest`, in particular the `onreadystatechange` event.
+The very first attempt to integrate any callback-based API such as that of `XMLHttpRequest` into an Elmish program is to implement them directly as commands. To turn an HTTP request into a command means that the command will be able to dispatch various messages from events that are triggered from the `XMLHttpRequest`, in particular the `onreadystatechange` event.
 
 As a request is being processed, this event is triggered multiple times notifying the subscribers of the event about the current state the HTTP request. For the purposes of this section, we will only be interested in the state of the HTTP request when it has been processed (i.e. when ready state is `DONE`) and the response information is available for use. We will not be looking into the intermediate states of an ongoing HTTP request and that is enough to cover 99% of the requirements a web application has when it comes to making HTTP requests.
 
@@ -18,13 +18,13 @@ Here we are defining very simplified representations of HTTP requests and respon
  - A `method`: the so-called method of the request that determines the "type" of request the application sends such as `GET`, `POST`, `DELETE` etc.
  - A `body` to send along the request which is for now just a simple string.
 
-On the other hand, a HTTP response has:
+On the other hand, an HTTP response has:
  - A `statusCode` which is a number that determines the status of the response
  - A `body` that the server has returned for the specific request that was processed, which in this simple case is also a string.
 
-These definitions have some serious limitations because neither the `Request` nor the `Response` take HTTP headers into account  which are essential metadata about the data exchange for a single HTTP roundtrip and the subsequent requests. There is also the fact that the `body` of the response is a string which not always the case as there are multiple formats the response `body` can have such as raw binary data encoded as `UInt8Array` or `Blob` but for the purposes of this sample implementation we will skip over these concerns.
+These definitions have some serious limitations because neither the `Request` nor the `Response` take HTTP headers into account  which are essential metadata about the data exchange for a single HTTP roundtrip and the subsequent requests. There is also the fact that the `body` of the response is a string which is not always the case as there are multiple formats the response `body` can have such as raw binary data encoded as `UInt8Array` or `Blob` but for the purposes of this sample implementation we will skip over these concerns.
 
-With these types in mind, we can the model the type of the command itself. Remember that a command is something that is able to dispatch messages (say of type `Msg`). Let's define the type of the command:
+With these types in mind, we can model the type of the command itself. Remember that a command is something that is able to dispatch messages (say of type `Msg`). Let's define the type of the command:
 ```ocaml
 let httpRequest (request: Request) (responseHandler: Response -> 'Msg) : Cmd<'Msg> =
     (* . . . *)
@@ -95,7 +95,7 @@ When the application starts up, the loading starts as well, so we implement `ini
 ```fsharp
 let init() = { LoremIpsum = HasNotStartedYet }, Cmd.ofMsg (LoadLoremIpsum Started)
 ```
-Notice the initial command is `Cmd.ofMsg (LoadLoremIpsum Started)` which triggers the `LoadLoremIpsum Started` message. This message is responsible for initialing the HTTP request in the `update` function, let's see that is done and discuss the individual parts afterwards
+Notice the initial command is `Cmd.ofMsg (LoadLoremIpsum Started)` which triggers the `LoadLoremIpsum Started` message. This message is responsible for initialing the HTTP request in the `update` function, let's see how it is done and discuss the individual parts afterwards
 ```fsharp
 let update msg state =
     match msg with
@@ -151,7 +151,7 @@ The application ends up as follows:
 
 ### Composability problems with `httpRequest`
 
-In the section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multipe responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implementing an asynchronous function:
+In the section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multipe responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implements an asynchronous function:
 ```fsharp
 type httpRequest : Request -> Async<Response>
 ```

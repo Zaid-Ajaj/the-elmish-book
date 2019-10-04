@@ -78,7 +78,7 @@ let update msg state =
 
     | (* etc. *)
 ```
-It's up to you and your team which style you end up choosing, as long as you stay consistent through out the code base. Let us now turn to modelling the other type of async operations.
+It's up to you and your team which style you end up choosing, as long as you stay consistent throughout the code base. Let us now turn to modelling the other type of async operations.
 
 ### Operations that might fail
 
@@ -93,7 +93,7 @@ Here is an example of an operation that generates a random number larger than 0.
 type Msg =
     | GenerateRandomNumber of AsyncOperationEvent<Result<double, string>>
 ```
-When you see a union case modeled this way, you read it in your head as follow: "`GenerateRandomNumber` describes the events (start and finish) of an asynchronous operation that *might* succeed and return a `double` or fails with an error message". Handling this union case in the `update` function works the same as we did earlier:
+When you see a union case modeled this way, you read it in your head as follow: "`GenerateRandomNumber` describes the events (start and finish) of an asynchronous operation that *might* succeed and return a `double` or fail with an error message". Handling this union case in the `update` function works the same as we did earlier:
 ```fsharp
 let update msg state =
     match msg with
@@ -108,7 +108,7 @@ let update msg state =
         (* operation failed, derive useful information from error to the user know
            that something bad or unexpected has happened *)
 ```
-This way we end up with a really nice and concise way of handling the different possible events of an asynchronous operation. However, we are not done yet because now that we have modeled the events of an operation, we need to keep track the *state* of the operation while the application is running.
+This way we end up with a really nice and concise way of handling the different possible events of an asynchronous operation. However, we are not done yet because now that we have modeled the events of an operation, we need to keep track of the *state* of the operation while the application is running.
 
 The question is, what do we want to *know* about any given asynchronous operation at any point in time and how do we model that in the `State` of the application as a whole. During the life-time of an asynchronous operation, we can ask a couple of question:
  - Has the operation already started? The answer can either be "Not started yet" or "It is still ongoing"
@@ -256,4 +256,4 @@ type AsyncOperationEvent<'t> =
   | Started
   | Finished of 't
 ```
-When you use these in your application, feel free to change the terminology to your and to your team's liking as the as names of the types and the separate union cases is not as important as the concepts they represent. I personally find the name `Deferred<'t>` to be OK, but I am not entirely convinced about the naming pf `AsyncOperationEvent<'t>`. In any case, we will be using these types in the next sections when we start working with HTTP.
+When you use these in your application, feel free to change the terminology to yours and your team's liking as the as names of the types and the separate union cases is not as important as the concepts they represent. I personally find the name `Deferred<'t>` to be OK, but I am not entirely convinced about the naming of `AsyncOperationEvent<'t>`. In any case, we will be using these types in the next sections when we start working with HTTP.

@@ -1,6 +1,6 @@
 # Recursive State Updates
 
-In Elmish programs, commands are issued from two places; first is the `init` function where you can defines the initial command to be issued:
+In Elmish programs, commands are issued from two places; first is the `init` function where you can define the initial command to be issued:
 ```fsharp
 let initialState = (* state *)
 let initialCmd = (* command *)
@@ -24,7 +24,7 @@ let ofMsg (msg: 'msg) = Cmd.ofSub (fun (dispatch: 'msg -> unit) -> dispatch msg)
 
 As the `update` function receives the message `IssueCommand`, it will return the state as is and issue the command `Cmd.ofMsg Terminate`. As a result of which, the `Terminate` message will be dispatched. When `update` receives The `Terminate` message, it returns the state as is and doesn't issue any commands further.
 
-Suppose you start with an initial state and the user interface dispatches `IssueCommand` message, the execution diagram would looking something like this:
+Suppose you start with an initial state and the user interface dispatches `IssueCommand` message, the execution diagram would look something like this:
 ```
 -> State: Initial State
 -> New Message: IssueCommand (dispatched from UI)
@@ -104,7 +104,7 @@ let update msg state =
 ```
 Notice here in the update function how the control flow goes from `SetInputDate` to `ParseInput`: when `SetInputDate` is dispatched, the state is updated but a command is issued that in turn triggers `ParseInput` which causes another state update.
 
-When you see this type code you know that someone is abusing the Elmish dispatch loop to implement `goto` statements and control flow. Let that sink in ... yeah let's clean this up.
+When you see this type of code you know that someone is abusing the Elmish dispatch loop to implement `goto` statements and control flow. Let that sink in ... yeah let's clean this up.
 
 First take the body of the branch handled by `ParseInput` and extract it into a function that takes the state as input:
 ```fsharp

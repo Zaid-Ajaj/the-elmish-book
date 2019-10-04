@@ -2,7 +2,7 @@
 
 So far in this chapter, we have learnt a lot about asynchronous operations in Elmish. Using commands, we are able to initiate these operations from our `update` function and process the events triggered by them. This was in preparation for understanding how to work with HTTP within the context of Elmish programs.
 
-In any modern single page application, HTTP is the at core of the web application as the front-end exchanges data back and forth with a back-end by sending HTTP requests and processing HTTP responses.
+In any modern single page application, HTTP is at the core of the web application as the front-end exchanges data back and forth with a back-end by sending HTTP requests and processing HTTP responses.
 
 Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack developement server for the content of static files inside the `dist` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
 
@@ -26,7 +26,7 @@ To get started with `XMLHttpRequest` we need to install the API bindings for it 
 ```bash
 dotnet add package Fable.Browser.XMLHttpRequest
 ```
-Here is an example on how to work with `XMLHttpRequest` in a non-Elmish context where we request the the contents of a file from the webpack development server that is running locally and log the response to the console. Remember that the development server is a static file server so we can ask for the contents of any file in the `dist` directory, such as the contents of the `index.html` file that initiated the request itself:
+Here is an example on how to work with `XMLHttpRequest` in a non-Elmish context where we request the contents of a file from the webpack development server that is running locally and log the response to the console. Remember that the development server is a static file server so we can ask for the contents of any file in the `dist` directory, such as the contents of the `index.html` file that initiated the request itself:
 ```fsharp
 open Browser.Types
 open Browser
@@ -53,7 +53,7 @@ Before dissecting this code snippet, let us see what it does by running the code
   </div>
 </div>
 
-As you can see, two messages are logged to the console, one that prints the the status code and one the prints the response text of the response we got back for our request. This small snippet of code demonstrate how easy it is to request data from the server and get the response as text to further process it in the application. Let us go through the code snippet and discuss what happened.
+As you can see, two messages are logged to the console, one that prints the status code and one that prints the response text of the response we got back for our request. This small snippet of code demonstrate how easy it is to request data from the server and get the response as text to further process it in the application. Let us go through the code snippet and discuss what happened.
 
 First of all we created an instance of the `XMLHttpRequest` object using the static function `Create()`:
 ```fsharp
@@ -85,7 +85,7 @@ The `url` parameter we use in the `open` method contains a *relative* path: we d
 
 We can use relative URLs to access content from same origin but this begs the question: can we use *absolute* URLs in our HTTP requests such that we can access content from other external websites? It depends, unlike desktop and mobile applications that can make HTTP requests to any website or domain, HTTP requests made from a browser application cannot reach any arbitrary website unless that website *gives permission* for access by means of [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) or CORS for short.
 
-When a browser tries to communicate via HTTP with an external website or application, is it making a "cross origin" request. These requests are called "cross origin" because the web page initiating the request is trying to access a resource that is not from the same server (i.e. same origin) that the web page was served from.
+When a browser tries to communicate via HTTP with an external website or application, it is making a "cross origin" request. These requests are called "cross origin" because the web page initiating the request is trying to access a resource that is not from the same server (i.e. same origin) that the web page was served from.
 
 These "cross origin" requests are blocked by default in many web applications and authors have to explicitly enable them. You can give it a try yourself by requesting the content of the home page of Google:
 ```fsharp
@@ -135,7 +135,7 @@ Let's see how our application behaves after a full build with `npm run build` wh
 ```
 npm install http-server --save-dev
 ```
-Now you should the dependency added to your development dependencies in `package.json`:
+Now you should have the dependency added to your development dependencies in `package.json`:
 ```json {highlight: [11]}
 {
     "private": true,

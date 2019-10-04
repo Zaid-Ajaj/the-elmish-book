@@ -10,7 +10,7 @@ Parsing the JSON means that we convert the text into a structured type that we c
 
 In Fable, there two main libraries to work with JSON:
  - [Thoth.Json](https://mangelmaxime.github.io/Thoth/json/v3.html) by [Maxime Mangel](https://github.com/MangelMaxime) - Uses JSON encoders and decoders to transform JSON structures into user-defined types, inspired by the Elm package [elm/json](https://package.elm-lang.org/packages/elm/json/latest/). Comes with built-in "automatic converters".
- - [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson) - Converts JSON-formatted text itself into a JSON structure that be manipulated, searched and transformed into other structures. Comes with built-in "automatic converters".
+ - [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson) - Converts JSON-formatted text itself into a JSON structure that can be manipulated, searched and transformed into other structures. Comes with built-in "automatic converters".
 
 > Automatic converters are used to let the library transform the JSON-formatted text into typed entities automatically by means of Reflection (F#/.NET mechanism for type-introspection), this works nicely for 99% of the time and saves you from having to write conversion code by yourself.
 
