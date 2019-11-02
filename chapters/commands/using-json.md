@@ -33,7 +33,7 @@ let update (msg: Msg) (state: State) =
       let nextState = { state with StoreInfo = InProgress }
       let loadStoreInfo =
         async {
-          // simulate delay
+          // simulate network latency
           do! Async.Sleep 1500
           let! (statusCode, storeInfo) = Http.get "/store.json"
           if statusCode = 200
@@ -83,38 +83,90 @@ type StoreInfo = {
   products: Product list
 }
 ```
-Now we can convert JSON into these user defined types such that we are not just loading a `string` from the server, but instead a `StoreInfo` object. The `State` and `Msg` type become the following:
+Now we can convert JSON into these user defined types such that we are not just loading a `string` from the server, but instead a `StoreInfo` object. The `State` type become the following:
 ```fsharp
 type State =
   { StoreInfo: Deferred<Result<StoreInfo, string>> }
-
-type Msg =
-  | LoadStoreInfo of AsyncOperationEvent<Result<StoreInfo, string>>
 ```
-I've kept the error type to a `string` because we still want to show a textual error message when something goes wrong.
-Now we have a bit of a problem here:
-```fsharp {highlight: [11]}
+I've kept the error type to a `string` because we still want to show a textual error message when something goes wrong. Now notice the highlighted code where we receive the JSON from  the server and try to parse it:
+```fsharp {highlight: ['17-29']}
 let update (msg: Msg) (state: State) =
   match msg with
   | LoadStoreInfo Started ->
       let nextState = { state with StoreInfo = InProgress }
       let loadStoreInfo =
         async {
-          // simulate delay
+          // simulate network latency
           do! Async.Sleep 1500
           let! (statusCode, storeInfo) = Http.get "/store.json"
           if statusCode = 200
-          then return LoadStoreInfo (Finished (Ok storeInfo)) // compile error
+          then return LoadStoreInfo (Finished (Ok storeInfo))
           else return LoadStoreInfo (Finished (Error "Could not load the store information"))
         }
 
       nextState, Cmd.fromAsync loadStoreInfo
 
-  | LoadStoreInfo (Finished result) ->
-      let nextState = { state with StoreInfo = Resolved result }
+  | LoadStoreInfo (Finished (Ok storeInfoJson)) ->
+      // Here, we are able to retrieve the JSON from the server
+      // Now we try to parse thr JSON to a `StoreInfo` instance
+      match parseStoreInfo storeInfoJson with
+      | Ok storeInfo ->
+          // JSON was paresed succesfully into `StoreInfo`
+          let nextState = { state with StoreInfo = Resolved (Ok storeInfo) }
+          nextState, Cmd.none
+
+      | Error error ->
+          // JSON parsing failed here :/
+          let nextState = { state with StoreInfo = Resolved (Error "Could not parse JSON") }
+          nextState, Cmd.none
+
+  | LoadStoreInfo (Finished (Error httpError)) ->
+      let nextState = { state with StoreInfo = Resolved (Error httpError) }
       nextState, Cmd.none
 ```
-We get a compile error on that line because it does not accept the string `storeInfo` anymore (the response text) because now it has to be `StoreInfo`. So the problem comes down to converting that `storeInfo` string into an actual `StoreInfo` object and we will do exactly that, starting with `Thoth.Json`
+Here, nothing changed when we receive the `LoadStoreInfo Started` message into the program, we simply load the JSON from the server. However, when message `LoadStoreInfo (Finished (Ok storeInfoJson))` is received where `storeInfoJson` is a `string`, we try to parse that piece of string into an instance of `StoreInfo` using the `parseStoreInfo` function. We haven't defined that function yet and we will be using with `Thoth.Json` to do so.
+
+> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involding any side-effects which are sometimes discarded when unit-testing the `update` function.
+
+We also now get a compile error in the `render` function because it doesn't know how to render the `StoreInfo`:
+```fsharp {highlight: [11, 12, 13]}
+let render (state: State) (dispatch: Msg -> unit) =
+  match state.StoreInfo with
+  | HasNotStartedYet -> Html.none
+  | InProgress -> Html.h1 "Loading..."
+  | Resolved (Error errorMsg) ->
+      Html.h1 [
+        prop.style [ style.color.red ]
+        prop.text errorMsg
+      ]
+
+  | Resolved (Ok products) ->
+      // COMPILE ERROR
+      Html.pre products
+```
+Let us fix that real quick by making it render information from the store:
+```fsharp {highlight: ['11-18']}
+let render (state: State) (dispatch: Msg -> unit) =
+  match state.StoreInfo with
+  | HasNotStartedYet -> Html.none
+  | InProgress -> Html.h1 "Loading..."
+  | Resolved (Error errorMsg) ->
+      Html.h1 [
+          prop.style [ style.color.red ]
+          prop.text errorMsg
+      ]
+
+  | Resolved (Ok storeInfo) ->
+      Html.div [
+        Html.h1 storeInfo.name
+        Html.ul [
+          for product in storeInfo.products ->
+          Html.li product.name
+        ]
+      ]
+```
+
+Now we can get back to the implementation `parseStoreInfo` function. From the way it is used in the code, you can infer that the type of such function is `string -> Result<StoreInfo, string>`. This is because parsing usually might either be succesful and returns an instance of `StoreInfo` or might fail and returns a `string` in case the JSON is not well formatted or the decoding functions (see below) are looking for required fields that aren't present in the JSON content. Let us see how we can use `Thoth.Json` for decoding that JSON.
 
 ### Decoding JSON with `Thoth.Json`
 
@@ -131,6 +183,12 @@ In this section, we will be using *decoders* because we want to convert JSON (de
 ```fsharp
 type Decoder<'t> = (* ... *)
 ```
-Never mind the actual type for now, we will get to that later but essentially a `Decoder<'t>` is a function that can read a piece of JSON and converts to an instance of `'t`.
+Never mind the actual type definition for now, we will get to that later but essentially a `Decoder<'t>` is a *function* that can read a piece of JSON and converts it to an instance of `'t`.
 
 Standard built-in decoders in the Thoth.Json library do not understand complex types such as that of `StoreInfo` so we have to "teach" a bunch of little decoders how to decode JSON into it by combining and composing smaller decoders that work with primitive types.
+
+For example to create a `Decoder<Product>` (a decoder which take a piece of JSON and converts it to `Product`) where `Product` has the fields `name:string` and `price:float`, we need to use `Decoder<string>` against the `name` field and `Decoder<float>` against the `price` field and *combine* both decoders to make up a `Decoder<Product>`.
+
+The decoders `Decoder<string>` and `Decoder<float>` are built-in decoders in `Thoth.Json`.
+
+

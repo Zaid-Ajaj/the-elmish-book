@@ -53,3 +53,7 @@ html {
 .ItemTitle {
     margin-top: 20px;
 }
+
+.Content {
+    max-width: 1000px !important;
+}
