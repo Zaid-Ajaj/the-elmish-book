@@ -117,7 +117,7 @@ let update (msg: Msg) (state: State) =
 
       | Error error ->
           // JSON parsing failed here :/
-          let nextState = { state with StoreInfo = Resolved (Error "Could not parse JSON") }
+          let nextState = { state with StoreInfo = Resolved (Error error) }
           nextState, Cmd.none
 
   | LoadStoreInfo (Finished (Error httpError)) ->
@@ -191,4 +191,76 @@ For example to create a `Decoder<Product>` (a decoder which take a piece of JSON
 
 The decoders `Decoder<string>` and `Decoder<float>` are built-in decoders in `Thoth.Json`.
 
+Let's see how to build that `Decoder<Product>` in action and walk through the code:
 
+```fsharp
+let productDecoder : Decoder<Product> =
+  Decode.object (fun field -> {
+    name = field.Required.At [ "name" ] Decode.string
+    price = field.Required.At [ "price" ] Decode.float
+  })
+```
+Here, we are constructing the `Product` decoder using the `Decode.object` function. This is because we want to map a JSON object into the `Product` record. This function takes a single argument which is a "field getter" that allows you to define how the fields of the `Product` (the name and the price) can be decoded. In our case, we are decoding the `name` field using the `Decode.string` decoder which itself has type `Decoder<string>` and the for `price` field, we are using the `Decode.float` decoder which is of type `Decoder<float>`.
+
+You can use this decoder to try parse a piece of JSON into a record instance of `Product` as follows:
+```fsharp
+let productJson = """
+  {
+    "name": "Mocha",
+    "price": 2.25
+  }
+"""
+
+let product : Result<Product, string> =
+  Decode.fromString productDecoder productJson
+```
+Here, we are using the function `Decode.fromString` and giving it two things: the decoder we want to use and the string to decode from (i.e. to deserialize). The output of that function is a proper `Result<Product, string>` because the parsing might either succeed and gives you a `Product` back or it can fail and returns you the parsing error.
+
+The parsing can fail for many reasons, for example because of invalid JSON formatting, the JSON not being an object literal which is what we are decoding against, the fields being missing or having the wrong the JSON type (i.e. `price` is a string).
+
+Now that we have a `Decoder<Product>` we can use it as part of another, bigger decoder: `Decoder<StoreInfo>` because that is our object we want to parse. Here we go:
+```fsharp
+let storeInfoDecoder : Decoder<StoreInfo> =
+  Decode.object (fun field -> {
+    name = field.Required.At [ "name" ] Decode.string
+    since = field.Required.At [ "since" ] (Decode.map string Decode.int)
+    daysOpen = field.Required.At [ "daysOpen" ] (Decode.list Decode.string)
+    products = field.Required.At [ "products" ] (Decode.list productDecoder)
+  })
+```
+Same as with the previous decoder, we are using `Decode.object` and requiring fields at their respective JSON path. However, notice the `Decoder.list`: because we do not just want to decode a single product, but instead a list of products, we *transform* the decoder `productDecoder` into a new decoder that understands lists of that old decoder. To put simply, here are the types:
+```fsharp
+Decode.list : Decoder<'t> -> Decoder<'t list>
+
+productDecoder : Decoder<Product>
+
+Decode.list productDecoder : Decoder<Product list>
+```
+Another thing to notice as well is the field `since`. It is defined as a string in the `StoreInfo` record but in the JSON object we have as an integer. Since it is an integer in the JSON, we have to decode it using `Decode.int` which is a `Decoder<int>` but we *map* the result of the decoding (when it is succesfull) into another value which is in our case just making a `string` from the integer that was decoded.
+```fsharp
+Decode.map : Decoder<'t> -> ('t -> 'u) -> Decoder<'u>
+
+Decoder.int : Decoder<int>
+
+Decoder.map Decoder.int string : Decoder<string>
+// Same as
+Decoder.map Decoder.int (fun parsedInt -> string parsedInt) : Decoder<string>
+```
+And now we have our decoders ready to define the `parseStoreInfo` function that we want to use inside of the `update` function:
+```fsharp
+let parseStoreInfo (inputJson: string) : Result<StoreInfo, string> =
+  Decoder.fromString storeInfoDecoder inputJson
+```
+This can be simplified even further:
+```fsharp
+let parseStoreInfo = Decoder.fromString storeInfoDecoder
+```
+Et voilà, the application is now parsing the JSON and showing data on screen.
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:75%;">
+    <resolved-image source="/images/commands/thoth-working.gif" />
+  </div>
+</div>
+
+You can see the full worked out example at [elmish-with-json-thoth](https://github.com/Zaid-Ajaj/elmish-with-json-thoth) on Github.
