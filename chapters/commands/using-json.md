@@ -126,7 +126,7 @@ let update (msg: Msg) (state: State) =
 ```
 Here, nothing changed when we receive the `LoadStoreInfo Started` message into the program, we simply load the JSON from the server. However, when message `LoadStoreInfo (Finished (Ok storeInfoJson))` is received where `storeInfoJson` is a `string`, we try to parse that piece of string into an instance of `StoreInfo` using the `parseStoreInfo` function. We haven't defined that function yet and we will be using with `Thoth.Json` to do so.
 
-> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involding any side-effects which are sometimes discarded when unit-testing the `update` function.
+> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involding any side-effects which are sometimes easier to discarded when unit-testing the `update` function.
 
 We also now get a compile error in the `render` function because it doesn't know how to render the `StoreInfo`:
 ```fsharp {highlight: [11, 12, 13]}
