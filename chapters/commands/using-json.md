@@ -1,6 +1,6 @@
 # Thoth.Json and SimpleJson
 
-Previously on [Asynchronous XMLHttpRequest](async-xhr.md), we looked at how to retrieve data from a static file server, now we will *process* the data and show it to the user in a meaningful manner. To do that, we will be using both [Thoth.Json](https://mangelmaxime.github.io/Thoth/json/v3.html) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson) to decode the JSON text into user defined types, of course we will use them separately so that we can compare both approaches to JSON decoding.
+Previously on [Asynchronous XMLHttpRequest](async-xhr.md), we looked at how to retrieve data from a static file server, now we will *process* the data and show it to the user in a meaningful manner. JSON is the most common format of the data that is coming from the server. We will turn this JSON content into something that the Elmish application can actually work with. To do that, we will be using both [Thoth.Json](https://mangelmaxime.github.io/Thoth/json/v3.html) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson) which are libraries that allow you to decode the JSON text into user defined types. Of course we will use them separately so that we can compare both approaches to JSON decoding.
 
 To get started, I have set up a small application in the [elmish-with-json](https://github.com/Zaid-Ajaj/elmish-with-json) repository that loads JSON from the server and after a delay, shows it *as is* on screen:
 
@@ -10,7 +10,8 @@ To get started, I have set up a small application in the [elmish-with-json](http
   </div>
 </div>
 
-The application just shows the JSON content as a *string* which represents information about a coffee shop, this is also how the types are modelled:
+The application just shows the JSON content as a *string* which represents information about a coffee shop. Currently the state and message of the application are modelled as follows, using `string` as the result of remote data we get back from the server.
+
 ```fsharp
 type State =
   { StoreInfo: Deferred<Result<string, string>> }
@@ -69,7 +70,7 @@ Now instead of reading the contents as a string, we want to convert that string 
   ]
 }
 ```
-First of all, we can model a type that maps the structure of the JSON-formatted text as follows:
+First of all, we can model a type that maps the structure of the JSON-formatted text into F# record types:
 ```fsharp
 type Product = {
   name: string
@@ -83,7 +84,7 @@ type StoreInfo = {
   products: Product list
 }
 ```
-Now we can convert JSON into these user defined types such that we are not just loading a `string` from the server, but instead a `StoreInfo` object. The `State` type become the following:
+Now we can convert JSON into these user defined types such that we are not loading just a `string` from the server, but instead a `StoreInfo` object. The `State` type become the following:
 ```fsharp
 type State =
   { StoreInfo: Deferred<Result<StoreInfo, string>> }
@@ -175,7 +176,7 @@ First of all, let us install the library into the project so that we have that o
 cd src
 dotnet add package Thoth.Json
 ```
-This package is built around functional contructs called "Coders". Coders are *functions* that convert JSON and are divided into two categories:
+`Thoth.Json` is built around functional contructs called "Coders". Coders are *functions* that convert JSON and are divided into two categories:
  - *Encoders* that transform typed objects and values into JSON
  - *Decoders* that transform JSON into typed objects.
 
@@ -185,7 +186,7 @@ type Decoder<'t> = (* ... *)
 ```
 Never mind the actual type definition for now, we will get to that later but essentially a `Decoder<'t>` is a *function* that can read a piece of JSON and converts it to an instance of `'t`.
 
-Standard built-in decoders in the Thoth.Json library do not understand complex types such as that of `StoreInfo` so we have to "teach" a bunch of little decoders how to decode JSON into it by combining and composing smaller decoders that work with primitive types.
+Built-in decoders in the `Thoth.Json` library do not understand complex user-defined types such as that of `StoreInfo` so we have to "teach" a bunch of little decoders how to work together and decode JSON into `StoreInfo` by combining and composing smaller decoders that operate on simpler primitive types.
 
 For example to create a `Decoder<Product>` (a decoder which take a piece of JSON and converts it to `Product`) where `Product` has the fields `name:string` and `price:float`, we need to use `Decoder<string>` against the `name` field and `Decoder<float>` against the `price` field and *combine* both decoders to make up a `Decoder<Product>`.
 
@@ -214,11 +215,14 @@ let productJson = """
 let product : Result<Product, string> =
   Decode.fromString productDecoder productJson
 ```
-Here, we are using the function `Decode.fromString` and giving it two things: the decoder we want to use and the string to decode from (i.e. to deserialize). The output of that function is a proper `Result<Product, string>` because the parsing might either succeed and gives you a `Product` back or it can fail and returns you the parsing error.
+Here, we use the function `Decode.fromString` and giving it two things: the decoder we want to use and the string to decode from (i.e. to deserialize). The output of that function is a proper `Result<Product, string>` because the parsing might either succeed and gives you a `Product` back or it can fail and returns you the parsing error. The function has type:
+```fsharp
+Decode.fromString : Decoder<'t> -> string -> Result<'t, string>
+```
 
 The parsing can fail for many reasons, for example because of invalid JSON formatting, the JSON not being an object literal which is what we are decoding against, the fields being missing or having the wrong the JSON type (i.e. `price` is a string).
 
-Now that we have a `Decoder<Product>` we can use it as part of another, bigger decoder: `Decoder<StoreInfo>` because that is our object we want to parse. Here we go:
+Now that we have a `Decoder<Product>` we can use it as part of another, bigger decoder: `Decoder<StoreInfo>` because that is our object we want to parse:
 ```fsharp
 let storeInfoDecoder : Decoder<StoreInfo> =
   Decode.object (fun field -> {
@@ -228,7 +232,7 @@ let storeInfoDecoder : Decoder<StoreInfo> =
     products = field.Required.At [ "products" ] (Decode.list productDecoder)
   })
 ```
-Same as with the previous decoder, we are using `Decode.object` and requiring fields at their respective JSON path. However, notice the `Decoder.list`: because we do not just want to decode a single product, but instead a list of products, we *transform* the decoder `productDecoder` into a new decoder that understands lists of that old decoder. To put simply, here are the types:
+Same as with the previous decoder, we are using `Decode.object` and requiring fields at their respective JSON path. However, notice the `Decoder.list`: because we do not just want to decode a single product, but instead a list of products, we *transform* the decoder `productDecoder` into a new decoder that understands lists of that thing which the old decoder parses. To put it simply, `Decode.list` takes a `Decoder<'t>` and returns `Decoder<'t list>`.
 ```fsharp
 Decode.list : Decoder<'t> -> Decoder<'t list>
 
@@ -236,7 +240,7 @@ productDecoder : Decoder<Product>
 
 Decode.list productDecoder : Decoder<Product list>
 ```
-Another thing to notice as well is the field `since`. It is defined as a string in the `StoreInfo` record but in the JSON object we have as an integer. Since it is an integer in the JSON, we have to decode it using `Decode.int` which is a `Decoder<int>` but we *map* the result of the decoding (when it is succesfull) into another value which is in our case just making a `string` from the integer that was decoded.
+Another thing to notice as well is the field `since`. It is defined as a string in the `StoreInfo` record but in the JSON object we have as an integer. Since it is an integer in the JSON, we have to decode it using `Decode.int` which is a `Decoder<int>` but we *map* the result of the decoding (when it is successful) into another value which is in our case just making a `string` from the integer that was decoded.
 ```fsharp
 Decode.map : Decoder<'t> -> ('t -> 'u) -> Decoder<'u>
 
@@ -246,7 +250,7 @@ Decoder.map Decoder.int string : Decoder<string>
 // Same as
 Decoder.map Decoder.int (fun parsedInt -> string parsedInt) : Decoder<string>
 ```
-And now we have our decoders ready to define the `parseStoreInfo` function that we want to use inside of the `update` function:
+Now we have our decoders ready to define the `parseStoreInfo` function that we want to use inside of the `update` function:
 ```fsharp
 let parseStoreInfo (inputJson: string) : Result<StoreInfo, string> =
   Decoder.fromString storeInfoDecoder inputJson
@@ -274,8 +278,7 @@ First things first, we start by installing the library into the project so we ca
 cd src
 dotnet add package Fable.SimpleJson
 ```
-
-While `Thoth.Json` uses composed decoders to parse the JSON into the proper types, `SimpleJson` has to no such thing. All that `SimpleJson` does is parse the JSON, which is initially a string, into a *generic JSON data structure*:
+While `Thoth.Json` uses composed decoders to parse the JSON into the proper types, `SimpleJson` has to no such thing. All that `SimpleJson` does is parse the JSON, which is initially a `string` into a *generic JSON data structure*:
 ```fsharp
 /// A type representing Javascript Object Notation
 type Json =
@@ -303,9 +306,9 @@ let parseProduct (value: Json) : Option<Product> =
   | _ ->
     None
 ```
-Here we using F#'s pattern matching to look for the expected shape of a product and mapping the values of the fields of that product into a `Product` instance. Because we know that `Product` must be an object, we match against `JObject product` where `product` has type `Map<string, Json>` which itself can be traversed using `Map` functions such as `Map.tryFind` to find the specific fields of the `Product`.
+Since a value of type `Json` is just another discriminated union, we use pattern matching to look for the expected shape of a product in the JSON and map the values of the fields of that product into a `Product` instance. Because we know that `Product` must be an object, we match against `JObject product` where `product` has type `Map<string, Json>` which itself can be traversed using `Map` functions such as `Map.tryFind` to find the specific fields of the `Product`.
 
-Notice that we choose here to return `Option<Product>` but we could have chosen to return `Result<Product, string>` instead as follows:
+Notice that we choose to return `Option<Product>` but we could have chosen to return `Result<Product, string>` instead:
 ```fsharp
 let parseProduct (value: Json) : Result<Product, string> =
   match value with
@@ -320,7 +323,7 @@ let parseProduct (value: Json) : Result<Product, string> =
   | _ ->
     Error "The JSON value wasn't an object that matches with Product"
 ```
-It is up to you how much details you want to put in these error messages. You would to expand the pattern matching of the fields if you want to be more specific with your error messages. This is unlike `Thoth.Json` which automatically generates nice error messages if the fields and / or their types of the JSON do not match those of the F# type that we are decoding into.
+It is up to you how much details you want to put in these error messages. You could expand the pattern matching of the fields if you want to be more specific with your error messages. This is unlike `Thoth.Json` which automatically generates nice error messages if the fields or their types of the JSON do not match those of the F# type that we are decoding into.
 
 In any case, we can can complete the parsing by writing a function that now parses JSON into `StoreInfo`:
 ```fsharp
@@ -349,11 +352,11 @@ let parseStoreInfo (json: string) : =
   | _ ->
     Error "Parsed JSON is not valid or is not an object"
 ```
-This is the same `parseStoreInfo` we wrote before but instead now using `SimpleJson`. Effectively the program works the same as it did when we were parsing with `Thoth.Json`.
+This is the same `parseStoreInfo` we wrote before but instead now using `Fable.SimpleJson`. Effectively the program works the same as it did when we were parsing with `Thoth.Json`.
 
 ### Automatic converters: Fable.SimpleJson vs. Thoth.Json
 
-In the last two examples of parsing using either libraries, we have been using the *manual* way of parsing whether is it using decoders with `Thoth.Json` or pattern matching with `SimpleJson`. However, both libraries include automatic parsing capabilities that match the JSON structure with the F# type and instantiate it directly using Fable's Reflection.
+In the last two examples of parsing using either libraries, we have been using the *manual* way of parsing whether is was decoders with `Thoth.Json` or pattern matching with `Fable.SimpleJson`. However, both libraries include automatic parsing capabilities that match the JSON structure with the F# type and instantiate it directly using Fable's Reflection.
 
 In order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor the `StoreInfo` and change the `since` field into an integer as well:
 ```fsharp {highlight: [3]}
@@ -386,13 +389,15 @@ Nothing else required, both functions do basically the same thing.
 
 ### Comparison Fable.SimpleJson vs Thoth.Json
 
-We have now seen how to parse a piece of JSON using the *manual* and *automatic* way and building typed records from it. When it comes to the automatic converters, both `Thoth.Json` and `Fable.SimpleJson` do pretty much the same except that `Thoth.Json` has nicer error messages and `Fable.SimpleJson` are less strict.
+We have now seen how to parse a piece of JSON using the *manual* and *automatic* way and building typed records from it. When it comes to the automatic converters, both `Thoth.Json` and `Fable.SimpleJson` do pretty much the same except that `Thoth.Json` generates much nicer error messages and `Fable.SimpleJson` is less strict when parsing.
 
 However, when it comes to the manual converters it is a different story. You must be wondering something along the lines: "Aren't these `SimpleJson` stuff supposed to be, well *simple* to work with? The Thoth.Json approach is obviously simpler and cleaner." I would definitely agree to that statement.
 
-Decoders from `Thoth.Json` are really cool, you can compose them together in a functional manner to make bigger decoders and they will automatically nice error messages for you without the explicit matching of JSON structure that is going on with `Fable.SimpleJson`. In the use-case above and general JSON-parsing scenario's I would recommend `Thoth.Json`.
+Decoders from `Thoth.Json` are really cool, you can compose them together in a functional manner to make bigger decoders and they will automatically nice error messages for you without the explicit matching of JSON structure that is going on with `Fable.SimpleJson`.
 
-The explicitness of `Fable.SimpleJson` comes from the fact that it operates on a *lower-level* than `Thoth.Json` does to process the JSON: `SimpleJson` gives you [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of the JSON to work with. Transforming the JSON into typed entities is only one use-case of such AST. Another use case for the AST is *re-write* into another AST before processing it further if you have a piece of JSON that isn't easily convertable using decoders. Take this structure of the JSON:
+In Elmish applications I suggest to go for `Thoth.Json` whenever possible.
+
+The explicitness of `Fable.SimpleJson` comes from the fact that it operates on a *lower-level* than `Thoth.Json` does to process the JSON as it gives you [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of the JSON to work with. Transforming the JSON into typed entities is only one use-case of such AST. Another use case for the AST is *re-write* into another AST before processing it further if you have a piece of JSON that isn't easily convertable using decoders. Analyzing the type schema of the JSON from AST is also possible. Take this structure of the JSON:
 ```json
 {
   "RequestId:0HKV9C49II9CK": {
