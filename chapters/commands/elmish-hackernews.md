@@ -43,3 +43,14 @@ In the beginning, we will be implementing the minimal requirements of the applic
     <resolved-image source="/images/commands/elmish-hackernews-part1.gif" />
   </div>
 </div>
+
+### Elmish Hackernews: Part 2
+
+In this part, we will expand upon what we have learnt in part 1 and implement different tabs that load different stories from Hackernews pages, as well decoding the "score" of each item and rendering it on screen:
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:75%;">
+    <resolved-image source="/images/commands/elmish-hackernews-part2.gif" />
+  </div>
+</div>
+
