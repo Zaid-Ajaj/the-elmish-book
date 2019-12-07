@@ -54,3 +54,12 @@ In this part, we will expand upon what we have learnt in part 1 and implement di
   </div>
 </div>
 
+### Elmish Hackernews: Part 3
+
+Here, we step it up a notch. In contrary to the part 1 and part 2 where we load the story items in one go after all items have been loaded, we will load the story items individually.
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:75%;">
+    <resolved-image source="/images/commands/elmish-hackernews-part3.gif" />
+  </div>
+</div>
