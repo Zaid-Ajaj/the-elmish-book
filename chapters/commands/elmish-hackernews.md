@@ -33,13 +33,12 @@ For the purposes of our Elmish Hackernews clone we will be restricting ourselves
 
 Just like with chapter 2, I have divivded the implementation of the Elmish Hackernews clone into three parts where we incrementally add more features as we go.
 
-
 ### Elmish Hackernews: Part 1
 
 In the beginning, we will be implementing the minimal requirements of the application which is just to load the news items of the top stories into the application and render them in a list. It looks like this:
 
 <div style="width:100%">
-  <div style="margin: 0 auto; width:75%;">
+  <div style="margin: 0 auto; width:60%;">
     <resolved-image source="/images/commands/elmish-hackernews-part1.gif" />
   </div>
 </div>
@@ -49,7 +48,7 @@ In the beginning, we will be implementing the minimal requirements of the applic
 In this part, we will expand upon what we have learnt in part 1 and implement different tabs that load different stories from Hackernews pages, as well decoding the "score" of each item and rendering it on screen:
 
 <div style="width:100%">
-  <div style="margin: 0 auto; width:75%;">
+  <div style="margin: 0 auto; width:60%;">
     <resolved-image source="/images/commands/elmish-hackernews-part2.gif" />
   </div>
 </div>
@@ -59,7 +58,7 @@ In this part, we will expand upon what we have learnt in part 1 and implement di
 Here, we step it up a notch. In contrary to the part 1 and part 2 where we load the story items in one go after all items have been loaded, we will load the story items individually.
 
 <div style="width:100%">
-  <div style="margin: 0 auto; width:75%;">
+  <div style="margin: 0 auto; width:60%;">
     <resolved-image source="/images/commands/elmish-hackernews-part3.gif" />
   </div>
 </div>
