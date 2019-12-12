@@ -246,6 +246,12 @@ let loadStoryItem (itemId: int) = async {
     return None
 }
 ```
+First of all, we implement a `Decoder<HackernewsItem>` using Thoth.Json which we will use for decoding a piece of JSON from the response text we get back from the Hackernews API. Next, we write the `loadStoryItem` function which has the type:
+```fsharp
+loadStoryItem : int -> Async<Option<HackernewsItem>>
+```
+Now this function call the end point specifically for an item and tries to decode the JSON-formatted response text using the `itemDecoder` that we wrote earlier. Notice that the function returns `Option<HackernewsItem>` rather than `Result<HackernewsItem, someErrorType>` because we are choosing to ignore errors when loading individual items, both HTTP and JSON-decoding errors.
+
 Now combining both functions `loadStoryItem` and `loadStoryItems` we get:
 ```fsharp {highlight: ['14-19']}
 let loadStoryItem (itemId: int) : Async<Option<HackernewsItem>> = (* . . . *)
@@ -278,3 +284,36 @@ let loadStoryItems = async {
       return LoadStoryItems (Finished (Error responseText))
 }
 ```
+It is important to understand what is going on with the highlighted lines in the snippet above: first of all we have the `storyIds` which are of type `int list`. That is nice, we can apply list functions with these such `List.truncate n` to take the first `n` elements and `List.map loadStoryItem` which turns every `int` from the list of IDs into `Async<Option<HackernewsItem>>` and we end up with this type:
+```fs
+Async<Option<HackernewsItem>> list
+```
+This type reads: "I have a list of asynchronous operations where each operations might or might not give me a `HackernewsItem`". Of course, we don't want a list of asyncrhronous operations but instead a single operation which is why aggregate those async operations into one using `Async.Parallel` which has type:
+```fs
+Async.Parallel : Async<'t> seq -> Async<'t array>
+
+// Subtitute 't -> Option<HackernewsItem>
+Async.Parallel : Async<Option<HackernewsItem>> list -> Async<Option<HackernewsItem> array>
+```
+Finally when we have `Async<Option<HackernewsItem> array>`, we pass into `Async.map (Array.choose id >> List.ofArray)` where:
+```fsharp
+Async.map : ('t -> 'u) -> Async<'t> -> Async<'u>
+
+Array.choose id >> List.ofArray : Option<'t> array -> 't list
+
+Async.map (Array.choose id >> List.ofArray)
+  : Async<Option<'t> array>
+ -> Async<'t list>
+
+// Subtitute 't -> HackernewItem
+Async.map (Array.choose id >> List.ofArray)
+  : Async<Option<HackernewsItem> array>
+ -> Async<HackernewsItem list>
+```
+Phew! That was quite packed to be honest. If the functions get compilcated, *follow the types* and you will see the light at the end of the tunnel. That said, we are actually done here, the last expressions gives us `Async<HackernewsItem list>` and because we are using *let bang* in the `let! storyItems = ...` defintions, the type of `storyItems` becomes simply `HackernewsItem list` which is exactly what we want after we have aggregated all of the asynchronous operations into one and filtered out those that operations that were unsuccesful using the `Array.choose id` part.
+
+> `Async.map` unfortunately isn't part of the F# standard library. I'll leave it as an exercise for the reader to implement.
+
+### Conclusion
+
+This sums it up for part 1 of the Elmish Hackernews application. The important lesson from here is how we were able to send many HTTP requests as asynchronous operations, then manipulate and aggregate the results before turning them into `Msg`s that are consumed by the `update` function.
