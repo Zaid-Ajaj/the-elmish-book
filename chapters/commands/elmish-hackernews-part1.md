@@ -317,3 +317,5 @@ Phew! That was quite packed to be honest. If the functions get compilcated, *fol
 ### Conclusion
 
 This sums it up for part 1 of the Elmish Hackernews application. The important lesson from here is how we were able to send many HTTP requests as asynchronous operations, then manipulate and aggregate the results before turning them into `Msg`s that are consumed by the `update` function.
+
+You can find the source code of this in [Zaid-Ajaj/elmish-hackernews-part1](https://github.com/Zaid-Ajaj/elmish-hackernews-part1)

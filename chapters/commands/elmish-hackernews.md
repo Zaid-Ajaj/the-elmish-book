@@ -31,7 +31,9 @@ Understanding the API you are working with is crucial before you are able to pro
 
 For the purposes of our Elmish Hackernews clone we will be restricting ourselves into just getting the information of items and render them as a list with links to the `url` of those items. Building an entire clone that maps to the API is out of scope for this application, though definitely possible using the techniques that we will be applying in the remainder of this chapter.
 
-Just like with chapter 2, I have divivded the implementation of the Elmish Hackernews clone into three parts where we incrementally add more features as we go.
+Just like with chapter 2, I have divivded the implementation of the Elmish Hackernews aoplication into three parts where we incrementally add more features as we go based on some requirements. The chapter wraps up with exercises where I will ask you to add features to it.
+
+> Besides the exercises of the chapter, there is *always* the mental exercise of how to translate the application requirements into a model we use for the `State` type of the application and the associated events (i.e `Msg`) for it. This shapes your train of thought whenever you encounter different requirements for future applications.
 
 ### Elmish Hackernews: Part 1
 
