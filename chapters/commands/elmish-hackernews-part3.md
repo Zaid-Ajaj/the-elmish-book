@@ -49,3 +49,127 @@ Imagine you are building a classic content management system (CMS), a common lan
 </div>
 
 ### Modelling The State
+
+In parts 1 and 2 we had a single asynchronous operation that loads all the story items in one go and to keep track of that operation we modelled the data using the `Deferred<'t>` type where `'t` was `Result<HackernewsItem list, string>` to account for failure of loading in case of HTTP and or JSON errors. In this part however, we are not keeping track of a single operation, but instead of *multiple ongoing* operations at the same time: every story item has an asynchronous state (initial, in progress and resolved).
+
+You might be tempted to use `Deferred<Result<HackernewsItem, string>> list` for these operations and that would be a close model but that is not enough (why? think about it before you read on).
+
+Well, once all these operations have been started, they are all in the `Deferred.InProgress` state. You basically have a list that looks like this `[ Deferred.InProgress; Deferred.InProgress; Deferred.InProgress; ...]`. Once a story item is loaded with information, you have to update the list but there is no way *identify* which item was loaded. To identify story items, we need to give them identities along with their asynchronous state:
+```fsharp
+(int * Deferred<Result<HackernewsItem, string>>) list
+```
+Here we are using an integer to identify the asynchronous state of each item. This integer is the `id` field of the story item in subject. Instead of `a' list`, you can also use a `Map` to work with the types which I personally find nicer in this example even though `list` would work just fine:
+```fsharp
+Map<int, Deferred<Result<HackernewsItem, string>>>
+```
+This way, we keep track of the asynchronous state of each story item and we are able to identify these states by the ID of the story item. However, where are these IDs are coming from? These have to be loaded in an earlier stage which in itself is an asycnhronos operation that can be modelled with `Deferred`. The end result for the state becomes something like this:
+```fsharp
+type StoryItem = Deferred<Result<HackernewsItem, string>>
+
+type State =
+  { CurrentStories: Stories
+    StoryItems : Deferred<Result<Map<int, StoryItem>, string>> }
+```
+The "outer" asynchronous operation is responsible for loading the only the IDs of the story items from the stories end point and from there we initialize the "inner" asynchronous state for the individual story items. I know this looks very complicated but bear in mind, this is the Hackernews API that is a bit unconventional which complicates our model which again is why I think it is a great exercise to understand the train of thought when modelling asynchronous data and possible states that the data can take.
+
+We know that there are two types of asynchronous events:
+ - One to load the IDs of the story items
+ - One to load a single story item
+
+Refactor the `Msg` type to account for these events:
+```fsharp
+type Msg =
+  | LoadStoryItems of AsyncOperationEvent<Result<int list, string>>
+  | LoadedStoryItem of Result<HackernewsItem, int * string>
+  | ChangeStories of Stories
+```
+Notice here that `LoadStoryItems` eventually returns `int list` when finished, these are the IDs of the story items. When that event occurs, we initialize the asynchronous states of the items and wait for `LoadedStoryItem` events to get dispatched so we are able to process them and update the user interface.
+
+### Implementing `init` and `update`
+
+In this part, I will go through in details into the implementations of `init` and `update` because once you get the model right, what's left is fill in the blanks in these two functions which is actually quite straightforward from that point on. You can find the [source code of part 3 here](https://github.com/Zaid-Ajaj/elmish-hackernews-part3) for reference. The important sections of the `update` function lie in here:
+
+```fsharp {highlight: [5, 8]}
+let update (msg: Msg) (state: State) =
+  match msg with
+  | LoadStoryItems (Finished (Ok storyIds)) ->
+      // initialize the story IDs
+      let storiesMap  = Map.ofList [ for id in storyIds -> id, Deferred.InProgress ]
+      let nextState = { state with StoryItems = Resolved (Ok storiesMap) }
+      // trigger a command from each story ID
+      nextState, Cmd.batch [ for id in storyIds -> Cmd.fromAsync (loadStoryItem id) ]
+
+  | LoadedStoryItem (Ok item) ->
+      match state.StoryItems with
+      | Resolved (Ok storiesMap) ->
+          // update a single story item state from the storiesMap
+          let modifiedStoriesMap =
+            storiesMap
+            |> Map.remove item.id
+            |> Map.add item.id (Resolved (Ok item))
+
+          let nextState = { state with StoryItems = Resolved (Ok modifiedStoriesMap) }
+          nextState, Cmd.none
+
+      | _ ->
+          // state sink
+          state, Cmd.none
+
+  | (* omitted for brevity *)
+```
+More specifically this line:
+```fsharp
+Cmd.batch [ for id in storyIds -> Cmd.fromAsync (loadStoryItem id) ]
+```
+Which effectively creates a single command by batching a list of the commands where each of which loads a single story item from Hackernews API.
+
+You might wondered why `LoadedStoryItem` is of type
+```fsharp
+Result<HackernewsItem, int * string>
+```
+instead of
+```fsharp
+AsyncOperationEvent<Result<HackernewsItem, int * string>>
+```
+This is because we don't need to know whether the operation has started or not. As soon as the IDs of the story items are loaded, the asynchronous state of each item is `Deferred.InProgess` and the commands to load each item is triggered right away so we don't need to bother with the initial state of the items but only the end result when an item has been loaded.
+
+### Implementing the `render` function
+
+Even though the state type looks complicated, once you break it down in the `render` function, you will see that it is not that bad and is pretty straightforward as the user interface also needs to account for the asynchronous states of the data we are keeping track of. Here are a couple of the smaller render functions used to make up the whole user interface (refere to [Zaid-Ajaj/elmish-hackernews-part3](https://github.com/Zaid-Ajaj/elmish-hackernews-part3) for the full code):
+```fsharp
+let renderStoryItem (itemId: int) storyItem =
+  let renderedItem =
+      match storyItem with
+      | HasNotStartedYet -> Html.none
+      | InProgress -> spinner
+      | Resolved (Error error) -> renderError error
+      | Resolved (Ok storyItem) -> renderItemContent storyItem
+
+  Html.div [
+    prop.key itemId
+    prop.className "box"
+    prop.style [ style.marginTop 15; style.marginBottom 15]
+    prop.children [ renderedItem ]
+  ]
+
+let renderStories items =
+  match items with
+  | HasNotStartedYet -> Html.none
+  | InProgress -> spinner
+  | Resolved (Error errorMsg) -> renderError errorMsg
+  | Resolved (Ok items) ->
+      items
+      |> Map.toList
+      |> List.map (fun (id, storyItem) -> renderStoryItem id storyItem)
+      |> React.fragment
+
+let render (state: State) (dispatch: Msg -> unit) =
+  Html.div [
+    prop.style [ style.padding 20 ]
+    prop.children [
+      title
+      renderTabs state.CurrentStories dispatch
+      renderStories state.StoryItems
+    ]
+  ]
+```
