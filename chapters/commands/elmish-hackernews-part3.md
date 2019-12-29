@@ -93,7 +93,7 @@ Refactor the `Msg` type to account for these events:
 ```fsharp
 type Msg =
   | LoadStoryItems of AsyncOperationEvent<Result<int list, string>>
-  | LoadedStoryItem of Result<HackernewsItem, int * string>
+  | LoadedStoryItem of int * Result<HackernewsItem, string>
   | ChangeStories of Stories
 ```
 Notice here that `LoadStoryItems` eventually returns `int list` when finished, these are the IDs of the story items. When that event occurs, we initialize the asynchronous states of the items and wait for `LoadedStoryItem` events to get dispatched so we are able to process them and update the user interface.
@@ -137,11 +137,11 @@ Which effectively creates a single command by batching a list of the commands wh
 
 You might have wondered why `LoadedStoryItem` is of type
 ```fsharp
-Result<HackernewsItem, int * string>
+int * Result<HackernewsItem, string>
 ```
 instead of
 ```fsharp
-AsyncOperationEvent<Result<HackernewsItem, int * string>>
+int * AsyncOperationEvent<Result<HackernewsItem, string>>
 ```
 This is because we don't need to know whether the operation has started or not. As soon as the IDs of the story items are loaded, the asynchronous state of each item is `Deferred.InProgess` and the commands to load each item are triggered right away so we don't need to bother with the initial state of the items but only the end result when an item has been loaded.
 
