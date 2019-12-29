@@ -218,10 +218,10 @@ Here I wanted to show you how you could make use of the F# type system to correc
 
 ### Built-in HTML5 Number Validation
 
-Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using the `withType` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
+Input elements of Html have a special attribute called `type`. This attribute tells the browser what type of input are we expecting from the user, whether it is textual (the default), numeric, boolean etc. We can specify this attribute by using the `type'` property. To tell the browser that the `Html.input` element is expecting a number from the user, we can specify it as follows:
 ```fsharp {highlight: [2]}
 Html.input [
-  prop.withType.number
+  prop.type'.number
   prop.valueOrDefault state.NumberInput.Raw
   prop.onChange (tryParseInt >> SetNumberInput >> dispatch)
 ]
@@ -262,7 +262,7 @@ let update msg state =
       { state with Capitalized = value }
 ```
 Finally we have the `render` function:
-```fsharp {highlight: ['17-23']}
+```fsharp {highlight: ['16-23']}
 let render state dispatch =
   Html.div [
     prop.style [ style.padding 20 ]
@@ -281,7 +281,7 @@ let render state dispatch =
         Html.input [
           prop.style [ style.margin 5 ]
           prop.id "checkbox-capitalized"
-          prop.withType.checkbox
+          prop.type'.checkbox
           prop.valueOrDefault state.Capitalized
           prop.onChange (SetCapitalized >> dispatch)
         ]
@@ -296,7 +296,7 @@ let render state dispatch =
   ]
 ```
 Notice here the following:
- - A check box is simply an `Html.input` element with property `prop.withType.checkbox`
+ - A check box is simply an `Html.input` element with property `prop.type'.checkbox`
  - The function `prop.valueOrDefault` accepts a boolean input to set the value at start-up
  - The event handler `onChange : bool -> unit` gives a nice way to retrieve the value
 

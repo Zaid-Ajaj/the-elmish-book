@@ -49,7 +49,7 @@ let loadStoryItems stories = async {
 }
 ```
 
-In this exercise, add a (sticky) button at the bottom of the screen to load the *next 10* story items that haven't been loaded yet. This button becomes disabled when story items are being loaded and invisible when there no more story items that can be loaded.
+Add a (sticky) button at the bottom of the screen to load the *next 10* story items that haven't been loaded yet. This button becomes disabled when story items are being loaded and invisible when there no more story items that can be loaded.
 
 Hint: refactor `LoadedStoryItem` as follows
 ```fsharp
