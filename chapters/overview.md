@@ -10,3 +10,6 @@ This chapter is concerned with understanding the basics of the Elm architecture 
 
 ### Chapter 3: Commands In Elmish
 This chapter dives deeper into Elmish introducing an essential piece of Elm Architecture which is the commands. Using commands, we will be able to utilise asynchronous updates and asynchronous operations in Elmish applications and apply the techniques learnt to understand and implement HTTP operations from scratch. Once we know about HTTP and data communication, we can move forward to learning how to manipulate and work with the data as JSON in our applications.
+
+### Chapter 4: Composing Larger Applications
+This chapter expands upon the concept of an Elmish program that was first introduced in chapter 2 and delves into the systematic techniques of composing larger Elmish applications by means of composing multiple smaller (child) programs into larger (parent) programs and managing the data flow around these programs. Navigation and routing are introduced in this chapter as well.
