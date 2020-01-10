@@ -189,8 +189,8 @@ The rest of the `render` function falls into place:
 ```fsharp
 let validtedTextColor validated =
     match validated.Parsed with
-    | Some _ -> colors.green
-    | None -> colors.crimson
+    | Some _ -> color.green
+    | None -> color.crimson
 
 let render state dispatch =
   Html.div [
@@ -282,7 +282,7 @@ let render state dispatch =
           prop.style [ style.margin 5 ]
           prop.id "checkbox-capitalized"
           prop.type'.checkbox
-          prop.valueOrDefault state.Capitalized
+          prop.isChecked state.Capitalized
           prop.onChange (SetCapitalized >> dispatch)
         ]
       ]
@@ -297,7 +297,7 @@ let render state dispatch =
 ```
 Notice here the following:
  - A check box is simply an `Html.input` element with property `prop.type'.checkbox`
- - The function `prop.valueOrDefault` accepts a boolean input to set the value at start-up
+ - The function `prop.isChecked` accepts a boolean input to set the value at start-up
  - The event handler `onChange : bool -> unit` gives a nice way to retrieve the value
 
 Also there is the `span` as the last element where it renders it's content based on whether the `Capitalized` field was set to true or not.

@@ -167,7 +167,7 @@ Html.div [
   Html.input [
     prop.id "txtPass"
     prop.className "input"
-    prop.withType.password
+    prop.type'.password
   ]
 
   Html.hr [ ]
@@ -236,7 +236,7 @@ The snippet above uses the DSL provided in `Fable.React` library where there are
  - 3) Has all these functions for Html elements and properties *globally* available
  - 4) CSS attributes are not entirely type-safe
 
-The first difference is there for historical reasons to make it look like the Elm language equivalent when it comes to rendering user interfaces but this proves to become very messy in larger snippets where there are so many unnecessary brackets that the code becomes unreadable. Developers also can't seem to decide on a convention when it comes to formatting the code having to make micro decisions of whether put the two lists in one line or in separate lines based on whether the elements have more properties than children or vice-versa. I built Feliz to solve this problem by using a single list for each element and results in a consistent formatting across your codebase, the same list is overloaded to not just take a list of properties but also a list of children if the element doesn't have properties to keep simple things simple.
+The first difference is there for historical reasons to make it look like the Elm language equivalent when it comes to rendering user interfaces but this proves to be very messy in larger snippets where there are so many unnecessary brackets that the code becomes unreadable. Developers also can't seem to decide on a convention when it comes to formatting the code having to make micro decisions of whether put the two lists in one line or in separate lines based on whether the elements have more properties than children or vice-versa. I built Feliz to solve this problem by using a single list for each element and results in a consistent formatting across your codebase, the same list is overloaded to not just take a list of properties but also a list of children if the element doesn't have properties to keep simple things simple.
 
 Because of the overloaded functions of Feliz, the conversion functions `str`, `ofInt` etc. are not needed anymore because Html elements can simply take primitive values as inputs such as `Html.div 42`, `Html.h1 "Hello"` or `Html.li 20.0`.
 
