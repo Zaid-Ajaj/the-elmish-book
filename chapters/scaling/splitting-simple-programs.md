@@ -213,3 +213,187 @@ let renderInputText (state: InputTextState) (dispatch: InputTextMsg -> unit) = (
 
 ### Composing Dispatch Functions
 
+There is a little bit of a problem. Now the smaller render functions no longer can take the `dispatch` function as input coming from the top-level `render`. Instead, the functions `renderCounter` and `renderInputText` take `CounterMsg -> unit` and `InpuTextMsg -> unit` as input, respectively.
+
+The question is, how do we make such functions when we only have the *original* function of type `Msg -> unit`? The answer is not straighforward at first glance, but it is not complicated or difficult either. It goes as follows: given an already provided dispatch function of type `Msg -> unit`, you can create *derivative* functions from it, one for the `renderCounter` and another for the `renderInputText`:
+```fsharp {highlight: [3, 4, 6, 7, 18, 29]}
+let render (state: State) (dispatch: Msg -> unit) =
+
+  let counterDispatch (counterMsg: CounterMsg) : unit =
+    dispatch (Msg.CounterMsg counterMsg)
+
+  let inputTextDispatch (inputTextMsg: InputTextMsg) : unit =
+    dispatch (Msg.TextInputMsg inputTextMsg)
+
+  match state.CurrentPage with
+  | Page.Counter ->
+      Html.div [
+        Html.button [
+          prop.text "Show Text Input"
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.TextInput))
+        ]
+
+        divider
+        renderCounter state.Counter counterDispatch
+      ]
+
+  | Page.TextInput ->
+      Html.div [
+        Html.button [
+          prop.text "Show counter"
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.Counter))
+        ]
+
+        divider
+        renderInputText state.InputText inputTextDispatch
+      ]
+```
+Notice in the highlighted code above, the functions `counterDispatch` and `inputTextDispatch`. They have the types `CounterMsg -> unit` and `InputTextMsg -> unit` which is what the smaller rendering functions need.
+```fsharp
+let counterDispatch (counterMsg: CounterMsg) : unit =
+  dispatch (Msg.CounterMsg counterMsg)
+
+let inputTextDispatch (inputTextMsg: InputTextMsg) : unit =
+  dispatch (Msg.TextInputMsg inputTextMsg)
+```
+Here they are again. As you can see, these functions do nothing special, they only wrap their input messages (for the child programs) into a message type of the parent program, namely from the cases `Msg.CounterMsg` and `Msg.InputTextMsg` which the original `dispatch` function understands since it takes `Msg` as input.
+
+Actually, you will rarely ever see these composed `dispatch` functions written out in this format, most of the time the are written in-line where the smaller render functions are being called as follows:
+```fsharp {highlight: [11, 22]}
+let render (state: State) (dispatch: Msg -> unit) =
+  match state.CurrentPage with
+  | Page.Counter ->
+      Html.div [
+        Html.button [
+          prop.text "Show Text Input"
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.TextInput))
+        ]
+
+        divider
+        renderCounter state.Counter (fun counterMsg -> dispatch (CounterMsg counterMsg))
+      ]
+
+  | Page.TextInput ->
+      Html.div [
+        Html.button [
+          prop.text "Show counter"
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.Counter))
+        ]
+
+        divider
+        renderInputText state.InputText (fun inputTextMsg -> dispatch (InputTextMsg inputTextMsg))
+      ]
+```
+These forms can be simplified even further into the format that is most commonly used in Elmish applications that uses the composition operator `>>`
+```fsharp {highlight: [11, 22]}
+let render (state: State) (dispatch: Msg -> unit) =
+  match state.CurrentPage with
+  | Page.Counter ->
+      Html.div [
+        Html.button [
+          prop.text "Show Text Input"
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.TextInput))
+        ]
+
+        divider
+        renderCounter state.Counter (CounterMsg >> dispatch)
+      ]
+
+  | Page.TextInput ->
+      Html.div [
+        Html.button [
+          prop.text "Show counter"
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.Counter))
+        ]
+
+        divider
+        renderInputText state.InputText (InputTextMsg >> dispatch)
+      ]
+```
+It comes down to the syntax of `(ChildMsg >> dispatch)` which effectively *translates* messages from the child program message type (i.e. `CounterMsg` and `CounterMsg`) into a message type of the parent program (i.e. `Msg`) which is then `dispatch`-ed back into the dispatch loop to be handled by the `update` function and so on and so forth.
+
+In many examples out there, this final form is shown as a first example which could prove to be quite of a head-scratcher, I know for me it was. However, once you disect where it comes from and the reasoning behind it then it all makes sense.
+
+### Refactoring `update` and `init`:
+
+What happened to `update` and `init` now that we have introduced the types `CounterState`, `InputTextState` and their associated message types? Let us inspect them after an initial refactoring and see what we could do better. First of all, the `init` function:
+```fsharp
+let initCounter() : CounterState =
+  { Count = 0 }
+
+let initInputText() : InputTextState =
+  { InputText = ""
+    IsUpperCase = false }
+
+let init() : State =
+  { Counter = initCounter()
+    InputText = initInputText()
+    CurrentPage = Page.Counter }
+```
+We split the initialization of the states of the child programs into separate functions. The root `init()` function simply calls these functions to initialize the fields that hold the states of these child programs but it also initializes the data that itself keeps track of, namely the `CurrentPage` field.
+
+When you see such piece of code, you can read it as follows: "The initial state of the parent program is made out of the initial states of the child programs along with the data that is managed by the parent program itself."
+
+If you list the types of these initialization functions, you will see something funny:
+```fsharp
+val initCounter : unit -> CounterState
+val initInputText : unit -> InputTextState
+val init : unit -> State
+```
+All of these functions have `unit` as input. It makes sense the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having a `init` signature of `User -> UserDashboardState`. We will take a look at such example at a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
+
+Moving on to the `update` function, which has become a bit of a mess because of the types that were introducee earlier, let's take a look:
+```fsharp
+let update (msg: Msg) (state: State): State =
+  match msg with
+  | CounterMsg Increment ->
+      let counter = { state.Counter with Count = state.Counter.Count + 1 }
+      { state with Counter = counter }
+
+  | CounterMsg Decrement ->
+      let counter = { state.Counter with Count = state.Counter.Count - 1 }
+      { state with Counter = counter }
+
+  | InputTextMsg (InputTextChanged text) ->
+      let inputText = { state.InputText with InputText = text }
+      { state with InputText = inputText }
+
+  | InputTextMsg (UppercaseToggled upperCase) ->
+      let inputText = { state.InputText with IsUpperCase = upperCase }
+      { state with InputText = inputText }
+
+  | SwitchPage page ->
+      { state with CurrentPage = page }
+```
+It is a mess because of the nested message definitions from `CounterMsg` and `InputTextMsg` as well as the nested records of type `CounterState` and `InputTextState` that has to be updated separately before updating the parent record of type `State`. Luckily though, it is easy to refactor the `update` function into specialized functions that update the nested records:
+```fsharp {highlight: [14, 15, 18, 19]}
+let updateCounter (counterMsg: CounterMsg) (counterState: CounterState) =
+  match counterMsg with
+  | Increment -> { counterState with Count = counterState.Count + 1 }
+  | Decrement -> { counterState with Count = counterState.Count - 1 }
+
+let updateInputText (inputTextMsg: InputTextMsg) (inputTextState: InputTextState) =
+  match inputTextMsg with
+  | InputTextChanged text -> { inputTextState with InputText = text }
+  | UppercaseToggled upperCase -> { inputTextState with IsUpperCase = upperCase }
+
+let update (msg: Msg) (state: State): State =
+  match msg with
+  | CounterMsg counterMsg ->
+      let updatedCounter =  updateCounter counterMsg state.Counter
+      { state with Counter = updatedCounter }
+
+  | InputTextMsg inputTextMsg ->
+      let updatedInputText = updateInputText inputTextMsg state.InputText
+      { state with InputText = updatedInputText}
+
+  | SwitchPage page ->
+      { state with CurrentPage = page }
+```
+And there we have it! Took us a while but we now have an `init` function, an `update` function and a `render` function, all of which are specialized to deal with a part of the application that is entirely separate of other parts. This means if you were to add or remove feature from the counter view, the input text view isn't impacted in anyway and there is no risk of introducing bugs in one program when we make changes in another, except of course for the parent program that controls the data flow between the views and the switching from one into another.
+
+### Programs As Modules
+
+To inforce the concept that the two programs (i.e. counter and input text) are totally separate, we can put their relavant program pieces into a *module*. In an Elmish application, we will strive for splitting programs into their respective modules that expose a composable API to the outside world.
+
+Let us move the pieces around and put them in modules: the counter goes into a `Counter` module and the input text goes into the `InputText` module. We will put the types for the state and messages in these modules as well so there will be no need for example to call the state of the counter as "CounterState" but rather simply `State` and refer to it from the parent as `Counter.State`. The same train of thought follows for `Counter.Msg`, `init`, `update` and `render`.
