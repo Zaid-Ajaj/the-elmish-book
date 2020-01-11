@@ -575,6 +575,6 @@ Project
   | -- Main.fs
 ```
 
-You can the source code of the finished result in the repository [Zaid-Ajaj](https://github.com/Zaid-Ajaj/multiple-simple-programs-finished). Take a second and compare it with the project structure we started with in [Zaid-Ajaj/multiple-simple-programs](https://github.com/Zaid-Ajaj/multiple-simple-programs).
+You can the source code of the finished result in the repository [Zaid-Ajaj/multiple-simple-programs-finished](https://github.com/Zaid-Ajaj/multiple-simple-programs-finished). Take a second and compare it with the project structure we started with in [Zaid-Ajaj/multiple-simple-programs](https://github.com/Zaid-Ajaj/multiple-simple-programs).
 
 That's it for this section, next up we look into integrating commands while wiring up child programs with parent ones.
