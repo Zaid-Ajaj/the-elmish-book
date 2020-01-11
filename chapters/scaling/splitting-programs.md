@@ -1,6 +1,6 @@
-# Splitting Simple Programs
+# Splitting Programs
 
-In this section, we will take a detailed look into splitting an Elmish program into multiple simple programs. The key is that in this example, we are working with *simple* programs: without commands in the definition of `init` and `update`. Splitting Elmish programs with commands will be tackled in the next section.
+In this section, we will take a detailed look into splitting an Elmish program into multiple programs. The key is that in this example, we are working with *simple* programs: without commands in the definition of `init` and `update`. Splitting Elmish programs with commands will be tackled in the next section.
 
 ### Counter and Text Input
 
@@ -394,6 +394,187 @@ And there we have it! Took us a while but we now have an `init` function, an `up
 
 ### Programs As Modules
 
-To inforce the concept that the two programs (i.e. counter and input text) are totally separate, we can put their relavant program pieces into a *module*. In an Elmish application, we will strive for splitting programs into their respective modules that expose a composable API to the outside world.
+To inforce the concept that the two programs, the counter and input text, are totally separate, we can put their relavant program pieces into a *module*. In an Elmish application, we will put programs into their respective modules which expose a composable API to the outside world while hiding the small helper functions inside that module.
 
 Let us move the pieces around and put them in modules: the counter goes into a `Counter` module and the input text goes into the `InputText` module. We will put the types for the state and messages in these modules as well so there will be no need for example to call the state of the counter as "CounterState" but rather simply `State` and refer to it from the parent as `Counter.State`. The same train of thought follows for `Counter.Msg`, `init`, `update` and `render`.
+
+Here is the `Counter` module
+```fsharp
+[<RequireQualifiedAccess>]
+module Counter =
+
+  type State =
+    { Count: int }
+
+  type Msg =
+    | Increment
+    | Decrement
+
+  let init() =
+    { Count = 0 }
+
+  let update (counterMsg: Msg) (counterState: State) =
+    match counterMsg with
+    | Increment -> { counterState with Count = counterState.Count + 1 }
+    | Decrement -> { counterState with Count = counterState.Count - 1 }
+
+  let render (state: State) (dispatch: Msg -> unit) =
+    Html.div [
+      Html.button [
+        prop.onClick (fun _ -> dispatch Increment)
+        prop.text "Increment"
+      ]
+      Html.button [
+        prop.onClick (fun _ -> dispatch Decrement)
+        prop.text "Decrement"
+      ]
+      Html.h1 state.Count
+    ]
+```
+As simple as that, this `Counter` module is a self-contained program exposing all the required parts to become compasable with a parent program as we will see in a bit. Notice the `RequireQualifiedAccess` attribute added to the module to simplify API discoverability and know which function is coming from which module.
+
+The same logic follows for the `InputText` module:
+
+```fsharp
+[<RequireQualifiedAccess>]
+module InputText =
+
+  type State =
+    { InputText: string
+      IsUpperCase: bool }
+
+  type Msg =
+    | InputTextChanged of string
+    | UppercaseToggled of bool
+
+  let init() =
+    { InputText = ""
+      IsUpperCase = false }
+
+  let update (inputTextMsg: Msg) (inputTextState: State) =
+    match inputTextMsg with
+    | InputTextChanged text -> { inputTextState with InputText = text }
+    | UppercaseToggled upperCase -> { inputTextState with IsUpperCase = upperCase }
+
+  let render (state: State) (dispatch: Msg -> unit) =
+    Html.div [
+      Html.input [
+        prop.valueOrDefault state.InputText
+        prop.onChange (InputTextChanged >> dispatch)
+      ]
+      divider
+      Html.input [
+        prop.id "uppercase-checkbox"
+        prop.type'.checkbox
+        prop.isChecked state.IsUpperCase
+        prop.onChange (UppercaseToggled >> dispatch)
+      ]
+      Html.label [
+        prop.htmlFor "uppercase-checkbox"
+        prop.text "Uppercase"
+      ]
+      Html.h3 (if state.IsUpperCase then state.InputText.ToUpper() else state.InputText)
+    ]
+```
+Again, the module `InputText` is written such that it contains all the pieces required for an Elmish program. Of course, these pieces don't do anything on their own unless the outside world - the parent program - consumes them and puts the pieces together: composing the lego blocks into bigger pieces. This is the resposibility of the parent program which I will call `App`:
+```fsharp
+[<RequireQualifiedAccess>]
+module App =
+
+  [<RequireQualifiedAccess>]
+  type Page =
+    | Counter
+    | TextInput
+
+
+  type State =
+    { Counter: Counter.State
+      InputText: InputText.State
+      CurrentPage : Page }
+
+  type Msg =
+    | CounterMsg of Counter.Msg
+    | InputTextMsg of InputText.Msg
+    | SwitchPage of Page
+
+  let init() =
+    { Counter = Counter.init()
+      InputText = InputText.init()
+      CurrentPage = Page.Counter }
+
+  let update (msg: Msg) (state: State): State =
+    match msg with
+    | CounterMsg counterMsg ->
+        let updatedCounter =  Counter.update counterMsg state.Counter
+        { state with Counter = updatedCounter }
+
+    | InputTextMsg inputTextMsg ->
+        let updatedInputText = InputText.update inputTextMsg state.InputText
+        { state with InputText = updatedInputText}
+
+    | SwitchPage page ->
+        { state with CurrentPage = page }
+
+  let render (state: State) (dispatch: Msg -> unit) =
+    match state.CurrentPage with
+    | Page.Counter ->
+        Html.div [
+          Html.button [
+            prop.text "Show Text Input"
+            prop.onClick (fun _ -> dispatch (SwitchPage Page.TextInput))
+          ]
+
+          divider
+          Counter.render state.Counter (CounterMsg >> dispatch)
+        ]
+
+    | Page.TextInput ->
+        Html.div [
+          Html.button [
+            prop.text "Show counter"
+            prop.onClick (fun _ -> dispatch (SwitchPage Page.Counter))
+          ]
+
+          divider
+          InputText.render state.InputText (InputTextMsg >> dispatch)
+        ]
+```
+The `App` module is the "outside" world of the other Elmish modules and it consumes the functions and types from these child modules/programs *without* knowing anything about their implementation, which is a key concept of modularity in Elmish applications: if you were to add more features in either modules, `Counter` or `InputText`, there would be required changes from the consumer `App` module point of view.
+
+### Bootstrapping The Application
+
+Finally, since we now have a single root program that composes other programs. We can set this root `App` program into motion by bootstrapping it using the `Program` module from the `Elmish` namespace:
+```fsharp
+Program.mkSimple App.init App.update App.render
+|> Program.withReactSynchronous "elmish-app"
+|> Program.run
+```
+
+### Modules In Separate Files
+
+As the final touch, we will put the Elmish modules inside different F# files to make up the application. This way, many developers can work on different files at the same time and it keeps the project neat and tidy. Of course, order matters in F# projects, so you have to put parent modules *after* the child modules so that the parent modules can reference the types and functions from the child programs.
+
+In this example, we have three modules that contain Elmish programs: `Counter`, `InputText` and `App`.
+
+I haven't mentioned it, but I have used a helper value called `divider`:
+```fsharp
+let divider =
+  Html.div [
+    prop.style [ style.margin 10 ]
+  ]
+```
+This value is used both in `InputText` and `App` so I will put it inside a `Common` module that is present *before* the modules that reference it. Finally, there will be a `Main` module that bootstraps the application by referencing the top-level program definition from `App`.
+
+The files end up in the following order:
+```
+Project
+  | -- Common.fs
+  | -- Counter.fs
+  | -- InputText.fs
+  | -- App.fs
+  | -- Main.fs
+```
+
+You can the source code of the finished result in the repository [Zaid-Ajaj](https://github.com/Zaid-Ajaj/multiple-simple-programs-finished). Take a second and compare it with the project structure we started with in [Zaid-Ajaj/multiple-simple-programs](https://github.com/Zaid-Ajaj/multiple-simple-programs).
+
+That's it for this section, next up we look into integrating commands while wiring up child programs with parent ones.
