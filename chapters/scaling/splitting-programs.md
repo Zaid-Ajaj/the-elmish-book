@@ -1,8 +1,17 @@
 # Splitting Programs
 
-In this section, we will take a detailed look into splitting an Elmish program into multiple programs. The key is that in this example, we are working with *simple* programs: without commands in the definition of `init` and `update`. Splitting Elmish programs with commands will be tackled in the next section.
+In this section, we will take a detailed look into splitting an Elmish program into multiple programs. The key is that in this example, we are working with *simple* programs: without commands in the definition of `init` and `update`. Splitting Elmish programs with commands will be tackled in the next section. We will be covering a lot in this section, here is the table of contents of what is up next:
 
-### Counter and Text Input
+- [Counter And Text Input](#counter-and-text-input)
+- [Refactoring The State](#refactoring-the-state)
+- [Composing Dispatch Functions](#composing-dispatch-functions)
+- [Refactoring `update` and `init`](#refactoring-update-and-init)
+- [Programs As Modules](#programs-as-modules)
+- [Bootstrapping The Application](#bootstrapping-the-application)
+- [Flow Of Messages](#flow-of-messages)
+- [Modules In Separate Files](#modules-in-separate-files)
+
+### Counter And Text Input
 
 Consider the following application
 
@@ -549,6 +558,22 @@ Program.mkSimple App.init App.update App.render
 |> Program.withReactSynchronous "elmish-app"
 |> Program.run
 ```
+
+### Flow of Messages
+
+There is quite a level of indirection when composing smaller programs into bigger ones and it might give the feeling that the smaller programs kind of have their own life-cycle as a standalone program. This is of course not the case because you can see the child programs as just a bunch of smaller "helper" functions of the main and only program that is bootstrapped at the entry of the application.
+
+Take for example what happens when you click the "Increment" button while the counter view is on screen. An `Increment` event is dispatched, but that event is of type `Counter.Msg`, not `App.Msg` that is then *wrapped* into a message of type `App.Msg` from the counter dispatcher `(CounterMsg >> dispatch)` because the Elmish dispatch loop only understands messages of the type from the top-level bootstrapped program: the `App` program.
+
+To put in a timeline, this is what happens:
+ - Button "Increment" clicked
+ - `Increment` message is dispatched using the Counter dispatcher `(CounterMsg >> dispatch)`
+ - `Increment` is wrapped into `CounterMsg` (top-level `Msg` type) and it called by the top-level `dispatch` function.
+ - `App.update` is called with message `CounterMsg Increment`
+ - `App.update` *unwraps* the `Increment` event from the `CounterMsg` by means of pattern matching and *passes it down* to `Counter.update` to compute the next state of the counter
+ - The updated counter state is then used to update the `Counter` field of the state from the main program
+ - Application re-renders
+
 
 ### Modules In Separate Files
 
