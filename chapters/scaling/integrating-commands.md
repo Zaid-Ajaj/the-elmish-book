@@ -188,3 +188,4 @@ This is saying two things:
  - "The initial state of the parent program is the composed states of the child programs"
  - "The initial command of the parent program is all the commands of the child programs, batched as one command and each of them is transformed to wrap the dispatched messages into the `Msg` type of the parent program."
 
+You can find the source code of this example in the repository [Zaid-Ajaj/multiple-programs-with-commands](https://github.com/Zaid-Ajaj/multiple-programs-with-commands) for reference. I have also added a new file called "Extensions.fs" that includes an auto-opened module which contains the `Cmd.fromAsync` function because unfortunately it is not included in the core Elmish library.
