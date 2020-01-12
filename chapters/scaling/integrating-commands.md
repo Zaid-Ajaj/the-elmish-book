@@ -140,11 +140,7 @@ let transformCounterMsg (counterMsg: Counter.Msg) : App.Msg =
 
 (fun counterMsg -> Msg.CounterMsg counterMsg)
 ```
-Which can be refactored into
-```fsharp
-Msg.CounterMsg
-```
-The final result becomes:
+The `App.update` function becomes:
 ```fsharp {highlight: [5]}
 let update (msg: Msg) (state: State) =
   match msg with
@@ -160,3 +156,35 @@ let update (msg: Msg) (state: State) =
   | SwitchPage page ->
       { state with CurrentPage = page }, Cmd.none
 ```
+The `Cmd.map` function transforms a command such that *when* that command dispatches an event, that event is transformed using the input transform function which gives a new command that is able to dispatch events of the transformed type. This means that `Cmd.map` does not change the behavior of side-effects, it only transforms the events that they might dispatch at some point in time.
+
+The F# compiler will tell you that this form
+```fsharp
+Cmd.map (fun counterMsg -> Msg.CounterMsg counterMsg) counterCmd
+```
+can be simplified to get rid of the inline function and use the discriminated union case directly as a function itself (without the need to fully qualify it):
+```fsharp
+Cmd.map CounterMsg counterCmd
+```
+This is how you will see Elmish applications implement command propagation from child programs into parent ones. The same logic follows for the `init` function of the parent `App` program if its child programs had commands in their `init` definition. It is not the case here, but for the sake of completeness, let us pretend that the `init` functions of the child programs *do* return initial commands along with their initial states, then the `init` of the parent would look like this:
+```fsharp {highlight: ['10-13']}
+let init() =
+  let counterState, counterCmd = Counter.init()
+  let inputTextState, inputTextCmd = InputText.init()
+
+  let initialState =
+    { Counter = counterState
+      InputText = inputTextState
+      CurrentPage = Page.Counter }
+
+  let initialCmd = Cmd.batch [
+    Cmd.map CounterMsg counterCmd
+    Cmd.map InputTextMsg inputTextCmd
+  ]
+
+  initialState, initialCmd
+```
+This is saying two things:
+ - "The initial state of the parent program is the composed states of the child programs"
+ - "The initial command of the parent program is all the commands of the child programs, batched as one command and each of them is transformed to wrap the dispatched messages into the `Msg` type of the parent program."
+
