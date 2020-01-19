@@ -40,7 +40,7 @@ And so on and so forth. Adding more child programs is a matter adding another fi
 
 ### Discriminated Union Composition
 
-The most common way to model child programs in web application is to use a discriminated union to model which child program is currently *active* on screen. Each case of the discriminated union holds the state of a child program. This is a natural way to model web pages because a web application typically is showing a single active page at any given moment:
+The most common way to model child programs in web applications is to use a discriminated union to model which child program is currently *active* on screen. Each case of the discriminated union holds the state of a child program. This is a natural way to model web pages because a web application typically is showing a single active page at any given moment. For example, the example we saw in the previous section could have modelled as a discriminated union type:
 ```fsharp
 type Page =
     | Counter of Counter.State
@@ -52,31 +52,21 @@ type State = { CurrentPage : Page }
 ```
 The most important distinction when comparing to State-Field composition is that when the `CurrentPage` changes from one child program into another, the state of that child program is *reset*. In State-Field compositon, the states of all child programs are maintained at the same time. We saw that in the previous example where the count of the counter view was kept the same as we switched back and forth from one view into another.
 
-When we say the state of a child program is "reset", it is not entirely true. It might be better to say that when changing the `CurrentPage` from one child program into another, the state of that child program is *re-initialized*.
+When we say the state of a child program is "reset", it is not entirely accurate. It is better to say that when changing the `CurrentPage` from one child program into another, the state of that child program is *re-initialized*. To elaborate on this concept, consider the `Msg` type that is associated with the `State` type that follows Discriminated Union composition:
 
-Let me explain what I mean, consider the `Msg` type associated with the parent program above:
 ```fsharp {highlight: [4]}
 type Msg =
   | CounterMsg of Counter.Msg
   | InputTextMsg of InputText.Msg
-  | SwitchPage of Page
+  // | SwitchPage of Page
 ```
-What do you think of the last union case `SwitchPage of Page`?
+We no longer have the union case `SwitchPage of Page`, take a second to think about why.
 
-One might say, "Yeah `SwitchPage` should work just fine, it has all the information needed to make the state change the current active page when invoked from a button":
-```fsharp
-Html.button [
-    prop.text "Show Counter"
-    prop.onClick (fun _ -> dispatch (SwitchPage (Page.Counter (fst (Counter.init())))))
-]
-```
-Here we dispatch a `SwitchPage` message and give it the initial value of the `Counter` module. This kind of works but not entirely: we are discarding the *initial command* of the `Counter` module which is definitely not the dersired behavior!
+Switching pages in Discriminated Union composition can be properly implemented by understanding the *initialization parameters* of each child program. In other words, we ask ourselves: "What information does the `Counter` module need for it to be initialized"? The answer is simple, just look at the paremeters of the `Counter.init` function.
 
-Switching pages in Discriminated Union composition can be properly implemented by understanding the *initialization conditions* of each child program. In other words, we ask ourselves: "What information does the `Counter` module need for it to be initialized"? The answer is simple, just look at the paremeters of the `Counter.init` function.
+One way to implement the switching is by having specialized messages case from the parent program that have *enough information* to call the `init` function of a child program. In the case of the `Counter` child program, the `init` function takes `unit` as input so it doesn't need any information to be initialized.
 
-One way to implement the switching properly is by having a specialized message case from the parent program that has *enough information* to initialize a child program. In the case of the `Counter` child program, the `init` function takes `unit` as input so it doesn't need any information to be initialized.
-
-Let us add a message `SwitchToCounter` that initializes the `Counter` program and another message `SwitchToInputText` that does the same for the `InputText` program:
+Let us add a message `SwitchToCounter` that initializes the `Counter` child program and another message `SwitchToInputText` that does the same for the `InputText` program:
 ```fsharp
 type Msg =
   | CounterMsg of Counter.Msg
@@ -150,13 +140,13 @@ let update (msg: Msg) (state: State) =
         nextState, nextCmd
 
     | Page.InputText inputTextState, InputTextMsg inputTextMsg ->
-        let inputTextState, inputTextCmd = InputText.update inputTextState inputTextMsg
-        let nextState = { state with CurrentPage = Page.InputText inputTextState }
+        let updatedInputText, inputTextCmd = InputText.update inputTextMsg inputTextState
+        let nextState = { state with CurrentPage = Page.InputText updatedInputText }
         let nextCmd = Cmd.map InputTextMsg inputTextCmd
         nextState, nextCmd
 
-    | _, SwitchToCounter count ->
-        let counterState, counterCmd = Counter.init count
+    | _, SwitchToCounter ->
+        let counterState, counterCmd = Counter.init()
         let nextState = { state with CurrentPage = Page.Counter counterState }
         let nextCmd = Cmd.map CounterMsg counterCmd
         nextState, nextCmd
@@ -170,6 +160,6 @@ let update (msg: Msg) (state: State) =
     | _, _ ->
         state, Cmd.none
 ```
-You might say: "Well, we didn't do anything like this, we just moved the *decision* to intialize the child program data up to the parent program instead of initializing it from the child program itself". In this case, you would be right. However, a lot of the times, the child program cannot choose the initial state without extra information provided by the parent. This is also why Disciriminated Union composition is often more suitable in web applications, because unlike State-Field composition, the parent program doesn't need to initialize *all* of the children during the initialization of the state, simply because some child program might require information that is not available at the time of the initialization of the parent program. It might be a bit vague but we will learn exactly why this is the case when we tackle real examples in the following sections.
+You might say: "Well, we didn't add anything really, we just moved the *decision* to intialize the child program data up to the parent program instead of initializing it from the child program itself". In this example, you would be right. However, a lot of the times, the child program cannot choose the initial state without extra information provided by the parent. This is also why Disciriminated Union composition is often more suitable in web applications, because unlike State-Field composition, the parent program doesn't need to initialize *all* of the children during the initialization of the state, simply because some child program might require information that is not available at the time of the initialization of the parent program. So the parent program *gather* enough information for the initialization of another child program before actually initializing it. Think about a user dashboard that loads all kinds of data for a certain user. That would be a page (child program) that requires a *user* as input during initialization. The user information is only available after a user has succesfully logged in. This means that we make it is impossible to initialize the dashboard unless we have acquired enough information about the user.
 
-I used the messages `SwitchToCounter` and `SwitchToInputText` to demonstrate the switching between the child programs. In a real web application, we don't need these messages because the switching between the pages happens based in the *current url* of the web page. "Switching child programs" is another way of saying "routing between the web pages". We will introduce routing in later section in this chapter.
+I used the messages `SwitchToCounter` and `SwitchToInputText` to demonstrate the switching between the child programs. In a real web application, we don't need these messages because the switching between the pages happens based in the *current url* of the web page. The application would *listen* for changes in the URL in the address bar and react accordingly. Routing will be discussed in a later chapter. For now, this is the gist of modelling child programs following Discriminated Union composition.
