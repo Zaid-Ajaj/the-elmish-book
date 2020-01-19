@@ -166,3 +166,28 @@ You might say: "Well, we didn't add anything really, we just moved the *decision
 
 I used the messages `SwitchToCounter` and `SwitchToInputText` to demonstrate the switching between the child programs. In a real web application, we don't need these messages because the switching between the pages happens based in the *current url* of the web page. The application would *listen* for changes in the URL in the address bar and react accordingly. Routing will be discussed in a later chapter. For now, this is the gist of modelling child programs following Discriminated Union composition.
 
+### Sequence Compostion
+
+Another common model to compose child programs into a bigger program is to have a **list** of them within the state of the parent. An example is the best way to explain this:
+```fsharp
+type State = { Counters : (Guid * Counter.State) list }
+```
+Here, the parent program keeps track of a number of child program states and *identifies* each of them using a `Guid`. Identifying each state element of the list is necessary because when the parent receives a `Counter.Msg` event, it has to know to which program from the list this event applies to:
+```fsharp
+type Msg =
+  | CounterMsg of Guid * Counter.Msg
+```
+Although the example above uses a list to model many child states, you can use any generic sequence type. Personally I think using a `Map` would be a better solution because we can then enforce the uniqueness of the identifiers that *map* to their corresponding state objects:
+```fsharp
+type State = { Counters : Map<Guid, Counter.State> }
+```
+
+### The Sky Is The Limit
+
+The forms I have presented in this section are just the beginning of the story and I can imagine much more complex models that allow for composition. For example you could extend a `State-Field` composition program into one that combines the child programs with the `Deferred` type:
+```fsharp
+type State = {
+  Counter : Deferred<Counter.State>
+}
+```
+It all depends on your requirements and the availability of the information required to initialize a child program.
