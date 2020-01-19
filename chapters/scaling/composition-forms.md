@@ -166,7 +166,7 @@ You might say: "Well, we didn't add anything really, we just moved the *decision
 
 I used the messages `SwitchToCounter` and `SwitchToInputText` to demonstrate the switching between the child programs. In a real web application, we don't need these messages because the switching between the pages happens based in the *current url* of the web page. The application would *listen* for changes in the URL in the address bar and react accordingly. Routing will be discussed in a later chapter. For now, this is the gist of modelling child programs following Discriminated Union composition.
 
-### Sequence Compostion
+### Keyed-Sequence Compostion
 
 Another common model to compose child programs into a bigger program is to have a **list** of them within the state of the parent. An example is the best way to explain this:
 ```fsharp
@@ -181,6 +181,34 @@ Although the example above uses a list to model many child states, you can use a
 ```fsharp
 type State = { Counters : Map<Guid, Counter.State> }
 ```
+When working with Keyed-Sequences, it is important to realize how the much work is involved with rendering the sequence of child programs on screen, especially when **adding**, **removing** or **reordering** the their states. Take the following function that renders the `Counters` from the definition above:
+```fsharp
+let renderCounters counters dispatch =
+  Html.div [
+    for (id, counter) in Map.toList counters ->
+    Html.div [
+      prop.className "counter"
+      prop.children [
+        Counter.render counter (CounterMsg >> dispatch)
+      ]
+    ]
+  ]
+```
+Whenever a new `Counter` is added to the list, the *entire* list is re-rendered. React cannot know whether the last element added is the one that should be rendered because React cannot assume the order in which the elements should be rendered on screen. We can help React a bit in figuring out which elements were added, removed or re-ordered so that it doesn't have to re-render the entire list, we will add a *unique key* for each element using the `key` property. With Keyed-Sequences, we just happen to have one per element of the sequence:
+```fsharp {highlight: [5]}
+let renderCounters counters dispatch =
+  Html.div [
+    for (id, counter) in Map.toList counters ->
+    Html.div [
+      prop.key id
+      prop.className "counter"
+      prop.children [
+        Counter.render counter (CounterMsg >> dispatch)
+      ]
+    ]
+  ]
+```
+This applies not only for Keyed-Sequences with child programs but any sequence of elements that you want to render on screen and have plans of mutating it. For example in a To-Do list application, every time you render a To-Do item, you can use the ID of the item as *key* for the rendered piece of UI.
 
 ### The Sky Is The Limit
 
