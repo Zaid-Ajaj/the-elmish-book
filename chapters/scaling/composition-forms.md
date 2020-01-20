@@ -189,7 +189,7 @@ let renderCounters counters dispatch =
     Html.div [
       prop.className "counter"
       prop.children [
-        Counter.render counter (CounterMsg >> dispatch)
+        Counter.render counter (fun counterMsg -> dispatch (id, CounterMsg counterMsg))
       ]
     ]
   ]
@@ -203,7 +203,7 @@ let renderCounters counters dispatch =
       prop.key id
       prop.className "counter"
       prop.children [
-        Counter.render counter (CounterMsg >> dispatch)
+        Counter.render counter (fun counterMsg -> dispatch (id, CounterMsg counterMsg))
       ]
     ]
   ]

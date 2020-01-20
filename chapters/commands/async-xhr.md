@@ -97,7 +97,7 @@ async {
 }
 |> Async.StartImmediate
 ```
-Converting callback-based APIs from Javascript into F#'s `async` is really powerfull and will allow to build abstractions upon existing Javascript libraries into idiomatic F# API that uses the `async` computation expressions.
+Converting callback-based APIs from Javascript into F#'s `async` is really powerful and will allow to build abstractions upon existing Javascript libraries into idiomatic F# API that uses the `async` computation expressions.
 
 ### Implementing `httpRequest`
 
