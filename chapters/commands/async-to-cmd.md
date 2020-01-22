@@ -87,7 +87,11 @@ let delayedSleepMsg (sleep: Async<unit>) (msg: Msg) : Cmd<Msg> =
 let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
     delayedSleepMsg (Async.Sleep delay) msg
 ```
-Here `delayedMsg` is rewritten in terms of another function `delayedSleepMsg`, that function takes two inputs of type `Async<unit>` and `Msg`, simply dispatching the input `Msg` after `sleep` finishes. But this `delayedSleepMsg` is quite ugly and doesn't seem really useful since the `sleep` can be anything. The parameters are begging to be combined into a single `Async<Msg>`:
+Here `delayedMsg` is rewritten in terms of another function `delayedSleepMsg`. That function takes two inputs of type `Async<unit>` and `Msg`, simply dispatching that `Msg` from the input parameter after `sleep` finishes.
+
+Having two parameteres of type `Async<unit>` and `Msg` being separate doesn't seem very useful. It is not generic enough that you can **reuse** it since your `Async` expressions usually are returning some value other than `unit`. In fact, in Elmish applications you would want your asynchronous operations to return `Msg`. That way when you convert them to `Cmd<Msg>`, that returned message is dispatched and processed further by the application.
+
+Let us combine both parameters of `Async<unit>` and `Msg` into a single asynchronous expression `Async<Msg>`. While we are at it, we can also rename the function `delayedSleepMsg` into something more generic like `fromAsync` because we are effectively turning an `Async<Msg>` into `Cmd<Msg>`:
 ```fsharp
 let fromAsync (operation: Async<Msg>) : Cmd<Msg> =
     let delayedCmd (dispatch: Msg -> unit) : unit = =
@@ -126,6 +130,8 @@ let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
 ```
 You could even add it as an extension of the existing `Cmd` module:
 ```ocaml
+open Elmish
+
 module Cmd =
     let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
         let delayedCmd (dispatch: 'msg -> unit) : unit =
@@ -137,4 +143,18 @@ module Cmd =
             Async.StartImmediate delayedDispatch
 
         Cmd.ofSub delayedCmd
+```
+After you have added the function `fromAsync` as an extension of the `Cmd` module, you can use it in your `update` and `init` functions like other functions that are available in the `Cmd` module:
+```fsharp {highlight: [11]}
+let update msg state =
+    match msg with
+    | Increment -> { state with Count = state.Count + 1 }, Cmd.none
+    | Decrement -> { state with Count = state.Count - 1 }, Cmd.none
+    | IncrementDelayed ->
+        let delayedIncrement = async {
+            do! Async.Sleep 1000
+            return Increment
+        }
+
+        state, Cmd.fromAsync delayedIncrement
 ```
