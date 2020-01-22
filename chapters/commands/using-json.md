@@ -196,9 +196,9 @@ Let's see how to build that `Decoder<Product>` in action and walk through the co
 
 ```fsharp
 let productDecoder : Decoder<Product> =
-  Decode.object (fun field -> {
-    name = field.Required.At [ "name" ] Decode.string
-    price = field.Required.At [ "price" ] Decode.float
+  Decode.object (fun get -> {
+    name = get.Required.At [ "name" ] Decode.string
+    price = get.Required.At [ "price" ] Decode.float
   })
 ```
 Here, we are constructing the `Product` decoder using the `Decode.object` function. This is because we want to map a JSON object into the `Product` record. This function takes a single argument which is a "field getter" that allows you to define how the fields of the `Product` (the name and the price) can be decoded. In our case, we are decoding the `name` field using the `Decode.string` decoder which itself has type `Decoder<string>` and the for `price` field, we are using the `Decode.float` decoder which is of type `Decoder<float>`.
@@ -373,19 +373,17 @@ Using `Fable.SimpleJson`:
 ```fsharp
 open Fable.SimpleJson
 
-let inline parseStoreInfo (json: string) : Result<StoreInfo, string> =
+let parseStoreInfo (json: string) : Result<StoreInfo, string> =
   Json.tryParseNativeAs<StoreInfo> json
 ```
 That's it! The function `Json.tryParseNativeAs<'t>` will do the magic conversion internally. Using `Thoth.Json`, it is just as simple:
 ```fsharp
 open Thoth.Json
 
-let inline parseStoreInfo (json: string) : Result<StoreInfo, string> =
+let parseStoreInfo (json: string) : Result<StoreInfo, string> =
   Decode.Auto.fromString<StoreInfo>(json)
 ```
 Nothing else required, both functions do basically the same thing.
-
-> It is very important to understand that the *inlining* of the conversion function is required! Whenver you use Fable's reflection capabilites to retrieve type meta-data in runtime, the types *must* be known at compile-time. This is because Fable includes the Reflection meta-data on demand as in with the examples above to avoid having to include all the meta-data of all used types when they are not needed.
 
 ### Comparison Fable.SimpleJson vs Thoth.Json
 

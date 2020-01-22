@@ -192,7 +192,7 @@ Now that we have the general shape of the application what it should do. We can 
 As you can see, there is quite a lot to digest. For the HTTP and JSON stuff we will be using [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) and [Thoth.Json](https://thoth-org.github.io/Thoth.Json/) respectively. Start by adding them to the project:
 ```bash
 cd src
-dotnet add package Fable.SimpleJson
+dotnet add package Fable.SimpleHttp
 dotnet add package Thoth.Json
 ```
 Now we can use both and implement `loadStoryItems`:
