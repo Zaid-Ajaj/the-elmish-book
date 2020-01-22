@@ -25,7 +25,7 @@ On the other hand, an HTTP response has:
 These definitions have some serious limitations because neither the `Request` nor the `Response` take HTTP headers into account  which are essential metadata about the data exchange for a single HTTP roundtrip and the subsequent requests. There is also the fact that the `body` of the response is a string which is not always the case as there are multiple formats the response `body` can have such as raw binary data encoded as `UInt8Array` or `Blob` but for the purposes of this sample implementation we will skip over these concerns.
 
 With these types in mind, we can model the type of the command itself. Remember that a command is something that is able to dispatch messages (say of type `Msg`). Let's define the type of the command:
-```ocaml
+```fsharp
 let httpRequest (request: Request) (responseHandler: Response -> 'Msg) : Cmd<'Msg> =
     (* . . . *)
 ```
@@ -70,24 +70,24 @@ dist
   └─── lorem-ipsum.txt
 ```
 We will load the contents of this file when the application starts using HTTP. Like always, we starting building the Elmish application by modelling the state of the application, for that we will use two important types we came up with in the [Modelling Asynchronous State](async-state.md) section:
-```ocaml
+```fsharp
 type Deferred<'t> =
   | HasNotStartedYet
   | InProgress
   | Resolved of 't
 
-type AsyncOperationEvent<'t> =
+type AsyncOperationStatus<'t> =
   | Started
   | Finished of 't
 ```
-The `Deferred<'t>` type is used to model the state and the `AsyncOperationEvent<'t>` type is used for the events, they can be used as follows:
+The `Deferred<'t>` type is used to model the state and the `AsyncOperationStatus<'t>` type is used for the events, they can be used as follows:
 ```fsharp
 type State = {
     LoremIpsum : Deferred<Result<string, string>>
 }
 
 type Msg =
-    | LoadLoremIpsum of AsyncOperationEvent<Result<string, string>>
+    | LoadLoremIpsum of AsyncOperationStatus<Result<string, string>>
 ```
 I use `Result<string, string>` for the generic `'t` type argument because when making a HTTP request, you could either get a successful result when the status code is 200 or an error otherwise.
 

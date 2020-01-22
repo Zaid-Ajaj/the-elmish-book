@@ -92,7 +92,7 @@ Moving on to the modelling the messagaes, we now know that there are two types o
 Refactor the `Msg` type to account for these events:
 ```fsharp
 type Msg =
-  | LoadStoryItems of AsyncOperationEvent<Result<int list, string>>
+  | LoadStoryItems of AsyncOperationStatus<Result<int list, string>>
   | LoadedStoryItem of int * Result<HackernewsItem, string>
   | ChangeStories of Stories
 ```
@@ -141,7 +141,7 @@ int * Result<HackernewsItem, string>
 ```
 instead of
 ```fsharp
-int * AsyncOperationEvent<Result<HackernewsItem, string>>
+int * AsyncOperationStatus<Result<HackernewsItem, string>>
 ```
 This is because we don't need to know whether the operation has started or not. As soon as the IDs of the story items are loaded, the asynchronous state of each item is `Deferred.InProgess` and the commands to load each item are triggered right away so we don't need to bother with the initial state of the items but only the end result when an item has been loaded.
 

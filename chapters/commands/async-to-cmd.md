@@ -116,7 +116,7 @@ let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
 ```
 ### Making `fromAsync` a library function
 We implemented `fromAsync` to take a concrete `Msg` type, if you had named your `Msg` something else like `Event` or `Message` then you would need to change the function signature as well. A better approach is to modify the function slightly and make it a *generic* function for some type `'msg` such that you could use it across your projects:
-```ocaml
+```fsharp
 let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
     let delayedCmd (dispatch: 'msg -> unit) : unit =
         let delayedDispatch = async {
@@ -129,7 +129,7 @@ let fromAsync (operation: Async<'msg>) : Cmd<'msg> =
     Cmd.ofSub delayedCmd
 ```
 You could even add it as an extension of the existing `Cmd` module:
-```ocaml
+```fsharp
 open Elmish
 
 module Cmd =

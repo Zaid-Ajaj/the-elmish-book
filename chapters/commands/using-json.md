@@ -17,10 +17,10 @@ type State =
   { StoreInfo: Deferred<Result<string, string>> }
 
 type Msg =
-  | LoadStoreInfo of AsyncOperationEvent<Result<string, string>>
+  | LoadStoreInfo of AsyncOperationStatus<Result<string, string>>
 ```
 
-> The types `Deferred<'t>` and `AsyncOperationEvent<'t>` are covered in section [Modelling Asynchronous State](async-state.md)
+> The types `Deferred<'t>` and `AsyncOperationStatus<'t>` are covered in section [Modelling Asynchronous State](async-state.md)
 
 
 The implementation of `init` and `update` is self-explanatory at this point I hope:

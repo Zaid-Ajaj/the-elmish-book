@@ -67,5 +67,5 @@ Hint: refactor `LoadedStoryItem` as follows
 ```fsharp
 int * Result<HackernewsItem, string>
 // becomes
-int * AsyncOperationEvent<Result<HackernewsItem, string>>
+int * AsyncOperationStatus<Result<HackernewsItem, string>>
 ```

@@ -29,10 +29,10 @@ type State = {
 }
 
 type Msg =
-  | LoadStoryItems of AsyncOperationEvent<Result<HackernewsItem list, string>>
+  | LoadStoryItems of AsyncOperationStatus<Result<HackernewsItem list, string>>
 ```
 
-> The types `Deferred<'t>` and `AsyncOperationEvent<'t>` are covered in section [Modelling Asynchronous State](async-state.md)
+> The types `Deferred<'t>` and `AsyncOperationStatus<'t>` are covered in section [Modelling Asynchronous State](async-state.md)
 
 Not here that we are using `Result<HackernewsItem list, string>` because the loading might fail due to one of the reasons:
  - HTTP error: not being able to reach the Hackernews API at all because maybe the server is down or receiving a non-successful status code in the response of the HTTP request.
@@ -83,7 +83,7 @@ let update (msg: Msg) (state: State) =
       let nextState = { state with StoryItems = Resolved (Error error) }
       nextState, Cmd.none
 ```
-The code above is the usual business when working with `Deferred` and `AsyncOperationEvent` and these have been covered quite a lot in previous sections. The actual loading work is the highlighted line:
+The code above is the usual business when working with `Deferred` and `AsyncOperationStatus` and these have been covered quite a lot in previous sections. The actual loading work is the highlighted line:
 ```fsharp
 nextState, Cmd.fromAsync loadStoryItems
 ```

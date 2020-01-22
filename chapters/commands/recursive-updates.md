@@ -18,7 +18,7 @@ let update msg state =
     | Terminate -> state, Cmd.none
 ```
 Here the command `Cmd.ofMsg` is a simple command that dispatches the given message immediately when the command is issued. It is both the most basic and most problematic command, you can define it by yourself easily with a one-liner:
-```ocaml
+```fsharp
 let ofMsg (msg: 'msg) = Cmd.ofSub (fun (dispatch: 'msg -> unit) -> dispatch msg)
 ```
 

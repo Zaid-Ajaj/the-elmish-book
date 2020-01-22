@@ -29,7 +29,7 @@ Keeping track of the current story category means that we should have a way to s
 ```fsharp {highlight: [2]}
 type Msg =
   | ChangeStories of Stories
-  | LoadStoryItems of AsyncOperationEvent<Result<HackernewsItem list, string>>
+  | LoadStoryItems of AsyncOperationStatus<Result<HackernewsItem list, string>>
 ```
 That's pretty much it for the `State`.
 

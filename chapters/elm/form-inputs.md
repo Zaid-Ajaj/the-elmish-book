@@ -150,7 +150,7 @@ We were able to retrieve numeric input from the text box, but still the program 
 <resolved-image source="/images/elm/int-validated.gif" />
 
 To make this work, we need not only the parsed integer but also the raw text of the input in case we weren't able to parse it. Let's introduce a `Validated<'t>` type for this purpose with some helper functions:
-```ocaml
+```fsharp
 type Validated<'t> =
     {  Raw : string
        Parsed : Option<'t> }
