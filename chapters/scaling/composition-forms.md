@@ -14,10 +14,11 @@ type Msg =
   | InputTextMsg of InputText.Msg
   | SwitchPage of Page
 ```
+This is of course not the only way model child programs, let us take a look at some models and discuss their implications.
 
 ### State-Field Composition
 
-You probably have already figured it out, the definition of the parent `State` and `Msg` types follows a simple pattern the more child programs we add to them. Suppose you want to implement a third page which is another child program called `Ticker`, then the `State` and `Msg` types would look something like the following, assuming you build this `Ticker` program in a separate module of the same name:
+You probably have already figured it out, the definition of the parent `State` and `Msg` types from the previous example follows a simple pattern the more child programs we add to them. Suppose you want to implement a third page which is another child program called `Ticker`, then the `State` and `Msg` types would look something like the following, assuming you build this `Ticker` program in a separate module of the same name:
 ```fsharp {highlight: [4, 9, 15]}
 type Page =
   | Counter
