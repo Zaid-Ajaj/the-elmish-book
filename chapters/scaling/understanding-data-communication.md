@@ -12,7 +12,7 @@ Consider the following application that for now only consists of a Login page as
   </div>
 </div>
 
-The end goal of this example is that after a succesful login attempt, the user is redirect to the home page where the username is shown in big bold letters. This means that we have to introduce a new page called Home and have some way of taking the result of the login operation and sharing it with the Home page. Take a second to think about how this would work and how the information would have to flow from the Login page to the Home page.
+The end goal of this example is that after a succesful login attempt, the user is redirect to the home page where the username is shown in big bold letters. This means that we have to introduce a new page called Home and have some way of taking the result of the login operation and sharing it with the Home page. Once the Home page is active, we want the user to be able to "log out" in which case the application will reset back to the Login page. Take a second to think about how this would work and how the information would have to flow from the Login page to the Home page.
 
 You can find the source code of the initial repository in [Zaid-Ajaj/login-sample-initial](https://github.com/Zaid-Ajaj/login-sample-initial.git), clone it locally and follow along with the section.
 
@@ -81,14 +81,14 @@ The implementation of the Login page is very simple. As you would expect, the `S
 type State =
     { Username: string
       Password: string
-      Login: Deferred<Api.LoginResult> }
+      LoginAttempt: Deferred<Api.LoginResult> }
 
 type Msg =
     | UsernameChanged of string
     | PasswordChanged of string
     | Login of AsyncOperationStatus<Api.LoginResult>
 ```
-What is more interesting than the credentials of the user, is that we can track the status of the login attempt in a single field called `Login`. This way the user interface can show a spinner when the `Login = InProgress` or show the login outcome when it is resolved:
+What is more interesting than the credentials of the user, is that we can track the status of the login attempt in a single field called `LoginAttempt`. This way the user interface can show a spinner when the `LoginAttempt = InProgress` or show the login outcome when it is resolved:
 ```fsharp
 let renderLoginOutcome (loginResult: Deferred<Api.LoginResult>)=
     match loginResult with
@@ -115,7 +115,7 @@ Html.div [
         Html.button [
             prop.className [
                 "button is-info is-fullwidth"
-                if state.Login = InProgress
+                if state.LoginAttempt = InProgress
                 then "is-loading"
             ]
             prop.onClick (fun _ -> dispatch (Login Started))
@@ -124,7 +124,32 @@ Html.div [
     ]
 ]
 ```
-I will let you study the rest of the render function on your own, there isn't much worth noting except for the fact that we are sing Bulmma classes for stying.
+I will let you study the rest of the render function on your own, there isn't much worth noting except for the fact that we are sing [Bulma](https://bulma.io) classes for stying.
 
 ### Modelling The Home Page
 
+Once the currently logged in user lands on the Home page, he or she should see their username on that page. This means that the Home page has information about currently logged in user. Regardless of where this information comes from, it is a *requirement* for initializing the Home page: it shoudn't be possible to go the Home page without obtaining an instance of a `User` first. This can be inforced by modelling the exposed program API of Home to reflect this requirement, specifically in the `init` function of Home:
+```fsharp
+[<RequireQualifiedAccess>]
+module Home
+
+open Elmish
+
+let init (user: Api.User) : State * Cmd<Msg> = (* . . . *)
+```
+Unlike the usual type definition of `init` that expects `unit` as input, this definition expects a `User` instance as input: the Home page cannot be initialized unless we provide it a `User` instance to proceed with processing whether it is to load more data in the initial command (using the access token of the user) or in our case just to maintain the information of that user in the state of program:
+```fsharp
+[<RequireQualifiedAccess>]
+module Home
+
+type State =
+    { User: Api.User }
+
+type Msg =
+    | Logout
+
+open Elmish
+
+let init (user: Api.User) =
+    { User = user }, Cmd.none
+```
