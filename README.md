@@ -1,6 +1,6 @@
 # The Elmish Book
 
-The Elmish Book is a practical guide to building modern web applications in F# from first principles. Using the  Fable compiler we will take our F# code and turn it into Javascript. This allows our F# code to run anywhere where JavaScript runs, whether it is the browser, [Node.js][nodejs] or other runtimes. Fable is designed with interoperability in mind, that makes it simple to re-use and integrate with the vast ecosystem of JavaScript libraries as we will see later on in the book.
+The Elmish Book is a practical guide to building modern and reliable web applications in F# from first principles. Using the  Fable compiler we will take our F# code and turn it into Javascript. This allows our F# code to run anywhere where JavaScript runs, whether it is the browser, [Node.js][nodejs] or other runtimes. Fable is designed with interoperability in mind, that makes it simple to re-use and integrate with the vast ecosystem of JavaScript libraries as we will see later on in the book.
 
 Our main focus will be building client applications for the browser. We will start by learning the development workflow around client applications, slowly understanding the tooling and the hybrid nature of Fable projects since we will be both using [.NET][dotnet] and Node.js tools for development.
 

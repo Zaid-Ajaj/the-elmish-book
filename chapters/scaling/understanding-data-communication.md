@@ -12,7 +12,7 @@ Consider the following application that for now only consists of a Login page as
   </div>
 </div>
 
-The end goal of this example is that after a succesful login attempt, the user is redirect to the home page where the username is shown in big bold letters. This means that we have to introduce a new page called Home and have some way of taking the result of the login operation and sharing it with the Home page. Once the Home page is active, we want the user to be able to "log out" in which case the application will reset back to the Login page. Take a second to think about how this would work and how the information would have to flow from the Login page to the Home page.
+The end goal of this example is that after a succesful login attempt, the user is redirected to the home page where the username is shown in big bold letters. This means that we have to introduce a new page called Home and have some way of taking the result of the login operation and sharing it with the Home page. Once the Home page is active, we want the user to be able to "log out" in which case the application will reset back to the Login page. Take a second to think about how this would work and how the information would have to flow from the Login page to the Home page.
 
 You can find the source code of the initial repository in [Zaid-Ajaj/login-sample-initial](https://github.com/Zaid-Ajaj/login-sample-initial.git), clone it locally and follow along with the section.
 
@@ -153,3 +153,180 @@ open Elmish
 let init (user: Api.User) =
     { User = user }, Cmd.none
 ```
+Finally we have a `Msg` type where the only event that can occur is a `Logout`. Let's finish with the implementation of Home since it is really simple:
+```fsharp
+open Elmish
+open Feliz
+
+let update (msg: Msg) (state: State) : State * Cmd<Msg> =
+    match msg with
+    | Logout -> state, Cmd.none
+
+let centered (children: ReactElement list) =
+    Html.div [
+        prop.style [
+            style.margin.auto
+            style.textAlign.center
+            style.padding 20
+            style.width (length.percent 100)
+        ]
+
+        prop.children children
+    ]
+
+let render (state: State) (dispatch: Msg -> unit) =
+    centered [
+        Html.h1 [
+            Html.strong (state.User.Username.ToUpper())
+        ]
+
+        Html.button [
+            prop.className "button is-info"
+            prop.onClick (fun _ -> dispatch Logout)
+            prop.text "Logout"
+        ]
+    ]
+```
+Like I said, the username will be shown in big bold letters on the Home page, hence `Html.h1` and `Html.strong`. The most important concept to realize is that *at any given moment*, the Home page has access to a `User` instance and does not have to check whether a user was logged in or not.
+
+The `Home` module has to be in a file that is included after `Api` in order for it to access that module but also included before `App` so that `App` can reference `Home`:
+```bash {highlight: [5]}
+ src
+  │ -- Api.fs # dummy API module
+  | -- Extensions.fs # extension functions
+  | -- Login.fs # Login child program
+  | -- Home.fs # Home child program
+  │ -- App.fs # App parent and root program
+  │ -- Main.fs # Entry point of the application
+```
+
+You might have not noticed it, but the `Logout` event isn't actually doing *anything* when it is dispatched into the `update` function. It simply returns the state as is. Although it might be the case for *this* child program of Home that it doesn't do anything, but since this event has to go through the parent App, then it might be of use. Let us look at the big picture and wire up both the Login and Home page with their parent App.
+
+### Wiring Up The Pages
+
+Now that we have two modules, Home and Login, each containing a child program we can wire them up using Discriminated Union composition like we did before. First we introduce a new `Page` type that captures they currently active page and use it in the `State` type of the App module.
+```fsharp
+[<RequireQualifiedAccess>]
+type Page =
+  | Login of Login.State
+  | Home of Home.State
+
+type State =
+  { CurrentPage: Page }
+
+type Msg =
+    | LoginMsg of Login.Msg
+    | HomeMsg of Home.Msg
+
+let init() =
+    let loginState, loginCmd = Login.init()
+    { CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
+```
+As you can see, we are still initializing the Login page first. In fact, we can't initialize Home at this point because we have to obtain an instance of `User` first which is to be collected *at some point* from the Login page. Then we have the `render` function that renders the currently active page:
+```fsharp
+let render (state: State) (dispatch: Msg -> unit) =
+  match state.CurrentPage with
+  | Page.Login loginState -> Login.render loginState (LoginMsg >> dispatch)
+  | Page.Home homeState -> Home.render homeState (HomeMsg >> dispatch)
+```
+We have seen this before. However, the actual interesting parts are happening in the `update` function. Initially we implement it as follows:
+```fsharp
+let update (msg: Msg) (state: State) =
+    match msg, state.CurrentPage with
+    | LoginMsg loginMsg, Page.Login loginState ->
+        let (updatedLoginState, loginCmd) = Login.update loginMsg loginState
+        { state with CurrentPage = Page.Login updatedLoginState }, Cmd.map LoginMsg loginCmd
+
+    | HomeMsg homeMsg, Page.Home homeState ->
+        let (updatedHomeState, homeCmd) = Home.update homeMsg homeState
+        { state with CurrentPage = Page.Home updatedHomeState }, Cmd.map HomeMsg homeCmd
+
+    | _, _ ->
+        state, Cmd.none
+```
+This implementation is basically saying these things:
+ - "Whenever you receive events from Login while the Login page is active, then process these events in Login and update the state accordingly"
+ - "Whenever you receive events from Home while the Home page is active, then process these events in Home and update the state accordingly"
+ - "Otherwise, do nothing at all and return the state as is"
+
+If you were to run the application using this implementation of `update`, the user will be presented with the Login page and stay there forever! Indeed, this is because we are missing an important piece of logic here: initializing the Home page. We have to ask ourselves: "At which point should the Home page get initialized?" or in other words, "Which *events* cause the Home page to be initialized?" Well, we know exactly when that should happen. Namely, when a user has succesfully logged in. Specifically when the parent App receives a `LoginMsg loginMsg` where this `loginMsg` is this:
+```fsharp
+Msg.Login (Finished (LoggedIn user))
+```
+That event is triggered from within the Login page, but it also has to go through parent like all events which means the parent can **inspect** the data from this event, extract the `User` instance from it and initialize the Home page with it. First of all, I will add an *active pattern* in the `Login` module to make it easy for the parent program to inspect that specific event:
+```fsharp
+// Inside of Login.fs
+
+let (|UserLoggedIn|_|) = function
+    | Msg.Login (Finished (Api.LoginResult.LoggedIn user)) -> Some user
+    | _ -> None
+```
+Then we can use this active pattern from the parent `update` function:
+```fsharp {highlight: [5,6,7]}
+let update (msg: Msg) (state: State) =
+    match msg, state.CurrentPage with
+    | LoginMsg loginMsg, Page.Login loginState ->
+        match loginMsg with
+        | Login.UserLoggedIn user ->
+            let homeState, homeCmd = Home.init user
+            { state with CurrentPage = Page.Home homeState }, Cmd.map HomeMsg homeCmd
+
+        | loginMsg ->
+            let loginState, loginCmd = Login.update loginMsg loginState
+            { state with CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
+
+    | HomeMsg homeMsg, Page.Home homeState ->
+        let homeState, homeCmd = Home.update homeMsg homeState
+        { state with CurrentPage = Page.Home homeState }, Cmd.map HomeMsg homeCmd
+
+    | _, _ ->
+        state, Cmd.none
+```
+Let that sink in for a moment because this pretty much the gist of data communication in Elmish apps: parent applications **inspect** and **intecept** events comming from child programs in order to initialize or trigger more events in the current program and other child programs. We effectively took the data from an event that occured in the Login page and used it to initialize the Home page.
+
+It is very important to understand that inspection and interception are very different: the former is only peeking into the data of the event but the latter is also preventing the child program from processing that event. In the snippet above, once the parent program has intercepted the event of a succesful login attempt, it directly initializes the Home page without letting the Login page process that event. Keep this in mind because sometime you still want to the state of the child program to change or let execute side-effects in which case you only want to do inspection. More on this coming up. Now let us see the results of the application:
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:60%;">
+    <resolved-image source="/images/scaling/admin-login-works.gif" />
+  </div>
+</div>
+
+Following the same logic, we can intercept the `Logout` event coming from the Home page and have the application redirect back to the Login page:
+```fsharp {highlight: [15, 16]}
+let update (msg: Msg) (state: State) =
+    match msg, state.CurrentPage with
+    | LoginMsg loginMsg, Page.Login loginState ->
+        match loginMsg with
+        | Login.UserLoggedIn user ->
+            let homeState, homeCmd = Home.init user
+            { state with CurrentPage = Page.Home homeState }, Cmd.map HomeMsg homeCmd
+
+        | loginMsg ->
+            let loginState, loginCmd = Login.update loginMsg loginState
+            { state with CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
+
+    | HomeMsg homeMsg, Page.Home homeState ->
+        match homeMsg with
+        | Home.Msg.Logout ->
+            init()
+
+        | homeMsg ->
+            let homeState, homeCmd = Home.update homeMsg homeState
+            { state with CurrentPage = Page.Home homeState }, Cmd.map HomeMsg homeCmd
+
+    | _, _ ->
+        state, Cmd.none
+```
+Intercepting the `Logout` will simply reset the data to its initial state using the `init` which effectively resets the application right back into the Login page.
+
+> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and F# compiler will complain that the second pattern will never match but I will keep nontheless because usually there are more than one event that can occur in child programs.
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:60%;">
+    <resolved-image source="/images/scaling/admin-logout.gif" />
+  </div>
+</div>
+
+That settles it for the end goal of our little program. You can find the source code of the finished application in the repository [Zaid-Ajaj/login-sample-finished](https://github.com/Zaid-Ajaj/login-sample-finished).
+
