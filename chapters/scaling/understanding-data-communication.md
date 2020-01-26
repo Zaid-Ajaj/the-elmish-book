@@ -320,7 +320,7 @@ let update (msg: Msg) (state: State) =
 ```
 Intercepting the `Logout` will simply reset the data to its initial state using the `init` which effectively resets the application right back into the Login page.
 
-> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and F# compiler will complain that the second pattern will never match but I will keep nontheless because usually there are more than one event that can occur in child programs.
+> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and F# compiler will complain that the second pattern will never match but I will keep it nontheless because usually there are more than one event that can occur in child programs.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">

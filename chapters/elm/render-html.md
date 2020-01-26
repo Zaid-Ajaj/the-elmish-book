@@ -149,7 +149,7 @@ Html.div [
     prop.text "I got style, boi"
 ]
 ```
-Notice here, the `style` property takes a list of styles. These styles are easy to find using the `style` type where you could just "dot through" the type and your IDE will tell you all the things you can use. The [Feliz](https://github.com/Zaid-Ajaj/Feliz) library includes overloads for most of the css properties and they are fully type-safe and well documented.
+Notice here, the `style` property takes a list of style attributes. These attributes are easy to find using the `style` type where you could just "dot through" the type and your IDE will tell you all the things you can use. The [Feliz](https://github.com/Zaid-Ajaj/Feliz) library includes overloads for most of the CSS properties and they are fully type-safe and well documented.
 
 ### Self-closing Tags
 
@@ -181,7 +181,7 @@ Html.div [
 
 ### Arbitrary render logic
 
-It important to understand that although we are just calling these DSL functions such as `div`, `span`, etc. to build the HTML, we are still executing actual F# code. This code can be anything you want to do in a normal function. For example you can use list comprehensions to build a list of elements that contain powers of 2:
+It important to understand that although we are just calling these DSL functions such as `Html.div`, `Html.span`, etc. to build the HTML, we are still executing F# code. This code can be anything you want to do in a normal function. For example you can use list comprehensions to build a list of elements that contains powers of 2:
 ```fsharp
 /// Computes x to the power n
 let power x n =
