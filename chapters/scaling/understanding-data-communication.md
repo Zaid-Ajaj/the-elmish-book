@@ -249,11 +249,11 @@ This implementation is basically saying these things:
  - "Whenever you receive events from Home while the Home page is active, then process these events in Home and update the state accordingly"
  - "Otherwise, do nothing at all and return the state as is"
 
-If you were to run the application using this implementation of `update`, the user will be presented with the Login page and stay there forever! Indeed, this is because we are missing an important piece of logic here: initializing the Home page. We have to ask ourselves: "At which point should the Home page get initialized?" or in other words, "Which *events* cause the Home page to be initialized?" Well, we know exactly when that should happen. Namely, when a user has succesfully logged in. Specifically when the parent App receives a `LoginMsg loginMsg` where this `loginMsg` is this:
+If you were to run the application using this implementation of `update`, the user will be presented with the Login page and stay there forever! Indeed, this is because we are missing an important piece of logic here: initializing the Home page. We have to ask ourselves: "At which point should the Home page get initialized?" or in other words, "Which *events* cause the Home page to be initialized?" Well, we know exactly when that should happen. Namely, when a user has succesfully logged in. Specifically when the parent App receives a `LoginMsg loginMsg` where `loginMsg` is:
 ```fsharp
-Msg.Login (Finished (LoggedIn user))
+Msg.Login (Finished (LoginResult.LoggedIn user))
 ```
-That event is triggered from within the Login page, but it also has to go through parent like all events which means the parent can **inspect** the data from this event, extract the `User` instance from it and initialize the Home page with it. First of all, I will add an *active pattern* in the `Login` module to make it easy for the parent program to inspect that specific event:
+That event is triggered from within the Login page, but it also has to go through parent like all events which means the parent can **inspect** the data from this event, extract the `User` instance from it and initialize the Home page with it. First of all, I will add an [*active pattern*](https://fsharpforfunandprofit.com/posts/convenience-active-patterns/) in the `Login` module to make it easy for the parent program to inspect that specific event:
 ```fsharp
 // Inside of Login.fs
 
@@ -271,7 +271,7 @@ let update (msg: Msg) (state: State) =
             let homeState, homeCmd = Home.init user
             { state with CurrentPage = Page.Home homeState }, Cmd.map HomeMsg homeCmd
 
-        | loginMsg ->
+        | _ ->
             let loginState, loginCmd = Login.update loginMsg loginState
             { state with CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
 
@@ -302,7 +302,7 @@ let update (msg: Msg) (state: State) =
             let homeState, homeCmd = Home.init user
             { state with CurrentPage = Page.Home homeState }, Cmd.map HomeMsg homeCmd
 
-        | loginMsg ->
+        | _ ->
             let loginState, loginCmd = Login.update loginMsg loginState
             { state with CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
 
