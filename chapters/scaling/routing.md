@@ -50,18 +50,11 @@ Url "/user/42" -> Segments [ "users"; "42" ]
 ```
 First of all, we start with the `State` and `Msg`:
 ```fsharp
-module App
-
-open Elmish
-open Elmish.React
-open Feliz
-open Feliz.Router
-
 type State =
-    { CurrentUrl: string list }
+  { CurrentUrl: string list }
 
 type Msg =
-    | UrlChanged of string list
+  | UrlChanged of string list
 ```
 We will use `string list` because that is what `Feliz.Router` provides as it listens for URL changes. The implementations of `init` and `update` are trivial:
 ```fsharp
@@ -99,3 +92,37 @@ Here we are using a special kind of UI element: `router`. It is a function that 
   </div>
 </div>
 
+### Order of Event Triggers
+
+The event `onUrlChanged` fires as soon as the `router` element becomes active on screen. This means that once you navigate to `http://localhost:8080/#about`, the application renders "Home" first because the `CurrentUrl` was initialized to be `[ ]` which is the root of the routes. Then when `onUrlChanged` fires with payload `[ "about" ]`, the state updates and the application re-renders to show "About". This happens really fast that you don't really see it, but it might lead to unexpected behavior because the application is switching from one page to another. A more correct approach is to initialize the application with "no URL" and only start rendering pages *after* `onUrlChanged` has been triggered. For that, we can use `Option<string list>` and initialize the current url with `None`:
+```fsharp
+type State =
+    { CurrentUrl: Option<string list> }
+
+let init() =
+    { CurrentUrl = None }
+
+let update (msg: Msg) (state: State): State =
+  match msg with
+  | UrlChanged url ->
+    { state with CurrentUrl = Some url }
+
+let render (state: State) (dispatch: Msg -> unit) =
+  let activePage =
+    match state.CurrentUrl with
+    | None -> Html.none
+    | Some url ->
+        match url with
+        | [ ] -> Html.h1 "Home"
+        | [ "about" ] -> Html.h1 "About"
+        | [ "contact" ] -> Html.h1 "Contact"
+        | _ -> Html.h1 "Not Found"
+
+  Router.router [
+    Router.onUrlChanged (UrlChanged >> dispatch)
+    Router.application [
+      activePage
+    ]
+  ]
+```
+Using this approach, the initial render will show nothing on screen until the first time `onUrlChanged` is triggered and from there the application starts to actually render pages based on the URL segments.
