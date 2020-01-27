@@ -63,7 +63,7 @@ type State =
 type Msg =
     | UrlChanged of string list
 ```
-We will use `string list` because that is what `Feliz.Router` provides as it listens for URL changes. The implementation of `init` and `update` are trivial:
+We will use `string list` because that is what `Feliz.Router` provides as it listens for URL changes. The implementations of `init` and `update` are trivial:
 ```fsharp
 let init() = { CurrentUrl = [ ] }
 
@@ -72,7 +72,7 @@ let update (msg: Msg) (state: State): State =
   | UrlChanged url -> { state with CurrentUrl = url }
 ```
 The interesting parts are happening in the `render` function where we use the `Router` module from the `Feliz.Router`:
-```fsharp {highlight: [9, 10, 11, 12, 13, 14]}
+```fsharp {highlight: ['12-17']}
 open Feliz
 open Feliz.Router
 
@@ -91,4 +91,11 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
-Here we are using a special kind of UI element: `router`. It is a function that takes in the router properties and returns `ReactElement` which allows you to use it right in your `render` function. The most important property of this element is the `Router.onUrlChanged` which is event handler that is triggered when the URL changes. This event handler expects an inout of type `string list -> unit` where the `string list` represents the URL segments of the new URL that was changed.
+Here we are using a special kind of UI element: `router`. It is a function that takes router properties and returns `ReactElement` which allows you to use it right in your `render` functions. The most important property of this element is the `Router.onUrlChanged` which is event handler that is triggered when the URL changes. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:60%;">
+    <resolved-image source="/images/scaling/initial-routing.gif" />
+  </div>
+</div>
+
