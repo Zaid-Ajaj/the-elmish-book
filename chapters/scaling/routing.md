@@ -4,7 +4,7 @@ Routing is an essential part of building single page applications. It is the mai
 
 ### Listening For URL Changes
 
-In Elmish terms, when we say "listening for URL changes" we really mean that there is an *event* that occures in the program to which the application Reacts that effectively switches the currently active page on screen. Consider the following `Msg` type:
+In Elmish terms, when we say "listening for URL changes" we really mean that there is an *event* that occurs in the program to which the application Reacts that effectively switches the currently active page on screen. Consider the following `Msg` type:
 ```fsharp
 type Msg =
     | UrlChanged of string
