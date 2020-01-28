@@ -29,7 +29,7 @@ let render state dispatch =
     | "/contact" -> Html.h1 "Contact"
     | _ -> Html.h1 "Not Found"
 ```
-The only part missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows how to workaround URL subtleties and gives utilities for parsing URL parts: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for Routing in Elmish applications that is both really simple to work with but also very flexible.
+The only part missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows how to workaround URL subtleties and gives utilities for parsing URL parts: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for Routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truely as an essential part of the Feliz ecosystem.
 
 ### Using `Feliz.Router`
 
@@ -40,12 +40,14 @@ cd elmish-getting-started
 cd src
 dotnet add package Feliz.Router
 ```
-After you have installed it, we can start implementing the snippet above. `Feliz.Router` chooses to work with the URL *segments*, not the entire raw URL. It might be obvious at first but it makes parsing the individual parts really easy. The package parses a URL when it changes into segments which are represented by a list of strings:
+After you have installed it, we can start implementing the snippet above. `Feliz.Router` chooses to work with the URL *segments*, not the entire raw URL. It might be not obvious at first but it makes parsing the individual parts really easy. The package parses a URL into segments which are represented by a list of strings:
 ```bash
 Url "/" -> Segments [ ]
 Url "/about" -> Segments [ "about" ]
+Url "/user/42" -> Segments [ "user"; "42" ]
 Url "/contact/location" -> Segments [ "contact"; "location" ]
-Url "/user/42" -> Segments [ "users"; "42" ]
+Url "/overview/sales/summary" -> Segments [ "overview"; "sales"; "summary" ]
+
 # etc.
 ```
 First of all, we start with the `State` and `Msg`:
@@ -56,16 +58,24 @@ type State =
 type Msg =
   | UrlChanged of string list
 ```
-We will use `string list` because that is what `Feliz.Router` provides as it listens for URL changes. The implementations of `init` and `update` are trivial:
+We will use `string list` because that is what `Feliz.Router` provides as it listens for URL changes. Next we implement `init` and `update`:
 ```fsharp
-let init() = { CurrentUrl = [ ] }
+open Feliz.Router
+
+let init() = { CurrentUrl = Router.currentUrl() }
 
 let update (msg: Msg) (state: State): State =
   match msg with
   | UrlChanged url -> { state with CurrentUrl = url }
 ```
-The interesting parts are happening in the `render` function where we use the `Router` module from the `Feliz.Router`:
-```fsharp {highlight: ['12-17']}
+Within the `Feliz.Router` namespace, we primarily use two modules:
+ - `Router` which contains functions to work with and listen to URLs.
+ - `Route` which contains active patterns to parse URL segments easily.
+
+The first function to use from the `Router` module is the `currentUrl()` which parses the URL of the page that the application has landed on into URL segments. The parsed segments will be the initial value for the `CurrentUrl`.
+
+Much more interesting is what is happening in the `render` function. Here we will use the `router` function from the `Router` module and use it as if it was a UI element:
+```fsharp {highlight: ['12-15']}
 open Feliz
 open Feliz.Router
 
@@ -79,9 +89,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 
   Router.router [
     Router.onUrlChanged (UrlChanged >> dispatch)
-    Router.application [
-      activePage
-    ]
+    Router.application [ activePage ]
   ]
 ```
 Here we are using a special kind of UI element: `router`. It is a function that takes router properties and returns `ReactElement` which allows you to use it right in your `render` functions. The most important property of this element is the `Router.onUrlChanged` which is event handler that is triggered when the URL changes. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
@@ -91,38 +99,3 @@ Here we are using a special kind of UI element: `router`. It is a function that 
     <resolved-image source="/images/scaling/initial-routing.gif" />
   </div>
 </div>
-
-### Order of Event Triggers
-
-The event `onUrlChanged` fires as soon as the `router` element becomes active on screen. This means that once you navigate to `http://localhost:8080/#about`, the application renders "Home" first because the `CurrentUrl` was initialized to be `[ ]` which is the root of the routes. Then when `onUrlChanged` fires with payload `[ "about" ]`, the state updates and the application re-renders to show "About". This happens really fast that you don't really see it, but it might lead to unexpected behavior because the application is switching from one page to another. A more correct approach is to initialize the application with "no URL" and only start rendering pages *after* `onUrlChanged` has been triggered. For that, we can use `Option<string list>` and initialize the current url with `None`:
-```fsharp
-type State =
-    { CurrentUrl: Option<string list> }
-
-let init() =
-    { CurrentUrl = None }
-
-let update (msg: Msg) (state: State): State =
-  match msg with
-  | UrlChanged url ->
-    { state with CurrentUrl = Some url }
-
-let render (state: State) (dispatch: Msg -> unit) =
-  let activePage =
-    match state.CurrentUrl with
-    | None -> Html.none
-    | Some url ->
-        match url with
-        | [ ] -> Html.h1 "Home"
-        | [ "about" ] -> Html.h1 "About"
-        | [ "contact" ] -> Html.h1 "Contact"
-        | _ -> Html.h1 "Not Found"
-
-  Router.router [
-    Router.onUrlChanged (UrlChanged >> dispatch)
-    Router.application [
-      activePage
-    ]
-  ]
-```
-Using this approach, the initial render will show nothing on screen until the first time `onUrlChanged` is triggered and from there the application starts to actually render pages based on the URL segments.
