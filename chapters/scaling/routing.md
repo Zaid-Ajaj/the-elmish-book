@@ -29,7 +29,7 @@ let render state dispatch =
     | "/contact" -> Html.h1 "Contact"
     | _ -> Html.h1 "Not Found"
 ```
-The only part missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows how to workaround URL subtleties and gives utilities for parsing URL parts: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for Routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truely as an essential part of the Feliz ecosystem.
+The only piece missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows best how to with URLs, parse them correctly and provide with utilities managing the history API: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for Routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truely as an essential part of the Feliz ecosystem.
 
 ### Using `Feliz.Router`
 
@@ -92,10 +92,52 @@ let render (state: State) (dispatch: Msg -> unit) =
     Router.application [ activePage ]
   ]
 ```
-Here we are using a special kind of UI element: `router`. It is a function that takes router properties and returns `ReactElement` which allows you to use it right in your `render` functions. The most important property of this element is the `Router.onUrlChanged` which is event handler that is triggered when the URL changes. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
+Here we are using a special kind of UI element: `router`. It is a function that takes router properties and returns `ReactElement` which allows you to use it right in your `render` functions. The most important property of this element is the `Router.onUrlChanged` which is en event handler that is triggered when the URL changes. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">
     <resolved-image source="/images/scaling/initial-routing.gif" />
   </div>
 </div>
+
+When I am changing the URL in the address bar by hand, I am using the hash sign (`#`) in front of the path. This sign instructs the browser to only *replace* the URL without fully reloading the entire page while still being compatible with the history mechanism of the browser: the back button still works as expected from the user's point of view without having to reload the entire application.
+
+### Navigation Using Links
+
+The most common way to navigate to different URLs is using anchor elements with `Html.a` and setting their `href` attribute to the desired destination. However, since this is a single page application, the routes have to be *formatted* to properly include the hash sign, for that we use the `Router.format` function which is overloaded function that takes in the segments of the URL you wish to construct and it formats it correctly for you. Here is an example that extends the sample application with links to navigate from one page to another:
+```fsharp {highlight: ['12-16', '18-22']}
+let render (state: State) (dispatch: Msg -> unit) =
+  let activePage =
+    match state.CurrentUrl with
+    | [ ] -> Html.h1 "Home"
+    | [ "about" ] -> Html.h1 "About"
+    | [ "contact" ] -> Html.h1 "Contact"
+    | _ -> Html.h1 "Not Found"
+
+  Router.router [
+    Router.onUrlChanged (UrlChanged >> dispatch)
+    Router.application [
+      Html.a [
+        prop.text "About"
+        prop.href (Router.format "about")
+        prop.style [ style.margin 5 ]
+      ]
+
+      Html.a [
+        prop.text "Contact"
+        prop.href (Router.format "contact")
+        prop.style [ style.margin 5 ]
+      ]
+
+      activePage
+    ]
+  ]
+```
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:60%;">
+    <resolved-image source="/images/scaling/initial-routing-with-links.gif" />
+  </div>
+</div>
+
+Notice how the router is able to handle edge cases in the path was formatted with hash sign: whether it is `#about` or `#/about` doesn't matter, the string segments are always nice and clean. Another feature of the router is that it automatically decodes segments that were URL encoded: `Url #/search/Hello%20World` becomes `Segments [ "search"; "Hello World" ]`.
