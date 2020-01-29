@@ -1,15 +1,15 @@
 # Routing And Navigation
 
-Routing is an essential part of building single page applications. It is the main machanism for switching the currently active page for any application. The idea revolves around a simple concept: listen to changes in the URL and react to those changes in the application. These changes can be manual when the user enters a URL in the address bar by hand or they could programmatic where the application itself changes the URL. An important characteristic of routing in single page application is that the application reacts to the changes of the URL *without* reloading the entire page. This means the application maintains its state and data as route changes which is great because you can pass data around pages as the URL changes but it also imposes a challenge for many front-end applications which is how you could reinitialize the application state only from data available in the URL if the user were to paste a URL they used before in the address bar.
+Routing is an essential part of building single page applications. It is the main machanism for switching the currently active page for any program. The idea revolves around a simple concept: listen to changes in the URL and react to those changes in the application. These changes can be manual when the user enters a URL in the address bar by hand or they could programmatic where the application itself changes the URL. An important characteristic of routing in single page applications is that the application reacts to the changes of the URL *without* reloading the entire page. This means the application maintains its state as route changes which is great because you can pass data around pages when you switch between them, for example passing information about the currently logged in user without having them to login again every time they navigate to another page. However, since the application maintains its state, it should be able to *retain* it if the user happens to fully refresh the page using F5. So we have to think about the *re-initialization* conditions when a full refresh occurs. More on that later, for now let us start with the simple examples.
 
 ### Listening For URL Changes
 
-In Elmish terms, when we say "listening for URL changes" we really mean that there is an *event* that occurs in the program to which the application Reacts that effectively switches the currently active page on screen. Consider the following `Msg` type:
+In Elmish terms, when we say "listening for URL changes" we really mean that there is an *event* which occurs in the program to which the application reacts. Whatever that reaction is, whether it is changing the active page or reloading data, they are all the result of that one event:
 ```fsharp
 type Msg =
     | UrlChanged of string
 ```
-It is really that simple. Now to build an application that makes use of this feature you only have to maintain the URL in the state and render different UI elements based on that URL:
+We model URL changes using an event called `UrlChanged` which contains the newly modified URL. It is really that simple. Here is a psuedo-application that makes use of this feature where you only have to maintain the URL in the state and render different UI elements based on that URL:
 ```fsharp
 type State = { CurrentUrl : string }
 
@@ -29,7 +29,7 @@ let render state dispatch =
     | "/contact" -> Html.h1 "Contact"
     | _ -> Html.h1 "Not Found"
 ```
-The only piece missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows best how to with URLs, parse them correctly and provide with utilities managing the history API: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for Routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truely as an essential part of the Feliz ecosystem.
+The only piece missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows how to with work URLs, parse them correctly and provide utilities to manage the history API: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truely as an essential part of the Feliz ecosystem.
 
 ### Using `Feliz.Router`
 
@@ -40,7 +40,7 @@ cd elmish-getting-started
 cd src
 dotnet add package Feliz.Router
 ```
-After you have installed it, we can start implementing the snippet above. `Feliz.Router` chooses to work with the URL *segments*, not the entire raw URL. It might be not obvious at first but it makes parsing the individual parts really easy. The package parses a URL into segments which are represented by a list of strings:
+After you have installed it, we can start implementing the sample application. While writing `Feliz.Router`, I realized that the user is actually more interested to work with the URL *segments*, instead of the entire raw URL. It might be not obvious at first but it makes parsing the individual parts really easy, especially when pattern matching against them. The package parses the URL into cleaned segments which are represented by a list of strings:
 ```bash
 Url "/" -> Segments [ ]
 Url "/about" -> Segments [ "about" ]
@@ -50,7 +50,7 @@ Url "/overview/sales/summary" -> Segments [ "overview"; "sales"; "summary" ]
 
 # etc.
 ```
-First of all, we start with the `State` and `Msg`:
+This means the most primitive form of a URL is the segments of it, that is why model the `State` and `Msg` types as follows:
 ```fsharp
 type State =
   { CurrentUrl: string list }
@@ -92,7 +92,9 @@ let render (state: State) (dispatch: Msg -> unit) =
     Router.application [ activePage ]
   ]
 ```
-Here we are using a special kind of UI element: `router`. It is a function that takes router properties and returns `ReactElement` which allows you to use it right in your `render` functions. The most important property of this element is the `Router.onUrlChanged` which is en event handler that is triggered when the URL changes. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
+Here we are using a special kind of UI element: `Router.router`. Whenever this element is rendered on screen, it can listen to URL changes through the `Router.onUrlChanged` event handler that is triggered when the URL is modified. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. The other property that the router takes is the `Router.application` which is what gets rendered in the place where the router element was put, much like the children of the element except it it called `application` because it is common to put the router around the root of the application.
+
+We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">
@@ -104,7 +106,7 @@ When I am changing the URL in the address bar by hand, I am using the hash sign 
 
 ### Navigation Using Links
 
-The most common way to navigate to different URLs is using anchor elements with `Html.a` and setting their `href` attribute to the desired destination. However, since this is a single page application, the routes have to be *formatted* to properly include the hash sign, for that we use the `Router.format` function which is overloaded function that takes in the segments of the URL you wish to construct and it formats it correctly for you. Here is an example that extends the sample application with links to navigate from one page to another:
+The most common way to navigate to different URLs is using anchor elements with `Html.a` and setting their `href` attribute to the desired destination. However, since this is a single page application, the routes have to be *formatted* to properly include the hash sign, for that we use the `Router.format` function which is an overloaded function that takes in the segments of the URL you wish to construct and it formats it correctly for you. Here is an example that extends the sample application with links to navigate from one page to another:
 ```fsharp {highlight: ['12-16', '18-22']}
 let render (state: State) (dispatch: Msg -> unit) =
   let activePage =
@@ -133,6 +135,8 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
+
+Using these links, the URL changes and the application switches the "pages" accordingly:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">
