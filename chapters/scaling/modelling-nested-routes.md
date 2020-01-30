@@ -33,9 +33,13 @@ Notice here, in the same way the `Page` references the state of the child progra
 ```fsharp
 // User.fs
 let parseUrl = function
+  // matches /{userId:int}
   | [ Route.Int userId ] -> Url.Index userId
+  // matches /edit/{userId:int}
   | [ "edit"; Route.Int userId ] -> Url.Edit userId
+  // matches /add
   | [ "add" ] -> Url.AddUser
+  // matches anything else
   | _ -> Url.NotFound
 ```
 Then from the parent program, we can compose the bigger `Url` type from the smaller ones:
@@ -48,8 +52,11 @@ type Url =
   | NotFound
 
 let parseUrl = function
+  // matches /users
   | [ "users" ] -> Url.Users
+  // matches /user/{User.Url}
   | "user" :: userSegments -> Url.User (User.parseUrl userSegments)
+  // matches anything else
   | _ -> Url.NotFound
 ```
 Again, because how awesome pattern matching is, we read the first segment of the URL which is the "user", then take the *rest* of the segments and give them as input for the `parseUrl` function of the child program. This way the parent program can construct the child URL using the implementation defined by that program itself.
