@@ -1,9 +1,0 @@
-# Book Format
-
-The book is divided into chapters and chapters contain sections. Within each section, concepts are explained mostly using concrete examples. The more we dive into the code, the more features we add to those example applications. The book is written with focus on domain modelling in mind.  Not all of these sample will be directly useful but they will usually be sufficient to explain individual concepts. Some chapters end by building an application. That application combines the different concepts we have learned throughout that chapter in a meaningful manner. After finishing up the application and getting familiar with it, you are tasked with exercises in which you add features to the application. These exercises are really important to test your knowledge and solidify the concepts you have learned.
-
-The pacing is *deliberately* slow because learning front-end development can often be overwhelming. That is why each chapter is divided into bite-sized sections that are hopefully easy to understand on their own. As you progress through the book, the concepts start to become more clear as we keep expanding upon the things we learn along the way.
-
-I have been writing the book the way I have wanted someone explain concepts to me: slowly progressing, walking through the code and getting down the nitty-gritty details.
-
-Some parts of the book are *opinionated* and do not necessarily follow the tutorials and guidelines you have potentially read before. However, this is not to say that you should follow these guidelines and forget what you already know, it is in fact the opposite: my goal is that you learn a lot and gain more experience to draw your own conclusions and understand why one approach is better than the other. That is why I will try my best in explaining my *train of thought* when going through the examples and the way they are implemented.

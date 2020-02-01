@@ -74,45 +74,22 @@ let init() =
   let currentUrl = parseUrl(Router.currentUrl())
   match currentUrl with
   | Url.User userUrl ->
-      let (state, cmd) = User.init userUrl
+      let (userState, userCmd) = User.init userUrl
       { state with
           CurrentUrl = currentUrl
-          CurrentPage = Page.User state }, Cmd.map UserMsg cmd
+          CurrentPage = Page.User userState }, Cmd.map UserMsg userCmd
 
   | Url.Users ->
-      let (state, cmd) = Users.init()
+      let (usersState, usersCmd) = Users.init()
       { state with
           CurrentUrl = currentUrl
-          CurrentPage = Page.Users state }, Cmd.map UsersMsg cmd
+          CurrentPage = Page.Users usersState }, Cmd.map UsersMsg usersCmd
 
   | NotFound ->
       { state with
           CurrentUrl = currentUrl
           CurrentPage = Page.NotFound }
 ```
-Same goes for the `update` function from the parent point of view. It can do two things when the URL changes. Either re-initialize the child programs from scratch (first scenario):
-```fsharp
-// App.fs -> first scenario: re-initialize the children when the URL changes
+As for the `update` function, we can do some interesting stuff. When the URL changes it triggers a message from the root program. Depending on the child program that is currently active, the root program can decide whether to **re-initialize** the active page from its `init` function when the URL is pointing to that *same* active page, or it can trigger `UrlChanged` event (child message type) in that active page's program using it's parsed URL and have that page decide how it should update itself. The latter approach is ideal because usually we don't want the active page to lose its state from re-initialization. This means when the root program receives a `UrlChanged` event, it has to compare the changed URL against the active page and decide how to do the propagation.
 
-let update (msg: Msg) (state: State) =
-  match msg with
-  | UrlChanged url ->
-      match url with
-      | Url.User userUrl ->
-          let (state, cmd) = User.init userUrl
-          { state with
-              CurrentUrl = currentUrl
-              CurrentPage = Page.User state }, Cmd.map UserMsg cmd
-
-      | Url.Users ->
-          let (state, cmd) = Users.init()
-          { state with
-              CurrentUrl = currentUrl
-              CurrentPage = Page.Users state }, Cmd.map UsersMsg cmd
-
-      | NotFound ->
-          { state with
-              CurrentUrl = currentUrl
-              CurrentPage = Page.NotFound }
-```
-Or it can trigger a custom message `UrlChanged` and have the child program decide how to react to URL changes. For this to work, the parent has to check that the URL changed while of the same page, i.e. only trigger `User.update` if the the current *page* is `Page.User` and the current url is `Url.User`. Otherwise there is no point in the parent program triggering a `UrlChanged` event in the child program if it is not already acitve. I will leave the implementation of the scenario for the reader. I hope by now that I've convinced you that using URL segments really makes it easy to work with URLs and have them compose nicely from parent to child in a modular fashion.
+The great thing about this, is that *we* have control over which parts should be updated and which shouldn't. Many frameworks out there will make the decision for the developers but I believe this is really a decision to be made from the application code, not the libraries. That is why `Feliz.Router` makes no assumptions about how you choose to process URL changes and only helps you with parsing the URL segments in a simple manner, the rest is up to you.
