@@ -136,6 +136,11 @@ let render (state: State) (dispatch: Msg -> unit) =
   ]
 ```
 
+The function `Router.format` can take URL segments as input and optionally the query string parameters as the last argument:
+ - `Router.format("segment1", "segment2", "segment3")` => `/segment1/segment2/segment3`
+ - `Router.format("user", [ "userId", 42 ])` => `/user?userId=42`
+ - `Router.format("albums", [ "search", "tayler swift" ])` => `/albums?search=tayler%20swift`
+
 Using these links, the URL changes and the application switches the "pages" accordingly:
 
 <div style="width:100%">
