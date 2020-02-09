@@ -74,7 +74,7 @@ type State =
       CurrentUrl  : Url
       CurrentPage : Page }
 ```
-Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. Here we are also assuming we have to pages, `Login` and `Overview` implemented as child programs in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is the same as the `Home` module from the inital sample, only renamed to "Overview" instead because in this sample, the root application is named "Home". What is happening in the child programs isn't as interesting as the root program that is responsible for routing and secure navigation which is why we aren't focusing much on the `Login` and `Overview` modules.
+Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. We are also assuming we have to pages, `Login` and `Overview` implemented as child programs in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user. We will not be focussing a lot on the `Login` and `Overview` modules.
 
 As for the `Msg` type, it can be modelled as follows to be able to handle messages from the child programs as well as react to URL changes:
 ```fsharp
@@ -113,3 +113,6 @@ let init() =
     | Url.NotFound -> { defaultState with CurrentPage = Page.NotFound }, Cmd.none
 ```
 The highlighted line shows how requirement (6) can be enforced. Once the application starts up, we know for sure that the `User = Anonymous` which means if the application happened to start with an initial URL that is pointing to the Overview page, it will immediately redirect the user to Login page instead as a result of the `Router.navigate("login")` command.
+
+> There are cases where the user information is loaded from the [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) after a previous login attempt when the application is re-initialized after a full refresh. This way, the user wouldn't be `Anonymous` anymore and you have access to secure pages, such as the overview page in our example.
+
