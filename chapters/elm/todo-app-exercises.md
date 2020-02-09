@@ -80,50 +80,65 @@ Both approaches are OK because they are keeping track of the same amount of data
 
 You can view and use the application [live here](https://zaid-ajaj.github.io/elmish-todo-exercises/).
 
-### Exercise 4: Refactor with Fulma
+### Exercise 4: Refactor Bulma With TypedCssClasses
 
-Throughout the user interface of the To-Do list, we have been using Bulma's classes to enhance the look and feel of the application. These classes are just strings that we have to look up in the documentation and remember to write correctly in our application, we can do much better than magic strings: enter [Fulma](https://github.com/Fulma/Fulma)!
+Throughout the user interface of the To-Do list, we have been using Bulma's classes to enhance the look and feel of the application. These classes are just strings that we have to look up in the documentation and remember to write correctly in our application, we can do much better than magic strings to avoid having to remember them or writing then incorrectly. The first approach is simply writing a module called `Bulma` that includes the class names:
+```fsharp
+module Bulma =
+  let [<Literal>] Button = "button"
+  let [<Literal>] IsPrimary = "is-primary"
+  // etc.
+```
+Although this would work, it requires considerable amount of work of taking every class exposed from Bulma and writing in the module, not to mention that you have to maintain the module and update it when Bulma introduces breaking changes. Finally, you would have to follow this process for every CSS framework you want to use. What if there was a tool that does all things for us using a single line of code? Enter [TypedCssClasses](https://github.com/zanaptak/TypedCssClasses) written by [Zanaptak](https://github.com/zanaptak), a type-provider that infers the class names exposed from a stylesheet and makes them available during compile-time!
 
-Fulma is a library that allows us to write UI code that makes use of Bulma classes in a type-safe manner. It provides idiomatic F# APIs to construct the user interface elements without having to remember the magic strings and have the compiler check the correctness of the code.
-
-For example, the following snippet:
-```fsharp
-Html.button [
-    prop.classes [ "button"; "is-primary"; "is-medium" ]
-    prop.onClick (fun _ -> dispatch CancelEdit)
-    prop.text "Add"
-]
-```
-Can be rewritten using Fulma's modules as follows:
-```fsharp
-Button.button
-  [ Button.Color IsPrimary
-    Button.Size IsMedium
-    Button.OnClick (fun _ -> dispatch CancelEdit) ] [
-    str "Add"
-  ]
-```
-Notice how Bulma's classes such as `is-primary` and `is-medium` are grouped in their appropriate categories using `Button.Color` and `Button.Size` respectively.
-
-The same applies for most types of UI elements, for example the text box:
-```fsharp
-Html.input [
-  prop.classes ["input"; "is-medium"]
-  prop.valueOrDefault state.NewTodo
-  prop.onTextChange (SetNewTodo >> dispatch)
-]
-```
-Can be rewritten into the follows:
-```fsharp
-Input.input [
-  Input.Size IsMedium
-  Input.ValueOrDefault state.NewTodo
-  Input.OnChange (fun ev -> dispatch (SetNewTodo ev.Value))
-]
-```
-In this exercise, you are tasked to refactor the To-Do list application using Fulma instead of Bulma's stringy classes. To get started, you need to install Fulma into your project. Fulma is just a nuget package that you can add to your `App.fsproj` as follows:
+First of all, install the package into the F# project
 ```bash
 cd src
-dotnet add package Fulma
+dotnet add package Zanaptak.TypedCssClasses
 ```
-Now inside `App.fs`, just `open Fulma` and start refactoring mercilessly! You can consult the very comprehensive [documentation](https://fulma.github.io/Fulma/) when you need to know how the different classes such as "field" and whatnot translate to Fulma's elements.
+After installing the library, you can use the type-provider called `CssClasses` from the package which takes a link to a stylesheet as input and creates a type that exposes the possible class names as static properties of that type. Very simple to use and type-safe:
+
+```fsharp
+open Zanaptak.TypedCssClasses
+
+type Bulma = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css", Naming.PascalCase>
+```
+Here, the generated type `Bulma` has static properties that correspond to the class names from the input stylesheet and can be used to convert this piece of code:
+```fsharp
+Html.button [
+  prop.classes [ "button"; "is-primary"; "is-medium" ]
+  prop.onClick (fun _ -> dispatch CancelEdit)
+  prop.text "Add"
+]
+```
+Into the following:
+```fsharp
+open Zanaptak.TypedCssClasses
+
+type Bulma = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css", Naming.PascalCase>
+
+Html.button [
+  prop.classes [ Bulma.Button; Bulma.IsPrimary; Bulma.IsMedium ]
+  prop.onClick (fun _ -> dispatch CancelEdit)
+  prop.text "Add"
+]
+```
+In this exercise, you are tasked with refactoring the To-Do application to use the type-safe Bulma classes and remove any use of strings in the `prop.className` attributes. Do the same for FontAwesome icons:
+```fsharp
+type FA = CssClasses<"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", Naming.PascalCase>
+```
+
+When working with multiple files, you can use a little trick to make the `Bulma` class globally available to all of your files by exposing the generated type `Bulma` from an "auto-opened" module that is referenced in the project very early on (added before any other file that would reference it)
+```fsharp
+[<AutoOpen>]
+module ApplicationStyles
+
+open Zanaptak.TypedCssClasses
+
+// Bulma classes
+type Bulma = CssClasses<"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css", Naming.PascalCase>
+
+// Font-Awesome classes
+type FA = CssClasses<"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", Naming.PascalCase>
+```
+Now if you add this module as the first file in your F# project, the types `Bulma` and `FA` will be available in all other files without having to explicitly open the `ApplicationStyles` because it has the `[<AutoOpen>]` attribute.

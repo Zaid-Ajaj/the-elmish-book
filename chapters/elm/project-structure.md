@@ -13,7 +13,7 @@ To answer the question, we take a look at the `App.fsproj` of an Elmish project:
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
-    <PackageReference Include="Feliz" Version="0.52.0" />
+    <PackageReference Include="Feliz" Version="0.68.10" />
   </ItemGroup>
 </Project>
 ```
