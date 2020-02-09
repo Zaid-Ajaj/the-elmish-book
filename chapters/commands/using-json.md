@@ -1,4 +1,4 @@
-# Thoth.Json and SimpleJson
+# Using Thoth.Json
 
 Previously on [Asynchronous XMLHttpRequest](async-xhr.md), we looked at how to retrieve data from a static file server, now we will *process* the data and show it to the user in a meaningful manner. JSON is the most common format of the data that is coming from the server. We will turn this JSON content into something that the Elmish application can actually work with.
 
