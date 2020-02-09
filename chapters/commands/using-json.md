@@ -1,6 +1,6 @@
 # Thoth.Json and SimpleJson
 
-Previously on [Asynchronous XMLHttpRequest](async-xhr.md), we looked at how to retrieve data from a static file server, now we will *process* the data and show it to the user in a meaningful manner. JSON is the most common format of the data that is coming from the server. We will turn this JSON content into something that the Elmish application can actually work with. To do that, we will be using both [Thoth.Json](https://mangelmaxime.github.io/Thoth/json/v3.html) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson) which are libraries that allow you to decode the JSON text into user defined types. Of course we will use them separately so that we can compare both approaches to JSON decoding.
+Previously on [Asynchronous XMLHttpRequest](async-xhr.md), we looked at how to retrieve data from a static file server, now we will *process* the data and show it to the user in a meaningful manner. JSON is the most common format of the data that is coming from the server. We will turn this JSON content into something that the Elmish application can actually work with.
 
 To get started, I have set up a small application in the [elmish-with-json](https://github.com/Zaid-Ajaj/elmish-with-json) repository that loads JSON from the server and after a delay, shows it *as is* on screen:
 
@@ -269,96 +269,9 @@ Et voilà, the application is now parsing the JSON and showing data on screen.
 
 You can see the full worked out example at [elmish-with-json-thoth](https://github.com/Zaid-Ajaj/elmish-with-json-thoth) on Github.
 
-### Time for Fable.SimpleJson
+### Automatic Converters In Thoth.Json
 
-Now we have seen how to parse the JSON contents into `StoreInfo` and how easy it is to do that with `Thoth.Json`, let us take a look at a different approach using [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson.git) and afterwards we can compare both approaches to see which one is more suitable for different tasks.
-
-First things first, we start by installing the library into the project so we can use it:
-```bash
-cd src
-dotnet add package Fable.SimpleJson
-```
-While `Thoth.Json` uses composed decoders to parse the JSON into the proper types, `SimpleJson` has to no such thing. All that `SimpleJson` does is parse the JSON, which is initially a `string` into a *generic JSON data structure*:
-```fsharp
-/// A type representing Javascript Object Notation
-type Json =
-  | JNumber of float
-  | JString of string
-  | JBool of bool
-  | JNull
-  | JArray of Json list
-  | JObject of Map<string, Json>
-```
-Once `SimpleJson` gives you a value of type `Json`, it is up to how you convert it into your specialized types like `Product` and `StoreInfo`. Let us see how this works in action by writing a function that tries to parse a `Json` value into a `Product`:
-```fsharp
-open Fable.SimpleJson
-
-let parseProduct (value: Json) : Option<Product> =
-  match value with
-  | JObject product ->
-      let name = Map.tryFind "name" product
-      let price = Map.tryFind "price" product
-      match name, price with
-      | Some (JString name), Some (JNumber price) ->
-          Some { name = name; price = price }
-      | _ ->
-          None
-  | _ ->
-    None
-```
-Since a value of type `Json` is just another discriminated union, we use pattern matching to look for the expected shape of a product in the JSON and map the values of the fields of that product into a `Product` instance. Because we know that `Product` must be an object, we match against `JObject product` where `product` has type `Map<string, Json>` which itself can be traversed using `Map` functions such as `Map.tryFind` to find the specific fields of the `Product`.
-
-Notice that we choose to return `Option<Product>` but we could have chosen to return `Result<Product, string>` instead:
-```fsharp
-let parseProduct (value: Json) : Result<Product, string> =
-  match value with
-  | JObject product ->
-      let name = Map.tryFind "name" product
-      let price = Map.tryFind "price" product
-      match name, price with
-      | Some (JString name), Some (JNumber price) ->
-          Some { name = name; price = price }
-      | _ ->
-          Error "The JSON object didn't have matching fields with Product"
-  | _ ->
-    Error "The JSON value wasn't an object that matches with Product"
-```
-It is up to you how much details you want to put in these error messages. You could expand the pattern matching of the fields if you want to be more specific with your error messages. This is unlike `Thoth.Json` which automatically generates nice error messages if the fields or their types of the JSON do not match those of the F# type that we are decoding into.
-
-In any case, we can can complete the parsing by writing a function that now parses JSON into `StoreInfo`:
-```fsharp
-open Fable.SimpleJson
-
-let parseStoreInfo (json: string) : =
-  // tryParseNative : string -> Option<Json>
-  match SimpleJson.tryParseNative json with
-  | Some (JObject storeInfo) ->
-      let name = Map.tryFind "name" storeInfo
-      let since = Map.tryFind "since" storeInfo
-      let daysOpen = Map.tryFind "daysOpen" storeInfo
-      let products = Map.tryFind "products" storeInfo
-      match name, since, daysOpen, products with
-      | Some (JString name), Some (JNumber since), Some (JArray days), Some (JArray products) ->
-          let days = days |> List.choose (function | JString day -> Some day | _ -> None)
-          let products = products |> List.choose parseProduct
-          Ok {
-            name = name
-            since = string since
-            daysOpen = days
-            products = products
-          }
-      | _ ->
-        Error "properties of the parsed JSON were not found or had the wrong type"
-  | _ ->
-    Error "Parsed JSON is not valid or is not an object"
-```
-This is the same `parseStoreInfo` we wrote before but instead now using `Fable.SimpleJson`. Effectively the program works the same as it did when we were parsing with `Thoth.Json`.
-
-### Automatic converters: Fable.SimpleJson vs. Thoth.Json
-
-In the last two examples of parsing using either libraries, we have been using the *manual* way of parsing whether is was decoders with `Thoth.Json` or pattern matching with `Fable.SimpleJson`. However, both libraries include automatic parsing capabilities that match the JSON structure with the F# type and instantiate it directly using Fable's Reflection.
-
-In order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor the `StoreInfo` and change the `since` field into an integer as well:
+In this example of parsing the JSON, we have been using the *manual* way of parsing with decoders using `Thoth.Json`. You might have wondered, if the library already knows the types of the record fields, can't the library automatically implement a decoder based on the record type itself? Yes, it can! Thoth.Json makes use of the Reflection capabilities in Fable which allows it to inspect the type information and metadata from which it can infer a decoder that can parse the corresponding JSON structure. However, in order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor the `StoreInfo` and change the `since` field into an integer as well:
 ```fsharp {highlight: [3]}
 type StoreInfo = {
   name: string
@@ -367,58 +280,11 @@ type StoreInfo = {
   products: Product list
 }
 ```
-Without matching the JSON and F# type, `Thoth.Json` will give you an error saying that it could not convert an integer into a string for the field `since` which is totally correct. On the other hand, `Fable.SimpleJson` is more forgiving in these cases and it will just stringify the integer into a string to make it match the F# type.
-
-Using `Fable.SimpleJson`:
-```fsharp
-open Fable.SimpleJson
-
-let parseStoreInfo (json: string) : Result<StoreInfo, string> =
-  Json.tryParseNativeAs<StoreInfo> json
-```
-That's it! The function `Json.tryParseNativeAs<'t>` will do the magic conversion internally. Using `Thoth.Json`, it is just as simple:
+Now we only have to write the following:
 ```fsharp
 open Thoth.Json
 
 let parseStoreInfo (json: string) : Result<StoreInfo, string> =
   Decode.Auto.fromString<StoreInfo>(json)
 ```
-Nothing else required, both functions do basically the same thing.
-
-### Comparison Fable.SimpleJson vs Thoth.Json
-
-We have now seen how to parse a piece of JSON using the *manual* and *automatic* way and building typed records from it. When it comes to the automatic converters, both `Thoth.Json` and `Fable.SimpleJson` do pretty much the same except that `Thoth.Json` generates much nicer error messages and `Fable.SimpleJson` is less strict when parsing.
-
-However, when it comes to the manual converters it is a different story. You must be wondering something along the lines: "Aren't these `SimpleJson` stuff supposed to be, well *simple* to work with? The Thoth.Json approach is obviously simpler and cleaner." I would definitely agree to that statement.
-
-Decoders from `Thoth.Json` are really cool, you can compose them together in a functional manner to make bigger decoders and they will automatically nice error messages for you without the explicit matching of JSON structure that is going on with `Fable.SimpleJson`.
-
-In Elmish applications I suggest to go for `Thoth.Json` whenever possible.
-
-The explicitness of `Fable.SimpleJson` comes from the fact that it operates on a *lower-level* than `Thoth.Json` does to process the JSON as it gives you [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of the JSON to work with. Transforming the JSON into typed entities is only one use-case of such AST. Another use case for the AST is *re-write* into another AST before processing it further if you have a piece of JSON that isn't easily convertable using decoders. Analyzing the type schema of the JSON from AST is also possible. Take this structure of the JSON:
-```json
-{
-  "RequestId:0HKV9C49II9CK": {
-    "Path": "/api/documents/read/2",
-    "Method": "GET",
-    "Duration": 1617,
-    "Status": 200
-  }
-}
-```
-The keys of the object themselves contain data and they are not valid names of fields. You can use `Fable.SimpleJson` to *preprocess* and *rewrite* the structure of the JSON above into something that is *decoder-friendly* and let `Thoth.Json` take over from that point:
-```json
-[
-  {
-    "RequestId": "0HKV9C49II9CK",
-    "Path": "/api/documents/read/2",
-    "Method": "GET",
-    "Duration": 1617,
-    "Status": 200
-  }
-]
-```
-
-### Conclusion
-
-Although `Thoth.Json` and `Fable.Simple` seem to overlap a lot in functionality, they can have different purposes and depending on your task as hand, one can more suitable than the other. In cases where you writing the parsing of the JSON by hand (the manual way) I would definitely use `Thoth.Json` because of it's elegant functional nature and ease of use. However, for low-level JSON operations and library infrastructure that require a very flexibel API, then I would go for `Fable.SimpleJson`. This has been a success story where `Fable.SimpleJson` has been an infrastructure component of [Fable.Remoting](https://github.com/Zaid-Ajaj/Fable.Remoting) and [Elmish.Bridge](https://github.com/Nhowka/Elmish.Bridge).
+That is it! The function `Decode.Auto.fromString<'t>(json: string)` uses the metadata of type `'t` to infer how the type should be decoded from the input JSON string. This function is also *safe*: it returns `Result<'t, string>` which can either be the succesfully decoded `'t` or a nice error message telling you where the decoding went wrong.

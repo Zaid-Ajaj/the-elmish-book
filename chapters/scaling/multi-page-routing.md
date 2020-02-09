@@ -74,7 +74,9 @@ type State =
       CurrentUrl  : Url
       CurrentPage : Page }
 ```
-Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. Here we are also assuming we have to pages, `Login` and `Overview` implemented as child programs in their respective modules. As for the `Msg` type, it can be modelled as follows to be able to handle messages from the child programs as well as react to URL changes:
+Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. Here we are also assuming we have to pages, `Login` and `Overview` implemented as child programs in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is the same as the `Home` module from the inital sample, only renamed to "Overview" instead because in this sample, the root application is named "Home". What is happening in the child programs isn't as interesting as the root program that is responsible for routing and secure navigation which is why we aren't focusing much on the `Login` and `Overview` modules.
+
+As for the `Msg` type, it can be modelled as follows to be able to handle messages from the child programs as well as react to URL changes:
 ```fsharp
 type Msg =
     | LoginMsg of Login.Msg

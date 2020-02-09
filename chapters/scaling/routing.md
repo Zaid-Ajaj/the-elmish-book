@@ -72,7 +72,7 @@ Within the `Feliz.Router` namespace, we primarily use two modules:
  - `Router` which contains functions to work with and listen to URLs.
  - `Route` which contains active patterns to parse URL segments easily.
 
-The first function to use from the `Router` module is the `currentUrl()` which parses the URL of the page that the application has landed on into URL segments. The parsed segments will be the initial value for the `CurrentUrl`.
+The first function to use from the `Router` module is `currentUrl()` which parses the URL of the page that the application has landed on into URL segments. The parsed segments will be the initial value for the `CurrentUrl`.
 
 Much more interesting is what is happening in the `render` function. Here we will use the `router` function from the `Router` module and use it as if it was a UI element:
 ```fsharp {highlight: ['12-15']}
