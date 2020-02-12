@@ -61,6 +61,7 @@ type Url =
     | Login
     | Overview
     | NotFound
+    | Logout
 
 [<RequireQualifiedAccess>]
 type Page =
@@ -74,15 +75,18 @@ type State =
       CurrentUrl  : Url
       CurrentPage : Page }
 ```
-Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. We are also assuming we have to pages, `Login` and `Overview` implemented as child programs in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user. We will not be focussing a lot on the `Login` and `Overview` modules.
+Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. Another curious case of URL is the `Logout` case. We are implementing it here such that if the application navigated to the `/logout` URL, then the user of the application will be reset back to `Anonymous`. Of course, I could have implement a specialized case in the `Msg` called `Logout` but I want to follow a simple rule for consistency: Page changes are always driven URL changes. This includes logging out.
 
-As for the `Msg` type, it can be modelled as follows to be able to handle messages from the child programs as well as react to URL changes:
+We are also assuming we have to pages, `Login` and `Overview` implemented as child programs of `Home` in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user (requires a user for initialization). We will not be focussing a lot on the `Login` and `Overview` modules because the interesting stuff are happening in the parent `Home` that is managing which page to show based on the URL and how to propagate the information based on whether or not a user has logged in.
+
+As for the `Msg` type, it can be modelled as follows in order to be able to handle messages from the child programs as well as react to URL changes:
 ```fsharp
 type Msg =
     | LoginMsg of Login.Msg
     | OverviewMsg of Overview.Msg
     | UrlChanged of Url
 ```
+Now that we have modelled the types, we can start implementing the `Home` parent program.
 ### Implementing `init()`
 It might be tempting to simply always initialize the Home page with the default values of the state:
 ```fsharp
@@ -91,12 +95,13 @@ let init() =
       CurrentUrl = Url.Index;
       CurrentPage = Page.Index; }, Cmd.none
 ```
-However, this approach is incorrect because the initialization of the root program depends on which URL the application starts with. This means we have to parse the *initial* URL first and decide which page we can or cannot land on:
-```fsharp {highlight: [17]}
+However, this approach is **incorrect** because the initialization of the root program *depends* on which URL the application starts with. This means we have to parse the *initial* URL first and then decide which page we can or cannot land on:
+```fsharp {highlight: [24, 25]}
 let parseUrl = function
   | [ ] -> Url.Index
   | [ "login" ] -> Url.Login
   | [ "overview" ] -> Url.Overview
+  | [ "logout" ] -> Url.Logout
   | _ -> Url.NotFound
 
 let init() =
@@ -104,15 +109,162 @@ let init() =
     let defaultState =
         { User = Anonymous
           CurrentUrl = initialUrl
-          CurrrentPage = Page.Index }
+          CurrentPage = Page.Index }
 
     match initialUrl with
-    | Url.Index ->  defaultState, Cmd.none
-    | Url.Login -> { defaultState with CurrrentPage = Page.Login }, Cmd.none
-    | Url.Overview -> defaultState, Router.navigate("login")
-    | Url.NotFound -> { defaultState with CurrentPage = Page.NotFound }, Cmd.none
+    | Url.Index ->
+        defaultState, Cmd.none
+
+    | Url.Login ->
+        let loginState, loginCmd = Login.init()
+        let nextPage = Page.Login loginState
+        { defaultState with CurrentPage = nextPage }, Cmd.map LoginMsg loginCmd
+
+    | Url.Overview ->
+        defaultState, Router.navigate("login")
+
+    | Url.Logout ->
+        defaultState, Router.navigate("/")
+
+    | Url.NotFound ->
+        { defaultState with CurrentPage = Page.NotFound }, Cmd.none
 ```
 The highlighted line shows how requirement (6) can be enforced. Once the application starts up, we know for sure that the `User = Anonymous` which means if the application happened to start with an initial URL that is pointing to the Overview page, it will immediately redirect the user to Login page instead as a result of the `Router.navigate("login")` command.
 
 > There are cases where the user information is loaded from the [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) after a previous login attempt when the application is re-initialized after a full refresh. This way, the user wouldn't be `Anonymous` anymore and you have access to secure pages, such as the overview page in our example.
 
+Moreover, if an end user happens to initialize the application at the `/logout` URL, we simply navigate back to the root which brings us to the `Home` page.
+
+The same rules apply when the event `UrlChanged` is triggered. The `update` function has to account for these changes and acts upon them. Let us take a look at how to implement the `update` function with respect to URL changes.
+
+### Implementing `update`:
+
+Since we are using Discriminated Union Composition, we can start by handling incoming messages from child programs and propagate their results accordingly. However, something interesting is going on when the parent `Home` program inspects the events coming from `Login`; once a user has logged in, `state.User` is updated using the value of that user and the application navigates back to the root using the command `Router.navigate("/")`:
+```fsharp {highlight: [5, 6]}
+let update (msg: Msg) (state: State) =
+    match msg, state.CurrentPage with
+    | LoginMsg loginMsg, Page.Login loginState ->
+        match loginMsg with
+        | Login.UserLoggedIn user ->
+            { state with User = LoggedIn user }, Router.navigate("/")
+
+        | loginMsg ->
+            let loginState, loginCmd = Login.update loginMsg loginState
+            { state with CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
+
+    | OverviewMsg overviewMsg, Page.Overview overviewState ->
+        let overviewState, overviewCmd = Overview.update overviewMsg overviewState
+        { state with CurrentPage = Page.Overview overviewState }, Cmd.map OverviewMsg overviewCmd
+
+    | _, _ ->
+        state, Cmd.none
+```
+This does two things. First of all, it makes the information of the logged in user available in the `Home` program and changes the URL back to the root `/`. This effectively makes triggers a `UrlChanged` event where the URL will be `Url.Index` (the entry page of `Home`). We haven't handled the `UrlChanged` event, so let us do that:
+```fsharp {highlight: ['16-34']}
+let update (msg: Msg) (state: State) =
+    match msg, state.CurrentPage with
+    | LoginMsg loginMsg, Page.Login loginState ->
+        match loginMsg with
+        | Login.UserLoggedIn user ->
+            { state with User = LoggedIn user }, Router.navigate("/")
+
+        | loginMsg ->
+            let loginState, loginCmd = Login.update loginMsg loginState
+            { state with CurrentPage = Page.Login loginState }, Cmd.map LoginMsg loginCmd
+
+    | OverviewMsg overviewMsg, Page.Overview overviewState ->
+        let overviewState, overviewCmd = Overview.update overviewMsg overviewState
+        { state with CurrentPage = Page.Overview overviewState }, Cmd.map OverviewMsg overviewCmd
+
+    | UrlChanged nextUrl, _ ->
+        let show page = { state with CurrentPage = page; CurrentUrl = nextUrl }
+
+        match nextUrl with
+        | Url.Index -> show Page.Index, Cmd.none
+        | Url.NotFound -> show Page.NotFound, Cmd.none
+        | Url.Login ->
+            let login, loginCmd = Login.init()
+            show (Page.Login login), Cmd.map LoginMsg loginCmd
+
+        | Url.Overview ->
+            match state.User with
+            | Anonymous ->  state, Router.navigate("login")
+            | LoggedIn user ->
+                let overview, overviewCmd = Overview.init user
+                show (Page.Overview overview), Cmd.map OverviewMsg overviewCmd
+
+        | Url.Logout ->
+            { state with User = Anonymous }, Router.navigate("/")
+
+    | _, _ ->
+        state, Cmd.none
+```
+Similar to the way we handled the changed `Url` event in `init()`, we are checking the next URL that the application was navigated to (i.e. the `nextUrl` value) and deciding which page we should show next based on that. However, there are two special case, with `Url.Overview` we do not initialize the `Overview` child program unless there is indeed a logged in user, otherwise we navigate the application into the `login` page and for `Url.Logout` we reset the application and go back the root using `Router.navigate("/")`.
+
+It is important to realize that even though we are *re-initializing* the `Ovewview` program by calling its `init` function, there are more things we can do. For example, we can check that if the current page is already `Page.Overview`, then we do not re-initialize it and instead trigger a message to reload a specific part of the information. This way, that page doesn't lose its state unnecessarily. Just remember that you have full control over how these child programs are initialized or updated, this is the flexibility of The Elm Architecture.
+
+Now we can implement the final part which is the `render` function. First of all, let us implement a smaller rendering function to show the user interface of the `Home` page itself. I will call it `renderIndex` bacause we will call that function when `state.CurrentPage = Page.Index`
+
+This page simply checks whether the user of application has yet logged in or not, then proceeds to welcome the user by their username if they are logged in or welcoming an anonymous guest when a user has yet to login:
+```fsharp
+let index (state: State) (dispatch: Msg -> unit) =
+    match state.User with
+    | Anonymous ->
+        Html.div [
+            Html.h1 "Welcome, guest"
+            Html.a [
+                prop.className [ "button"; "is-info" ]
+                prop.style [ style.margin 5 ]
+                prop.href (Router.format("login"))
+                prop.text "Login"
+            ]
+        ]
+
+    | LoggedIn user ->
+        Html.div [
+            Html.h1 (sprintf "Welcome, %s" user.Username)
+            Html.a [
+                prop.className [ "button"; "is-info" ]
+                prop.style [ style.margin 5 ]
+                prop.href (Router.format("overview"))
+                prop.text "Overview"
+            ]
+            Html.a [
+                prop.className [ "button"; "is-info" ]
+                prop.style [ style.margin 5 ]
+                prop.href (Router.format("logout"))
+                prop.text "Logout"
+            ]
+        ]
+```
+When the user is `Anonymous`, we show a `Login` anchor element which navigates the `/login`. When a user logs in, this `Home` page will switch the current view and instead shows two buttons, one for navigating to the `Overview` page and another for logging out. See the `href` values for these anchor elements. Since we are using Bulma for styling, I am giving these links a class of `button` to make them look like buttons but they are just links actually.
+
+Finally the root `render` function that puts application together and sets up the router to listen for URL changes:
+```fsharp
+let render (state: State) (dispatch: Msg -> unit) =
+    let activePage =
+        match state.CurrentPage with
+        | Page.Login login -> Login.render login (LoginMsg >> dispatch)
+        | Page.Overview overview -> Overview.render overview (OverviewMsg >> dispatch)
+        | Page.Index -> index state dispatch
+        | Page.NotFound -> Html.h1 "Not Found"
+
+    Router.router [
+        Router.onUrlChanged (parseUrl >> UrlChanged >> dispatch)
+        Router.application [
+            Html.div [
+                prop.style [ style.padding 20 ]
+                prop.children [ activePage ]
+            ]
+        ]
+    ]
+```
+And with that, we finish up our last sample application of this chapter. A lot of large applications follow this exact sturcture, only with many more pages and different behaviors per page. I have demonstrated the fundamental aspects of data communication with respect to routing and hope that you will be able to adapt the techniques learnt in this chapter to suit your application's needs.
+
+You can find the full source code of this application in the repository [Zaid-Ajaj/login-with-url-extended](https://github.com/Zaid-Ajaj/login-with-url-extended)
+
+<div style="width:100%">
+  <div style="margin: 0 auto; width:50%;">
+    <resolved-image source="/images/scaling/login-with-url-extended.gif" />
+  </div>
+</div>
