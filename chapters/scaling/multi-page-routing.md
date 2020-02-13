@@ -121,15 +121,16 @@ let init() =
         { defaultState with CurrentPage = nextPage }, Cmd.map LoginMsg loginCmd
 
     | Url.Overview ->
-        defaultState, Router.navigate("login")
+        defaultState, Router.navigate("login", HistoryMode.ReplaceState)
 
     | Url.Logout ->
-        defaultState, Router.navigate("/")
+        defaultState, Router.navigate("/", HistoryMode.ReplaceState)
 
     | Url.NotFound ->
         { defaultState with CurrentPage = Page.NotFound }, Cmd.none
 ```
-The highlighted line shows how requirement (6) can be enforced. Once the application starts up, we know for sure that the `User = Anonymous` which means if the application happened to start with an initial URL that is pointing to the Overview page, it will immediately redirect the user to Login page instead as a result of the `Router.navigate("login")` command.
+The highlighted line shows how requirement (6) can be enforced. Once the application starts up, we know for sure that the `User = Anonymous` which means if the application happened to start with an initial URL that is pointing to the Overview page, it will immediately redirect the user to Login page instead as a result of the `Router.navigate("login", HistoryMode.ReplaceState)` command. We use the parameter `HistoryMode.ReplaceState` so that the navigation command doesn't push a "history entry" into the browser page. If that was the case, then a user will be trapped in `/login` as every time the user hits the Back button of the browser, he or she will go back to `/overview` which is a protected page that takes you back again to `/login` and so on and so forth.
+
 
 > There are cases where the user information is loaded from the [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) after a previous login attempt when the application is re-initialized after a full refresh. This way, the user wouldn't be `Anonymous` anymore and you have access to secure pages, such as the overview page in our example.
 
@@ -188,7 +189,7 @@ let update (msg: Msg) (state: State) =
 
         | Url.Overview ->
             match state.User with
-            | Anonymous ->  state, Router.navigate("login")
+            | Anonymous ->  state, Router.navigate("login", HistoryMode.ReplaceState)
             | LoggedIn user ->
                 let overview, overviewCmd = Overview.init user
                 show (Page.Overview overview), Cmd.map OverviewMsg overviewCmd
@@ -203,7 +204,7 @@ Similar to the way we handled the changed `Url` event in `init()`, we are checki
 
 It is important to realize that even though we are *re-initializing* the `Ovewview` program by calling its `init` function, there are more things we can do. For example, we can check that if the current page is already `Page.Overview`, then we do not re-initialize it and instead trigger a message to reload a specific part of the information. This way, that page doesn't lose its state unnecessarily. Just remember that you have full control over how these child programs are initialized or updated, this is the flexibility of The Elm Architecture.
 
-Now we can implement the final part which is the `render` function. First of all, let us implement a smaller rendering function to show the user interface of the `Home` page itself. I will call it `renderIndex` bacause we will call that function when `state.CurrentPage = Page.Index`
+Now we can implement the final part which is the `render` function. First of all, let us implement a smaller rendering function to show the user interface of the `Home` page itself. I will call it `index` bacause we will call that function when `state.CurrentPage = Page.Index`
 
 This page simply checks whether the user of application has yet logged in or not, then proceeds to welcome the user by their username if they are logged in or welcoming an anonymous guest when a user has yet to login:
 ```fsharp
