@@ -1,6 +1,6 @@
 # Counter Application
 
-Let us now try to build something that not only has multiple elements, but also keeps track of and manipulates some local *state*. A counter application is the best candidate for these simple requirements. We can build something that looks like this:
+Let us now try to build something that not only has multiple elements but also keeps track of and manipulates some local *state*. A counter application is the best candidate for these simple requirements. We can build something that looks like this:
 
 <resolved-image source="/images/fable/counter.gif" />
 
@@ -25,7 +25,7 @@ We will need buttons that change the contents of a text element every time you c
 </html>
 ```
 
-Now we will do something similar like we did back with our [Hello World](hello-world) example that prints the console message: get references to the buttons by their id values and attaching event handlers. Because we want to keep local state of the current count, we will use a mutable value. The `App.fs` becomes the following:
+Now we will do something similar as we did back with our [Hello World](hello-world) example that prints the console message: get references to the buttons by their id values and attaching event handlers. Because we want to keep the local state of the current count, we will use a mutable value. The `App.fs` becomes the following:
 
 ```fsharp
 module App
@@ -55,10 +55,10 @@ decrease.onclick <- fun ev ->
 // set the count viewer with the initial count
 countViewer.innerText <- sprintf "Count is at %d" currentCount
 ```
-There you have it, a working counter app in F# that uses vanilla javascripts APIs available in the browser.
+There you have it, a working counter app in F# that uses vanilla JavaScript APIs available in the browser.
 
 ### Random Increments and Decrements
-So far so good. We can add a slight change to the code to make the counter increase or decrease the count by a some *random number*, say between 5 and 10. For this, we will use something you probably already know from writing F# that runs in normal .NET code: `System.Random`
+So far, so good. We can add a slight change to the code to make the counter increase or decrease the count by some *random number*, say between 5 and 10. For this, we will use something you probably already know from writing F# that runs in normal .NET code: `System.Random`
 ```fsharp {highlight: [12, 16, 20]}
 module App
 
@@ -111,7 +111,7 @@ Now, let us complicate this simple application by introducing yet another button
 </html>
 
 ```
-Next we will write an `async` function that runs a callback after a delay and use it from the event handler:
+Next, we will write an `async` function that runs a callback after a delay and use it from the event handler:
 ```fsharp
 // Runs the callback after a delay
 let runAfter ms callback =
