@@ -6,7 +6,7 @@ Although we were using the `System.Random` class, the actual implementation is n
 
 Supporting *all* of the base class library is not a goal of Fable, and when certain BCL functionality is needed, then a binding to the native equivalent of the feature will be the way to go.
 
-Fable tries to support certain BCL functions and classes when *'it makes sense'* because Fable compiles F# with the idea in mind that the code will run inside a JavaScript runtime, like V8 in the browser or Node.js on the server. In many cases, the APIs provided from the BCL doesn't work out of the box in these JavaScript environments. For example, multi-threading APIs within the `System.Threading.Tasks` namespace is not supported because JavaScript environments are usually single-threaded.
+Fable tries to support certain BCL functions and classes when *'it makes sense'* because Fable compiles F# with the idea in mind that the code will run inside a JavaScript runtime, like V8 in the browser or Node.js on the server. In many cases, the APIs provided from the BCL do now work out of the box in these JavaScript environments. For example, multi-threading APIs within the `System.Threading.Tasks` namespace are not supported because JavaScript environments are usually single-threaded.
 
 Likewise, APIs from `System.IO` are not supported because JavaScript in the browser cannot access the file system by default. However, JavaScript on the server *should* be able to access the file system and do all crazy things on the hosting machine, and in such cases, we will use JavaScript-specific APIs from Node.js. Again, we will use a binding to access these APIs, the binding `Fable.Node` covers most built-in modules from Node.js.
 
