@@ -65,7 +65,7 @@ Some Fable packages may build upon existing bindings, such as [Fable.SimpleHttp]
 
 <resolved-image source="/images/fable/type-two.png" />
 
-As for Type 3 package, there is the package [Fable.Node](https://github.com/fable-compiler/fable-node) which is binding most system modules of Node.js runtime
+As for Type 3 package, there is the package [Fable.Node](https://github.com/fable-compiler/fable-node) that covers most system modules of the Node.js runtime
 
 <resolved-image source="/images/fable/type-three.png" />
 
