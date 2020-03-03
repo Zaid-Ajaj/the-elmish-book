@@ -19,4 +19,6 @@ Also known as HMR for short, is one of the most important features required duri
 
 Currently with the templates, whenever we want to use static files like images or CSS files, we would have to include them either in the `index.html` page or reference them via absolute URLs in the `src` attribute of `img` tags. However, in modern front-end projects, it is common to reference static assets like you reference code modules and use them directly in the application.
 
-In this chapter, we will tackle the shortcomings of the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template and turn it into a production-ready template as well as make it nicer to with work with during development.
+In this short chapter, we will tackle the shortcomings of the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template and turn it into a production-ready template as well as make it nicer to with work with during development. We will not focus on the application point of view but we will be focusing more on the build configuration side of things.
+
+Build time configuration and fine-tuning is one of those domains of building front-end applications that is very important when working with real-world applications but is usually glanced over when learning front-end development and you have to learn it on your own as you go. That is why I am dedicating this small chapter to it.
