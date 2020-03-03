@@ -4,6 +4,9 @@ Throughout the book, we had been using primarily two templates to work with Fabl
 
 When I introduced these templates, I mentioned that both of them are made for the purpose of *learning* and that they shouldn't for production environments. The primary reason was to keep the build configuration at a minimum so that we don't get too distracted with these aspects of the front-end development. However, the bigger our applications get, more advanced and fine-tuned build configuration are required both for development and production environments. The template as it as now suffers from many problems, let us go through a couple of them.
 
+### Running Environment Specific Code
+In many scenarios, we want the ablility to execute different pieces of the code when running the environment in different environments: primarily development and production. For example, we want to introduce logging state changes of Elmish application to the console while in development but disable it in production.
+
 ### Large bundle size
 
 When we compile the project using `npm run build`, the size of the generated Javascript is too big because it includes code that might not have been used. When you pull packages in, you might use a function or two from that package, the rest of the code from said package shouldn't be included in the final output if it isn't used.
