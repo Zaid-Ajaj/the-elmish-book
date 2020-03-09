@@ -2,12 +2,11 @@
 
 In the previous section, we looked into how we can extract the compilation mode and use it in our webpack configuration file. Now we will propagate the same `mode` variable from the webpack configuration and make it available from *our F# code* as a compiler directive. More specifically, we will introduce the `DEVELOPMENT` compiler directive to allow for conditional compilation blocks which make it possible to compile or not compile certain pieces of code based on the used directive.
 
-
 First we will need to extend the options for the used `fable-loader` in webpack. Currently it looks like the highlighted lines of code:
 ```js {highlight: [15, 16, 17, 18]}
 const path = require("path")
 
-module.exports = module.exports = (env, argv) => {
+module.exports = (env, argv) => {
     // extract build mode from command-line
     const mode = argv.mode
     console.log(mode);
@@ -31,7 +30,7 @@ Notice the `use: "fable-loader"` part. Here we telling webpack to use the `fable
 ```js {highlight: [18, 19, 20, 21]}
 const path = require("path")
 
-module.exports = module.exports = (env, argv) => {
+module.exports = (env, argv) => {
     // extract build mode from command-line
     const mode = argv.mode
     console.log(mode);
