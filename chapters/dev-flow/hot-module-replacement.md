@@ -6,3 +6,20 @@ Image you have an application where you first have to login to get to the page y
 
 Here is where *hot module replacement* (HMR for short) comes into play. Instead of refreshing the entire page when some piece of code changes, only that piece is recompiled and *re-executed seperately* to reflect the changes without needing a full page refresh.
 
+Consider the following example **without** HMR where changing the source code resets the state:
+
+<div style="margin-top: 40px; margin-bottom:40px; width:100%">
+  <div style="margin: 0 auto; width:100%;">
+    <resolved-image source="/images/dev-flow/without-hmr.gif" />
+  </div>
+</div>
+
+However, when Hot Module Replacement is enabled, it is a whole new level of greatness for developer experience:
+
+<div style="margin-top: 40px; margin-bottom:40px; width:100%">
+  <div style="margin: 0 auto; width:100%;">
+    <resolved-image source="/images/dev-flow/with-hmr.gif" />
+  </div>
+</div>
+
+As you can see, changing certain pieces of the user interface updates automatically while *maintaining the state* without full refresh. This makes prototyping the user interface a real joy and once you get used, you never want to go back.
