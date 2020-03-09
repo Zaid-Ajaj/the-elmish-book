@@ -4,7 +4,7 @@ In many applications, hard-coding configuration values into the source code is f
 
 It might be an API key to some service that your application uses or it can be a version number that is only available in the environment variables of your CI server. Instead of using hard-coded configuration values, we use configuration variables: these are key-value pairs that are configurable from outside your application source code but they can be made available during runtime.
 
-In this section, we will make it possible to use configuration variables inside the [elmish-getting-started]() template repository and to make use them in a simple scenario, we will make the *color* and *text* of a welcome message configurable.
+In this section, we will make it possible to use configuration variables inside the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template repository. For the sake of simplicity, we will make the *color* and *text* of a welcome message configurable.
 
 Suppose we had the following `render` function:
 ```fsharp
