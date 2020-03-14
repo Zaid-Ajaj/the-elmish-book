@@ -1,6 +1,6 @@
 # Using Compiler Directives
 
-In the previous section, we looked into how we can extract the compilation mode and use it in our webpack configuration file. Now we will propagate the same `mode` variable from the webpack configuration and make it available from *our F# code* as a compiler directive. More specifically, we will introduce the `DEVELOPMENT` compiler directive to allow for conditional compilation blocks which make it possible to compile or not compile certain pieces of code based on the used directive.
+In the previous section, we looked into how we can extract the compilation mode and use it in our webpack configuration file. Now we will propagate the same `mode` variable from the webpack configuration and make it available from *our F# code* as a compiler directive. More specifically, we will introduce a `DEVELOPMENT` compiler directive to allow for conditional compilation blocks which make it possible to compile or not compile certain pieces of code based on the used directive.
 
 First we will need to extend the options for the used `fable-loader` in webpack. Currently it looks like the highlighted lines of code:
 ```js {highlight: [15, 16, 17, 18]}
@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-The extended options for `fable-loader` allow to customize the compilation workflow of Fable. In this case, we assign `options.define` the value `["DEVELOPMENT]` when in development mode, otherwise just an empty array. This array defines the constants for conditional compilation and can be used from the code as follows:
+The extended options for `fable-loader` allow to provide compilations options for the Fable compiler. In this case, we assign `options.define` the value `["DEVELOPMENT]` when in development mode, otherwise just an empty array. This array defines the constants that bcome compiler directives which can be used from the code as follows:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Mode
