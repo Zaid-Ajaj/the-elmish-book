@@ -1,13 +1,12 @@
 # Importing Static Images
 
 In this section, we pick the template project from we left it off after integrating [Hot Module Replacement](hot-module-replacement) and enable it to import static images into the project. First things first, what does it even mean to import an image into our Elmish project? Imagine having the following structure of source code in an Elmish project:
-```bash {highlight: [5]}
+```bash {highlight: [3]}
  src
   |
-  | -- App.fs
-  | -- Main.fs
   | -- fable_logo.png
-  | -- Client.fsproj
+  | -- App.fs
+  | -- App.fsproj
 ```
 How would you be able to *reference* the `fable_logo.png` file from your source files in `App.fs`? You can try writing this:
 ```fsharp
@@ -122,4 +121,12 @@ From which my local project prints out:
 // browser console
 Fable logo path dce2757cef5f2cc7b1dbc1416f3732ed.png
 ```
-Alternatively, you can run `npm run build` to see how this same file is copied into the output directory and is now referenced property from the image tag that we used.
+Alternatively, you can run `npm run build` to see how this same file is copied into the output directory and is now referenced property from the image tag that we used. When I run `npm run build` I get these files in the `dist` directory:
+```
+ dist
+  |
+  | -- index.html
+  | -- main.js
+  | -- dce2757cef5f2cc7b1dbc1416f3732ed.png
+```
+This is result of the `file-loader` package, it rewrites the path into a hash string and copies the required files into the output directory to have them referenced like you would them expect to.
