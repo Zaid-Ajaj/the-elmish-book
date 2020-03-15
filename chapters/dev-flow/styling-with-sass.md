@@ -179,7 +179,7 @@ There you have it! Now the primary turquoise color of Bulma is turned into our v
 
 ### What about LESS?
 
-Another languagae that compiles to CSS is [Less](http://lesscss.org) which similar to Sass but is a bit different. You can use Less instead of CSS for the same reasons as to why you would use Sass: your team members are familiar with it or you want to override the behaviour of a third-party framework like AntDesign which is built with React and Less. The workflow is similar, add the [less-loader](https://github.com/webpack-contrib/less-loader) and its dependencies (the [less](https://github.com/less/less.js) compiler) to your webpack configuration and import a stylesheet file that has extension `.less` from the entry point of your Elmish application.
+Another language that compiles to CSS is [Less](http://lesscss.org) which is similar to Sass but is a bit different. You can use Less instead of CSS for the same reasons as to why you would use Sass: your team members are familiar with it or you want to override the behaviour of a third-party framework that is built with Less. The workflow is similar: add the [less-loader](https://github.com/webpack-contrib/less-loader) and its dependencies (the [less](https://github.com/less/less.js) compiler) to your webpack configuration and import a stylesheet file that has extension `.less` from the entry point of your Elmish application.
 
 ### Further Reading
 

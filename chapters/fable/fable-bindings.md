@@ -84,6 +84,8 @@ dotnet add package Fable.DateFunctions
 npm install --save date-fns
 ```
 
+This may sound worrisome since you have to know which versions of npm packages go with which versions of the nuget packages. I will say worry not about it because it is a problem that is pretty much solved. We will talk about the solution later in chapter five in section [Introducing Femto](../dev-flow/introducing-femto.md)
+
 ### Authoring Fable libraries and bindings
 
 This was just a glimpse of how Fable packages can integrate native javascript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
