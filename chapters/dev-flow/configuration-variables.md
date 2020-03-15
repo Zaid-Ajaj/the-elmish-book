@@ -81,7 +81,7 @@ open Fable.Core
 open Fable.Core.JsInterop
 
 /// Returns the value of a configured variable using its key.
-/// Retursn empty string when the value does not exist
+/// Retursn empty string when the value is not defined
 [<Emit("process.env[$0] ? process.env[$0] : ''")>]
 let variable (key: string) : string = jsNative
 ```

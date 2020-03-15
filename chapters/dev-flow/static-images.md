@@ -50,7 +50,7 @@ module.exports = (env, argv) => {
             hot: true,
             inline: true
         },
-        plugins: mode === 'development' ?
+        plugins: mode === "development" ?
             // development mode plugins
             [
                 new DotenvPlugin({
@@ -83,7 +83,7 @@ module.exports = (env, argv) => {
 
             {
                 test: /\.(png|jpe?g|gif)$/i,
-                use: 'file-loader'
+                use: "file-loader"
             }]
         }
     }
@@ -91,6 +91,7 @@ module.exports = (env, argv) => {
 ```
 With that in place, we can import images by their relative paths when they have extension `.png`, `.jpeg`, or `.gif` as specified in the regex of the `test` option. What I always do is create a helper module for referencing relative images as follows:
 ```fsharp
+[<RequireQualifiedAccess>]
 module Image =
     open Fable.Core.JsInterop
 
@@ -101,7 +102,7 @@ This module has one function: `Image.load` which is basically an alias for `impo
 To use this module, simply call it with the input being a relative path and it will give you the modified path of the image that itself can be used as input for `prop.src` as follows:
 ```fsharp
 Html.img [
-  prop.src ()
+  prop.src (Image.load "./fable_logo.png")
   prop.alt "Logo"
 ]
 ```

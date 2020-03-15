@@ -89,7 +89,7 @@ module.exports = (env, argv) => {
             hot: true,
             inline: true
         },
-        plugins: mode === 'development' ?
+        plugins: mode === "development" ?
             // development mode plugins
             [
                 new DotenvPlugin({
