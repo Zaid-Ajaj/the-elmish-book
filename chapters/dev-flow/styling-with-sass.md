@@ -164,16 +164,14 @@ Now all of Bulma modules are imported into the application. You can cherry pick 
 Only classes related to buttons will be available for use from the application. Learn more about Bulma modules in the [Modularity Overview](https://bulma.io/documentation/overview/modular) from the documentation.
 
 Moving on to the more interesting parts: overriding the defaults of Bulma. Even though the defaults of Bulma are quite nice to begin with, using custom color scheme will give your application a unique look and feel. Bulma has *a lot* of [variables](https://bulma.io/documentation/customize/variables/) and according to the docs: it says "To override any of these variables, just set them before importing Bulma". We can do that:
-```scss
-/* main.scss */
-
-// define custom variables and colors
+```css
+/* define custom variables and colors */
 $purple: #8A4D76;
 
-// override Bulma's variables
+/* override Bulma's variables */
 $primary: $purple;
 
-// import Bulma modules
+/* import Bulma modules*/
 @import "bulma/sass/utilities/_all.sass";
 @import "bulma/sass/elements/button.sass";
 ```
