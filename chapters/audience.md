@@ -8,7 +8,11 @@ There are great references to help you learn and easily get started with F#:
  - [F# for fun and profit][fun-and-profit]
  - [The F# Website][fsharp-website]
  - [Microsoft documentation][msdocs]
+ - [F# Slack][fsharp-slack]
+
+> I usually hang out on the #web channel in F# slack so I can answer your questions if you get stuck somewhere. Of course, there will many awesome people there as well to help you as well when I happen to be unavailable.
 
 [fun-and-profit]:https://fsharpforfunandprofit.com/
 [fsharp-website]:https://fsharp.org/learn.html
 [msdocs]:https://docs.microsoft.com/en-us/dotnet/fsharp/
+[fsharp-slack]:https://fsharp.org/guides/slack
