@@ -6,7 +6,7 @@ After the fundamentals, there are subjects I want to dive into and cover as sepe
 
 Here are the chapters I have in mind. They are listed in no particular order. I might make a poll at some point and ask the F# community what to write first.
 
-- **Writing Unit Tests** extends the project we have working to be able to write unit tests for Elmish programs, run them with live reloading during development and prepar them for CI server integration.
+- **Writing Unit Tests** extends the project we have working to be able to write unit tests for Elmish programs, run them with live reloading during development and prepare them for CI server integration.
 
 - **Full-Stack F# with SAFE** discusses how to build full-stack web applications entirely in F# following the tools combined in the [SAFE stack](https://safe-stack.github.io/docs/)
 - **Interop with Javascript** covers advanced interop techniques in Fable that allow us to write F# code which generates custom Javscript code and it able to talk to third-party Javascript libraries.
