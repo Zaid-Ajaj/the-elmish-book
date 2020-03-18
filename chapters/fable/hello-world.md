@@ -87,7 +87,7 @@ node --version
 ```
 After you have checked the versions, you can clone the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository from GitHub and compile the whole project
 ```bash
-cd fable-starter-template
+cd fable-getting-started
 npm install
 npm run build
 ```
