@@ -148,8 +148,8 @@ let update (msg: Msg) (state: State) =
         let nextCmd = Cmd.map InputTextMsg inputTextCmd
         nextState, nextCmd
 
-    | _, SwitchToCounter ->
-        let counterState, counterCmd = Counter.init()
+    | _, SwitchToCounter count ->
+        let counterState, counterCmd = Counter.init count
         let nextState = { state with CurrentPage = Page.Counter counterState }
         let nextCmd = Cmd.map CounterMsg counterCmd
         nextState, nextCmd
