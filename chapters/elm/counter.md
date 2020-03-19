@@ -118,7 +118,7 @@ This tells Elmish two things:
  - (1) I want to render the application on the element which has id equal to "elmish-app"
  - (2) I want to use React as the rendering engine
 
-For part (1), lets examine `public/index.html`, we will see the placeholder element that will be replaced by the application when it is bootstrapped.
+For part (1), lets examine `dist/index.html`, we will see the placeholder element that will be replaced by the application when it is bootstrapped.
 
 ```html {highlight: [10]}
 <!doctype html>
