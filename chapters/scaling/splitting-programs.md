@@ -403,7 +403,7 @@ And there we have it! Took us a while but we now have an `init` function, an `up
 
 ### Programs As Modules
 
-To inforce the concept that the two programs, the counter and input text, are totally separate, we can put their relavant program pieces into a *module*. In an Elmish application, we will put programs into their respective modules which expose a composable API to the outside world while hiding the small helper functions inside that module.
+To enforce the concept that the two programs, the counter and input text, are totally separate, we can put their relavant program pieces into a *module*. In an Elmish application, we will put programs into their respective modules which expose a composable API to the outside world while hiding the small helper functions inside that module.
 
 Let us move the pieces around and put them in modules: the counter goes into a `Counter` module and the input text goes into the `InputText` module. We will put the types for the state and messages in these modules as well so there will be no need for example to call the state of the counter as "CounterState" but rather simply `State` and refer to it from the parent as `Counter.State`. The same train of thought follows for `Counter.Msg`, `init`, `update` and `render`.
 
