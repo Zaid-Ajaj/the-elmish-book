@@ -47,7 +47,8 @@ When the F# project is compiled using Fable, a single JavaScript file called `ma
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="fable.ico" />
 </head>
-    <script src="main.js"></script>
+<body>
+  <script src="main.js"></script>
 </body>
 </html>
 ```
