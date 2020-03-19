@@ -2,7 +2,7 @@
 
 In the previous sections, we talked quite a bit about the `render` function. This function takes the current state of the application and creates the user interface from it. *Every* time the state changes, the `render` function is invoked and the user interface is updated accordingly.
 
-At this point, this `render` function has probably peaked your interest but you have put it at back of your mind as some "black box" doing the magic. In this section, we will try to remedy the situation and understand how Elmish updates the user interface and how it does so in a performant manner.
+At this point, this `render` function has probably piqued your interest but you have put it at back of your mind as some "black box" doing the magic. In this section, we will try to remedy the situation and understand how Elmish updates the user interface and how it does so in a performant manner.
 
 Let's start off with the *type signature* of the function:
 ```fsharp
