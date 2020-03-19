@@ -106,7 +106,7 @@ Using the steps above, we have a rough idea of how we should implement the `upda
 let update msg state =
   match msg with
   | SetNewTodo desc ->
-      { state with NewTodoDescription = desc }
+      { state with NewTodo = desc }
 
   | DeleteTodo todoId ->
       let nextTodoList =
@@ -125,7 +125,7 @@ let update msg state =
 
       { state with TodoList = nextTodoList }
 
-  | AddNewTodo when state.NewTodoDescription = "" ->
+  | AddNewTodo when state.NewTodo = "" ->
       state
 
   | AddTodo ->
@@ -139,11 +139,11 @@ let update msg state =
 
       let nextTodo =
         { Id = nextTodoId
-          Description = state.NewTodoDescription
+          Description = state.NewTodo
           Completed = false }
 
       { state with
-          NewTodoDescription = ""
+          NewTodo = ""
           TodoList = List.append state.TodoList [nextTodo] }
 ```
 Let's go through each event: `DeleteTodo`
@@ -188,15 +188,15 @@ Event `AddTodo` now has a bit more logic to it than from the previous section:
         Completed = false }
 
     { state with
-        NewTodoDescription = ""
+        NewTodo = ""
         TodoList = List.append state.TodoList [nextTodo] }
 ```
 First we calculate the identity that our next To-Do item will have, we do so by checking the current list of `Todo`'s, if the list is empty, then use 1 is the identity for the first item, otherwise we get the To-Do item that has the largest `Id` value using `List.maxBy` and we extract the `Id` from that item. Afterwards we create a new `Todo` using the `Id` we calculated and adding (appending) it the `TodoList` we already have in the state.
 
 ### Rendering The User Interface
 
-That was it for the `update`, now we consider the `render` function. Since the user interface is more or less the same as the in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Previously we had items rendered as simple `Html.listItem` elements:
-```fsharp {highlight: ['5-8']}
+That was it for the `update`, now we consider the `render` function. Since the user interface is more or less the same as the in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Previously we had items rendered as simple `Html.li` elements:
+```fsharp {highlight: ['4-7']}
 let todoList (state: State) (dispatch: Msg -> unit) =
   Html.ul [
     for todo in state.TodoList ->
