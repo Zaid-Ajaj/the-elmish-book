@@ -31,6 +31,6 @@ The command `npm start` will start the development server of webpack, compiles t
 
 > Learn how `npm start` relates to webpack development server in the paragraph [Npm Scripts](node-packages#npm-scripts) of section [Node.js Packages](node-packages)
 
-Once you start modifying your F# source code, only a subset of the project will be recompiled: the code you changed and other pieces and other pieces that depend on the code you changed. After a successful recompilation cycle, webpack will refresh the browser for you to see the changes you made.
+Once you start modifying your F# source code, only a subset of the project will be recompiled: the code you changed and other pieces that depend on the code you changed. After a successful recompilation cycle, webpack will refresh the browser for you to see the changes you made.
 
 These recompilation cycles are very fast, a lot faster than a full build and make for a pleasant development workflow. From now on, I will assume that we will be working in development mode.
