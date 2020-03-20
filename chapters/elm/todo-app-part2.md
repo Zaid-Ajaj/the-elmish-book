@@ -28,7 +28,7 @@ Alright, from the point of view of the `State` this looks like enough informatio
 ```fsharp
 type Msg =
   | SetNewTodo of string
-  | AddTodo
+  | AddNewTodo
   | ToggleCompleted of ???
   | DeleteTodo of ???
 ```
@@ -44,7 +44,7 @@ Now the events can carry information about a certain To-Do item only by using th
 ```fsharp
 type Msg =
   | SetNewTodo of string
-  | AddTodo
+  | AddNewTodo
   | ToggleCompleted of int
   | DeleteTodo of int
 ```
@@ -87,7 +87,7 @@ For example, an event `ToggleCompleted 4` means "Toggle the completed flag of th
     ]
   }
 
--> Trigger [AddTodo]
+-> Trigger [AddNewTodo]
 -> Next State =
   {
     NewTodo = "";
@@ -128,7 +128,7 @@ let update msg state =
   | AddNewTodo when state.NewTodo = "" ->
       state
 
-  | AddTodo ->
+  | AddNewTodo ->
       let nextTodoId =
         match state.TodoList with
         | [ ] -> 1
@@ -171,9 +171,9 @@ As for `ToggleCompleted`:
 ```
 We transform (map) each item in the list of our To-Do items and we check: if `todo` has the id of one we want to toggle, then we return a *new* To-Do item where the `Completed` field is toggled. Otherwise, just return the To-Do item unchanged. That's how we get a new list where one To-Do item is toggled. Next we return a new state with the new list we just created.
 
-Event `AddTodo` now has a bit more logic to it than from the previous section:
+Event `AddNewTodo` now has a bit more logic to it than from the previous section:
 ```fsharp
-| AddTodo ->
+| AddNewTodo ->
     let nextTodoId =
       match state.TodoList with
       | [ ] -> 1
