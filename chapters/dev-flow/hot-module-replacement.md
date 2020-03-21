@@ -128,7 +128,7 @@ What is going on there? It is a simple check: if we are in development mode, the
 Now adding just the HMR plugin is not enough to make our Elmish programs maintain their state while modifying the code. We have to modify the bootstrapping of the Elmish program a bit by first installing a package called `Fable.Elmish.HMR` like this:
 ```bash
 cd src
-dotent add package Fable.Elmish.HMR
+dotnet add package Fable.Elmish.HMR
 ```
 After installation completes, go to the `App.fs` F# file where the root program is boostrapped like this at the end of the file:
 ```fsharp
