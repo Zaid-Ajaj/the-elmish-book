@@ -18,7 +18,7 @@ increase.onclick = function(ev) {
 };
 
 decrease.onclick = function (ev) {
-    count = count + 1;
+    count = count - 1;
     countViewer.innerText = `Count is at ${count}`;
 };
 
