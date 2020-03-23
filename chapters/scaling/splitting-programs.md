@@ -548,7 +548,7 @@ module App =
           InputText.render state.InputText (InputTextMsg >> dispatch)
         ]
 ```
-The `App` module is the "outside" world of the other Elmish modules and it consumes the functions and types from these child modules/programs *without* knowing anything about their implementation, which is a key concept of modularity in Elmish applications: if you were to add more features in either modules, `Counter` or `InputText`, there would be required changes from the consumer `App` module point of view.
+The `App` module is the "outside" world of the other Elmish modules and it consumes the functions and types from these child modules/programs *without* knowing anything about their implementation, which is a key concept of modularity in Elmish applications: if you were to add more features in either modules, `Counter` or `InputText`, there would be no required changes from the consumer `App` module point of view.
 
 ### Bootstrapping The Application
 
