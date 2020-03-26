@@ -130,7 +130,7 @@ let inputField (state: State) (dispatch: Msg -> unit) = (* . . . *)
 ```
 This function can be used later inside the main `render` function and this way we are able to break down the user interface into smaller chunks instead of putting *everything* within the `render` function.
 
-As for the last part of the UI, we have to render the To-Do items themselves in a list. We do it using a list comprehension, mapping each `todo` in the `state.TodoList` into a `Html.listItem` element:
+As for the last part of the UI, we have to render the To-Do items themselves in a list. We do it using a list comprehension, mapping each `todo` in the `state.TodoList` into a `Html.li` element:
 ```fsharp {highlight: [4]}
 let todoList (state: State) (dispatch: Msg -> unit) =
   Html.ul [
