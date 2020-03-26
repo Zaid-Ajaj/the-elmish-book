@@ -24,7 +24,7 @@ The easiest way to use predefined styles is to include a `style` tag in your `in
 </body>
 </html>
 ```
-Then in your `render` function, you can assign the `.hidden` style to an element using the `ClassName` attribute, the following `render` function will create a hidden `div` element:
+Then in your `render` function, you can assign the `.hidden` style to an element using the `className` attribute, the following `render` function will create a hidden `div` element:
 ```fsharp
 let render state dispatch =
     Html.div [
@@ -32,7 +32,7 @@ let render state dispatch =
         prop.text "You can't see me"
     ]
 ```
-Of course, using `ClassName` you can apply multiple classes to your elements. For example, given the styles:
+Of course, using `className` you can apply multiple classes to your elements. For example, given the styles:
 ```html
 <style>
     .text-large { font-size: 18px }
