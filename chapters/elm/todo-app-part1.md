@@ -27,9 +27,9 @@ Now that we have the data model, we have to think about *which* events occur whi
 ```fsharp
 type Msg =
     | SetNewTodo of string
-    | AddTodo
+    | AddNewTodo
 ```
-Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box, that's why we need extra information `of string` which will carry the text that the user typed. `AddTodo` on the other hand will take the *current* value of `NewTodo` and add it to `TodoList`. Notice here that `AddTodo` doesn't require extra information because we already have the text of the `NewTodo` in our state.
+Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box, that's why we need extra information `of string` which will carry the text that the user typed. `AddNewTodo` on the other hand will take the *current* value of `NewTodo` and add it to `TodoList`. Notice here that `AddNewTodo` doesn't require extra information because we already have the text of the `NewTodo` in our state.
 
 In the back of your mind, try to imagine how the state evolves from the initial state as these events are triggered:
 ```bash
@@ -43,7 +43,7 @@ In the back of your mind, try to imagine how the state evolves from the initial 
 -> SetNewTodo "Learn Elmish"
 -> State becomes { NewTodo = "Learn Elmish"; TodoList = ["Learn F#"] }
 -> Now user clicks the `Add` button
--> Event `AddTodo` is triggered
+-> Event `AddNewTodo` is triggered
 -> State becomes { NewTodo = ""; TodoList = [ "Learn F#"; "Learn Elmish" ] }
 ```
 This gives you an idea of whether your state has enough information to evolve as these events are triggered and whether the events themselves carry enough information (event arguments) to be able to update the state. An example of such event arguments is the `string` in `SetNewTodo`.
@@ -59,15 +59,15 @@ let init() : State =
 let update msg state =
     match msg with
     | SetNewTodo todoText -> { state with NewTodo = todoText }
-    | AddTodo when state.NewTodo = "" -> state
-    | AddTodo ->
+    | AddNewTodo when state.NewTodo = "" -> state
+    | AddNewTodo ->
         { state with
             NewTodo = ""
             TodoList = List.append state.TodoList [state.NewTodo] }
 ```
 Notice that I am doing a bit of validation in the `update` function:
 ```fsharp
-| AddTodo when state.NewTodo = "" -> state
+| AddNewTodo when state.NewTodo = "" -> state
 ```
 This means that if the `NewTodo` is empty then return the state as is.
 
@@ -100,7 +100,7 @@ let inputField (state: State) (dispatch: Msg -> unit) =
           Html.input [
             prop.classes [ "input"; "is-medium" ]
             prop.valueOrDefault state.NewTodo
-            prop.onTextChange (SetNewTodo >> dispatch)
+            prop.onChange (SetNewTodo >> dispatch)
           ]
         ]
       ]
@@ -110,7 +110,7 @@ let inputField (state: State) (dispatch: Msg -> unit) =
         prop.children [
           Html.button [
             prop.classes [ "button"; "is-primary"; "is-medium" ]
-            prop.onClick (fun _ -> dispatch AddTodo)
+            prop.onClick (fun _ -> dispatch AddNewTodo)
             prop.children [
               Html.i [ prop.classes [ "fa"; "fa-plus" ] ]
             ]
@@ -120,7 +120,7 @@ let inputField (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
-We are using Bulma's [form fields](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo` and whenever the user types in, the `onTextChange` event is triggered which in turn triggers (i.e. "dispatches") the `SetNewTodo` event giving it the current value of the input. The add button is trivial, just dispatches the `AddTodo` event when clicked.
+We are using Bulma's [form fields](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo` and whenever the user types in, the `onChange` event is triggered which in turn triggers (i.e. "dispatches") the `SetNewTodo` event giving it the current value of the input. The add button is trivial, just dispatches the `AddNewTodo` event when clicked.
 
 Notice the part `Html.i [ prop.classes [ "fa"; "fa-plus" ] ]`. This is how we use icons from the Font Awesome library that we referenced in the beginning. Using the class `fa fa-plus` gives the "plus" icon. See [here](https://fontawesome.com/icons?d=gallery) all the icons you can use.
 
@@ -143,7 +143,6 @@ let todoList (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
-
 Now we can put the parts together as a whole to define the `render` function as follows:
 ```fsharp {highlight: [5,6,7]}
 let render (state: State) (dispatch: Msg -> unit) =

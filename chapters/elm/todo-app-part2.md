@@ -263,9 +263,11 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
 
 The layout can be visualized roughly as follows:
 
-<resolved-image source="/images/elm/render-todo-layout.png" />
-
-> Yes, this is MS Paint.
+<div style="width:100%">
+  <div style="margin: 0 auto; width:70%;">
+    <resolved-image source="/images/elm/render-todo-layout.png" />
+  </div>
+</div>
 
 To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two columns. But in the example above, I want the description to have more space, so I use the `is-narrow` class on the second column such that the second column only takes the space it needs for the two buttons and the first column will automatically take up the rest of the space for the To-Do item description.
 
