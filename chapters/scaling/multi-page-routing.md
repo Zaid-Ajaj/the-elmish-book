@@ -8,7 +8,7 @@ Previously on [Understanding Data Communication](understanding-data-communicatio
   </div>
 </div>
 
-In this section, we will step it up a notch by taking the example above and introducing URL routing between the pages. This means, not only information is flowing from one page to another, but also the application as a whole can switch pages from URL changes and propagete the information necessary for the initialization of another page. This time, the requiements will reflect those of a real-world application as follows:
+In this section, we will step it up a notch by taking the example above and introducing URL routing between the pages. This means, not only information is flowing from one page to another, but also the application as a whole can switch pages from URL changes and propagate the information necessary for the initialization of another page. This time, the requirements will reflect those of a real-world application as follows:
  1. The application starts at the *Home* page where it shows a generic message to greet anonymous users such as "Hello, guest". This page is at the root `/` URL.
  2. The Home page has a link that navigates to the *Login* page where an admin can login, just like in the example above. This page is at the `/login` URL.
  3. Once a user has logged in, they are redirected back to the landing page at the root `/` URL where the greeting message now refers to the username of that user who logged in. I.e. `"Hello, {username}"`.
@@ -20,9 +20,9 @@ In this section, we will step it up a notch by taking the example above and intr
 
 ### Page Accessibility With Respect To Users
 
-The first thing we have to think about when it comes to applications that involve some users logging in, is detemining which pages are secured that require users to be logged in, which pages don't (i.e. allow anonymous users) and which pages allow both.
+The first thing we have to think about when it comes to applications that involve some users logging in, is determining which pages are secured that require users to be logged in, which pages don't (i.e. allow anonymous users) and which pages allow both.
 
-The requirements (1) and (3) tell us that the Home should be available for both anonymous and logged in users, showing different information and different UI elements in each case. Requirement (6) shows that the Overview page is only accessible after a user has succesfully logged in.
+The requirements (1) and (3) tell us that the Home should be available for both anonymous and logged in users, showing different information and different UI elements in each case. Requirement (6) shows that the Overview page is only accessible after a user has successfully logged in.
 
 What about the Login page, though? Of course, anonymous users should always be allowed to view the Login. However, once they logged in, should they be allowed to go to the login page again (if they happen to manually change the URL in the address bar)? There are a couple of options. First of all, you can simply not allow logged in users to go the Login page and instead redirect them immediately to the Home page. Another option is let them login again, in which case the user of the application is replaced with that last user who logged in. I think both options are fine, for our sample application, we will just allow everyone to view the Login page since that still adheres to the requirements above. In summary, we have three pages:
 ```fsharp
@@ -77,7 +77,7 @@ type State =
 ```
 Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. Another curious case of URL is the `Logout` case. We are implementing it here such that if the application navigated to the `/logout` URL, then the user of the application will be reset back to `Anonymous`. Of course, I could have implement a specialized case in the `Msg` called `Logout` but I want to follow a simple rule for consistency: Page changes are always driven URL changes. This includes logging out.
 
-We are also assuming we have to pages, `Login` and `Overview` implemented as child programs of `Home` in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user (requires a user for initialization). We will not be focussing a lot on the `Login` and `Overview` modules because the interesting stuff are happening in the parent `Home` that is managing which page to show based on the URL and how to propagate the information based on whether or not a user has logged in.
+We are also assuming we have two pages, `Login` and `Overview` implemented as child programs of `Home` in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user (requires a user for initialization). We will not be focussing a lot on the `Login` and `Overview` modules because the interesting stuff are happening in the parent `Home` that is managing which page to show based on the URL and how to propagate the information based on whether or not a user has logged in.
 
 As for the `Msg` type, it can be modelled as follows in order to be able to handle messages from the child programs as well as react to URL changes:
 ```fsharp
@@ -204,7 +204,7 @@ Similar to the way we handled the changed `Url` event in `init()`, we are checki
 
 It is important to realize that even though we are *re-initializing* the `Ovewview` program by calling its `init` function, there are more things we can do. For example, we can check that if the current page is already `Page.Overview`, then we do not re-initialize it and instead trigger a message to reload a specific part of the information. This way, that page doesn't lose its state unnecessarily. Just remember that you have full control over how these child programs are initialized or updated, this is the flexibility of The Elm Architecture.
 
-Now we can implement the final part which is the `render` function. First of all, let us implement a smaller rendering function to show the user interface of the `Home` page itself. I will call it `index` bacause we will call that function when `state.CurrentPage = Page.Index`
+Now we can implement the final part which is the `render` function. First of all, let us implement a smaller rendering function to show the user interface of the `Home` page itself. I will call it `index` because we will call that function when `state.CurrentPage = Page.Index`
 
 This page simply checks whether the user of application has yet logged in or not, then proceeds to welcome the user by their username if they are logged in or welcoming an anonymous guest when a user has yet to login:
 ```fsharp
