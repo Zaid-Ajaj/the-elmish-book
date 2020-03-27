@@ -2,10 +2,10 @@
 
 Throughout the book, we had been using primarily two templates to work with Fable front-end projects: [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) and [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started). The former scaffolds a simple plain Fable project to work in the browser and the latter is the basic Elmish template that we have been using in chapters 2, 3 and 4.
 
-When I introduced these templates, I mentioned that both of them are made for the purpose of *learning* and that they shouldn't for production environments. The primary reason was to keep the build configuration at a minimum so that we don't get too distracted with these aspects of the front-end development. However, the bigger our applications get, more advanced and fine-tuned build configuration are required both for development and production environments. The template as it as now suffers from many problems, let us go through a couple of them.
+When I introduced these templates, I mentioned that both of them are made for the purpose of *learning* and that they shouldn't be used for production environments. The primary reason was to keep the build configuration at a minimum so that we don't get too distracted with these aspects of the front-end development. However, the bigger our applications get, more advanced and fine-tuned build configuration are required both for development and production environments. The template as it is now suffers from many problems, let us go through a couple of them.
 
 ### Running Environment Specific Code
-In many scenarios, we want the ablility to execute different pieces of the code when running the environment in different environments: primarily development and production. For example, we want to introduce logging state changes of Elmish application to the console while in development but disable it in production.
+In many scenarios, we want the ability to execute different pieces of the code when running the environment in different environments: primarily development and production. For example, we want to introduce logging state changes of Elmish application to the console while in development but disable it in production.
 
 ### Large bundle size
 
@@ -13,7 +13,7 @@ When we compile the project using `npm run build`, the size of the generated Jav
 
 ### Hot module replacement
 
-Also known as HMR for short, is one of the most important features required during development: it is the ability to see the changes you make to the code live **without** fully refreshing the page you are working on! This means if you tuning the user interface on a page that required you to login first, then you wouldn't need to login again to see your changes whenever you update the UI. Instead, the state of the application is reserved and only the pieces of code are reloaded that were changed. This allows for really short feedback cycles and makes prototyping easier so that you can quickly see the results of your code.
+Also known as HMR for short, is one of the most important features required during development: it is the ability to see the changes you make to the code live **without** fully refreshing the page you are working on! This means if you are tuning the user interface on a page that required you to login first, then you wouldn't need to login again to see your changes whenever you update the UI. Instead, the state of the application is reserved and only the pieces of code are reloaded that were changed. This allows for really short feedback cycles and makes prototyping easier so that you can quickly see the results of your code.
 
 ### Using Static Assets
 
