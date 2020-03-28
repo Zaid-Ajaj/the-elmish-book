@@ -57,7 +57,7 @@ Let's go through some example Fable bindings and explain on which target they wo
 
 The first example is one we used in the very first [Hello World](hello-world.md) application, the package `Fable.Browser.Dom`. Using this package, we were able to interact with the `document` object and manipulate UI elements on the page. `Fable.Browser.Dom` is a binding for Type 2 javascript code. This package is one of the family of Fable packages under the [Fable.Browser](https://www.nuget.org/packages?q=Fable.Browser) namespace designed to be used in the browser.
 
-The packages [Thoth.Json](https://github.com/thoth-org/Thoth.Json) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson), two general-purpose libraries for working with JSON are bindings of Type 1 because they both use the `JSON.*` module under the hood. These two can be used both inside the browser and Node.js runtimes.
+The packages [Thoth.Json](https://github.com/thoth-org/Thoth.Json) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson), two general-purpose libraries for working with JSON are bindings of Type 1 because they both use the `JSON.*` module under the hood. These two can be used both inside the browser and Node.js runtime.
 
 <resolved-image source="/images/fable/type-one.png" />
 
@@ -69,7 +69,7 @@ As for Type 3 package, there is the package [Fable.Node](https://github.com/fabl
 
 <resolved-image source="/images/fable/type-three.png" />
 
-Type 4 packages are by far the most common bindings in Fable's ecosystem, simply because there are literally millions of useful packages distributed to npm that we want to use in Fable applications. These are further divided into those packages that can be used inside a browser and those that can be used in Node.js runtimes.
+Type 4 packages are by far the most common bindings in Fable's ecosystem, simply because there are literally millions of useful packages distributed to npm that we want to use in Fable applications. These are further divided into those packages that can be used inside a browser and those that can be used in Node.js runtime.
 
 <resolved-image source="/images/fable/type-four.png" />
 

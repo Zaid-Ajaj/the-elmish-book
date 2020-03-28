@@ -4,7 +4,7 @@ In the previous section when we were [wiring up the pages](understanding-data-co
 - Intercept the event without propagating it further down to child programs.
 - Inspect the event and propagate it to the child program for further processing.
 
-The App program intercepted the event from the Login page when a user has succesfully logged in and decided not to propagate that event further down to the Login program. It makes to do so because we switched the currently active page to Home when that event occured so there is no point from having Login process the event any further. We can take this as a high-level guideline: when intercepting events from child programs, we do not have to propagate these events down if we are switching the currently active page.
+The App program intercepted the event from the Login page when a user has successfully logged in and decided not to propagate that event further down to the Login program. It makes to do so because we switched the currently active page to Home when that event occurred so there is no point from having Login process the event any further. We can take this as a high-level guideline: when intercepting events from child programs, we do not have to propagate these events down if we are switching the currently active page.
 
 Although this makes sense from the parent program perspective, it feels weird from the child program point of view where it expects that the events will be processed no matter which event that is.
 

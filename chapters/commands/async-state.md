@@ -7,7 +7,7 @@ If your program happens to work with multiple asynchronous operations, then your
 type Msg =
   // messages for Operation 1 -> might fail
   | StartOperationOne
-  | FinishOperationOneSuccesfully of ResultOfOne
+  | FinishOperationOneSuccessfully of ResultOfOne
   | FinishOperationOneWithError of exn
   // messages for Operation 2 -> always succeeds
   | StartOperationTwo
@@ -15,7 +15,7 @@ type Msg =
   // messages for Operation N
   | (* etc. *)
 ```
-The union cases `StartOperationOne`, `FinishOperationOneSuccesfully` and `FinishOperationOneWithError` are associated with one operation while cases `StartOperationTwo` and `FinishOperationTwo` are associated with another. As you can see, modelling asynchronous events this way can get really messy, especially as your program grows larger and larger. In order not to lose track of the big picture, it is better to model these events associated with an asynchronous operation as a single type. Before we do that, let's think about the types of asynchronous operations we care about:
+The union cases `StartOperationOne`, `FinishOperationOneSuccessfully` and `FinishOperationOneWithError` are associated with one operation while cases `StartOperationTwo` and `FinishOperationTwo` are associated with another. As you can see, modelling asynchronous events this way can get really messy, especially as your program grows larger and larger. In order not to lose track of the big picture, it is better to model these events associated with an asynchronous operation as a single type. Before we do that, let's think about the types of asynchronous operations we care about:
  - (1) Operations that always succeed (for example, a delay)
  - (2) Operations that fail
 
@@ -101,7 +101,7 @@ let update msg state =
            change the loading state into true *)
 
     | GenerateRandomNumber (Finished (Ok randomNumber)) ->
-        (* operation finished succesfully
+        (* operation finished successfully
            do something with randomNumber *)
 
     | GenerateRandomNumber (Finished (Error error)) ->
@@ -222,7 +222,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         | Resolved (Ok number) ->
             Html.h1 [
                 prop.style [ style.color.green ]
-                prop.text (sprintf "Succesfully generated random number: %f" number)
+                prop.text (sprintf "Successfully generated random number: %f" number)
             ]
 
         | Resolved (Error errorMsg) ->

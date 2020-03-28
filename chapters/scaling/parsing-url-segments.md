@@ -80,12 +80,12 @@ let activePage =
   | _ ->
     Html.h1 "Not Found"
 ```
-Notice here that the order matters of the tuples in the list we are pattern matching against. So we match against the different ordering in which the paramters may appear:
+Notice here that the order matters of the tuples in the list we are pattern matching against. So we match against the different ordering in which the parameters may appear:
  - `/search?query={query}&limit={limit:int}`
  - `/search?limit={limit:int}&query={query}`
  - `/search?query={query}`
 
-Of course you could work around the ordering by sorting the parameters by their keys using `List.sortBy fst paramters`, then matching the patterns from this sorted list. However, you could always write a function that takes that list and tries to turn it into a record that contains the parameter information. This function can for example return `Result<SearchParameters, string>` where `SearchParamters` is defined as follows:
+Of course you could work around the ordering by sorting the parameters by their keys using `List.sortBy fst parameters`, then matching the patterns from this sorted list. However, you could always write a function that takes that list and tries to turn it into a record that contains the parameter information. This function can for example return `Result<SearchParameters, string>` where `SearchParameters` is defined as follows:
 ```fsharp
 type SearchParameters =
     { query : string

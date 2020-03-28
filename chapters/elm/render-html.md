@@ -215,7 +215,7 @@ let renderUserIcon user =
   | None ->
       renderSignInButton
 ```
-Here we check if the user is logged in, if that is the case we render his or her profile image and a logout button, otherwise there is no loggin user so we render the sign-in button. In the next section we will take a closer look into the many ways we can implement conditional rendering.
+Here we check if the user is logged in, if that is the case we render his or her profile image and a logout button, otherwise there is no logged in user so we render the sign-in button. In the next section we will take a closer look into the many ways we can implement conditional rendering.
 
 ### Feliz vs. Fable.React Comparison
 
@@ -232,7 +232,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 ```
 The snippet above uses the DSL provided in `Fable.React` library where there are some syntactic differences than the snippets written in Feliz.
  - 1) Requires *two lists* for each element, one for the properties and one for the children.
- - 2) Requires convertion functions to React elements `str` and `ofInt` when you need render primitive values such as `string` and `int`
+ - 2) Requires conversion functions to React elements `str` and `ofInt` when you need render primitive values such as `string` and `int`
  - 3) Has all these functions for Html elements and properties *globally* available
  - 4) CSS attributes are not entirely type-safe
 

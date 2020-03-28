@@ -33,10 +33,10 @@ type State = {
 
 type Msg =
     | GenerateRandomNumber
-    | RandomNumberSuccesfullyGenerated of float
+    | RandomNumberSuccessfullyGenerated of float
     | FailedToGenerateRandomNumber of exn
 ```
-Here the event `GenerateRandomNumber` issues the asynchronous command, from which either `RandomNumberSuccesfullyGenerated` or `FailedToGenerateRandomNumber` will get dispatched depending on whether the asynchronous operation in the command fails or succeeds.
+Here the event `GenerateRandomNumber` issues the asynchronous command, from which either `RandomNumberSuccessfullyGenerated` or `FailedToGenerateRandomNumber` will get dispatched depending on whether the asynchronous operation in the command fails or succeeds.
 
 The `init` is straightforward:
 ```fsharp
@@ -57,7 +57,7 @@ let update msg state =
             do! Async.Sleep 1000
             let random = rnd.NextDouble()
             if random > 0.5
-            then return RandomNumberSuccesfullyGenerated random
+            then return RandomNumberSuccessfullyGenerated random
             else return! failwithf "Could not generate a 'good' random number: %f" random
         }
 
@@ -66,7 +66,7 @@ let update msg state =
 
         nextState, nextCmd
 
-    | RandomNumberSuccesfullyGenerated number ->
+    | RandomNumberSuccessfullyGenerated number ->
         let nextState = { state with Loading = false; Value = Ok number }
         nextState, Cmd.none
 
@@ -90,7 +90,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         | Ok number ->
             Html.h1 [
                 prop.style [ style.color.green ]
-                prop.text (sprintf "Succesfully generated random number: %f" number)
+                prop.text (sprintf "Successfully generated random number: %f" number)
             ]
 
         | Error errorMsg ->
@@ -124,7 +124,7 @@ Let's refactor the program above to eliminate the use of exceptions. First of al
 ```fsharp {highlight: [4]}
 type Msg =
   | GenerateRandomNumber
-  | RandomNumberSuccesfullyGenerated of float
+  | RandomNumberSuccessfullyGenerated of float
   | FailedToGenerateRandomNumber of string
 ```
 Next, the async operation `randomOp` can refactored into:
@@ -134,7 +134,7 @@ let randomOp : Async<Msg> = async {
     do! Async.Sleep 1000
     let random = rnd.NextDouble()
     if random > 0.5 then
-      return RandomNumberSuccesfullyGenerated random
+      return RandomNumberSuccessfullyGenerated random
     else
       let errorMsg = (sprintf "Could not generate a 'good' random number: %f" random)
       return FailedToGenerateRandomNumber errorMsg
@@ -153,7 +153,7 @@ let update msg state =
             do! Async.Sleep 1000
             let random = rnd.NextDouble()
             if random > 0.5 then
-              return RandomNumberSuccesfullyGenerated random
+              return RandomNumberSuccessfullyGenerated random
             else
               let errorMsg = (sprintf "Could not generate a 'good' random number: %f" random)
               return FailedToGenerateRandomNumber errorMsg
@@ -164,7 +164,7 @@ let update msg state =
 
         nextState, nextCmd
 
-    | RandomNumberSuccesfullyGenerated number ->
+    | RandomNumberSuccessfullyGenerated number ->
         let nextState = { state with Loading = false; Value = Ok number }
         nextState, Cmd.none
 
@@ -212,7 +212,7 @@ let fromAsyncSafe (operation: Async<'t>) (handler: Result<'t, exn> -> 'msg) : Cm
 Notice here that operation `Async<'t>` doesn't necessarily return a message, instead it returns a value that the `handler` will turn into a message which is dispatch subsequently. The same happens if an exception is thrown, `handler` turns the error into a message that gets dispatched afterwards. Here is an example of using the function:
 ```fsharp
 let handler = function
-    | Ok number -> RandomNumberSuccesfullyGenerated number
+    | Ok number -> RandomNumberSuccessfullyGenerated number
     | Error ex -> FailedToGenerateRandomNumber ex.Message
 
 let randomOp : Async<float> =

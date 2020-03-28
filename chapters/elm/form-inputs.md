@@ -187,7 +187,7 @@ let tryParseInt (input: string) : Validated<int> =
 ```
 The rest of the `render` function falls into place:
 ```fsharp
-let validtedTextColor validated =
+let validatedTextColor validated =
     match validated.Parsed with
     | Some _ -> color.green
     | None -> color.crimson
@@ -202,7 +202,7 @@ let render state dispatch =
       ]
 
       Html.h1 [
-        prop.style [ style.color (validtedTextColor state.NumberInput) ]
+        prop.style [ style.color (validatedTextColor state.NumberInput) ]
         prop.text state.NumberInput.Raw
       ]
     ]
@@ -230,7 +230,7 @@ Now we can't type any non-numeric values into the input field and the browser ad
 
 ### Check Boxes
 
-Another type of input element is a check box. Check box inputs correspond to boolean fields of the state. Assume we want to extend the example we have to the following sample application that implements a state toggle that will detemine whether or not the resulting text from text box is upper case:
+Another type of input element is a check box. Check box inputs correspond to boolean fields of the state. Assume we want to extend the example we have to the following sample application that implements a state toggle that will determine whether or not the resulting text from text box is upper case:
 
 <resolved-image source="/images/elm/checkbox-input.gif" />
 

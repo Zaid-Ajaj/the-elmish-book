@@ -20,7 +20,7 @@ let title : ReactElement = Html.h1 "Happy coding!"
 ```
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
 
-[React.js](https://reactjs.org) is a native javascript library and Fable.React is the binding for it that allows us to use React from Fable and Elmish applications. Feliz is a library built on top of Fable.React and provides an alternaltive DSL to the one included by default in Fable.React.
+[React.js](https://reactjs.org) is a native javascript library and Fable.React is the binding for it that allows us to use React from Fable and Elmish applications. Feliz is a library built on top of Fable.React and provides an alternative DSL to the one included by default in Fable.React.
 
 </div>
 

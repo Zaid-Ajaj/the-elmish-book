@@ -4,7 +4,7 @@ You might be wondering why we made the trivial counter application in the previo
 
 ### Fable is a general-purpose compiler
 
-Assuming you have done any JavaScript developement before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure javascript to implement the same app it would look something like this:
+Assuming you have done any JavaScript development before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure javascript to implement the same app it would look something like this:
 ```js
 const increase = document.getElementById("increase")
 const decrease = document.getElementById("decrease")
@@ -38,7 +38,7 @@ In the previous example, we used two different constructs: mutability and `async
 
 ### F# Async in Javascript
 
-As for `async`, it is natural for Fable to support such construct because javascript runtimes make heavy use of continuations, also known as callbacks. In fact, many if not all native javascript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in javascript into an async "sleep" function, you can write the following:
+As for `async`, it is natural for Fable to support such construct because javascript runtime make heavy use of continuations, also known as callbacks. In fact, many if not all native javascript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in javascript into an async "sleep" function, you can write the following:
 
 ```fsharp
 open Fable.Core

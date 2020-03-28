@@ -31,7 +31,7 @@ setTimeout(() => {
     }, 1000)
 }, 1000)
 ```
-Here, in every callback, we trigger another `setTimout` operation in the callback of the one before it in order to run the next print statement in sequence and we end up with the infamous "callback pyramid of hell" of Javascript where code starts to get really hard to read and confusing because of the nesting of callbacks.
+Here, in every callback, we trigger another `setTimeout` operation in the callback of the one before it in order to run the next print statement in sequence and we end up with the infamous "callback pyramid of hell" of Javascript where code starts to get really hard to read and confusing because of the nesting of callbacks.
 
 You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world Javascript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs and also applies to any callback based API such that of the file system when running Javascript in a Node.js environment.
 
@@ -127,7 +127,7 @@ let update msg state =
     match msg with
     | LoadLoremIpsum Started ->
         let nextState = { state with LoremIpsum = InProgress }
-        let loadLoremInpsum =
+        let loadLoremIpsum =
             async {
                 let request = { url = "/lorem-ipsum.txt"; method = "GET"; body = "" }
                 let! response = httpRequest request
@@ -136,7 +136,7 @@ let update msg state =
                 else return LoadLoremIpsum (Finished (Error "Could not load the content"))
             }
 
-        nextState, Cmd.fromAsync loadLoremInpsum
+        nextState, Cmd.fromAsync loadLoremIpsum
 
     | LoadLoremIpsum (Finished result) ->
         let nextState = { state with LoremIpsum = Resolved result }
@@ -153,7 +153,7 @@ In our implementation of `httpRequest : Request -> Async<Response>` we had defin
 type Request = { url: string; method: string; body: string }
 type Response = { statusCode: int; body: string }
 ```
-We also talked about their limitations such as the fact that they don't account for request and response headers, nor do they account for different request and response body types, i.e. string vs raw binary blob etc. Of course, these `Request` and `Response` types where used for demonstration purposes. Going forward, we will be using a library called [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) that fully supports operations of `XMLHttpRequest` implemented with F# asynchronous expressions that can be easily incorporated in our Elmish applicatios.
+We also talked about their limitations such as the fact that they don't account for request and response headers, nor do they account for different request and response body types, i.e. string vs raw binary blob etc. Of course, these `Request` and `Response` types where used for demonstration purposes. Going forward, we will be using a library called [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) that fully supports operations of `XMLHttpRequest` implemented with F# asynchronous expressions that can be easily incorporated in our Elmish applications.
 
 Let us see the library in action replacing the `httpRequest` we used in the above `update` function. First of all, install the library from nuget:
 ```
@@ -167,7 +167,7 @@ let update msg state =
     match msg with
     | LoadLoremIpsum Started ->
         let nextState = { state with LoremIpsum = InProgress }
-        let loadLoremInpsum =
+        let loadLoremIpsum =
             async {
                 let! (statusCode, responseText) = Http.get "/lorem-ipsum.txt"
                 if statusCode = 200
@@ -175,7 +175,7 @@ let update msg state =
                 else return LoadLoremIpsum (Finished (Error "Could not load the content"))
             }
 
-        nextState, Cmd.fromAsync loadLoremInpsum
+        nextState, Cmd.fromAsync loadLoremIpsum
 
     | LoadLoremIpsum (Finished result) ->
         let nextState = { state with LoremIpsum = Resolved result }
@@ -191,7 +191,7 @@ let update msg state =
     match msg with
     | LoadLoremIpsum Started ->
         let nextState = { state with LoremIpsum = InProgress }
-        let loadLoremInpsum =
+        let loadLoremIpsum =
             async {
                 let! response =
                     Http.request "/lorem-ipsum.txt"
@@ -203,13 +203,13 @@ let update msg state =
                 else return LoadLoremIpsum (Finished (Error "Could not load the content"))
             }
 
-        nextState, Cmd.fromAsync loadLoremInpsum
+        nextState, Cmd.fromAsync loadLoremIpsum
 
     | LoadLoremIpsum (Finished result) ->
         let nextState = { state with LoremIpsum = Resolved result }
         nextState, Cmd.none
 ```
-To learn more, refere to the documentation of [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) available in the README section of the repository. From now on, we will be using this library when it comes to making HTTP requests.
+To learn more, refer to the documentation of [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) available in the README section of the repository. From now on, we will be using this library when it comes to making HTTP requests.
 
 ### `Fable.Fetch` as an alternative to `Fable.SimpleHttp`
 
@@ -221,7 +221,7 @@ However, I would still recommend using `Fable.SimpleHttp` over `Fable.Fetch` and
 
 > No, not because I built `Fable.SimpleHttp` thank you very much ;)
 
-First of all, Promises follow different semantics (meaning) than `async` expressions of F#: once a value of type `Promise<'t>` is created which is basically a description of an asynchronous operation just like that of `Async<'t>`, the operation is immediately started. This is a different behavior than that of `Async<'t>` with which you need to initiate the asynchronous operation yourself by calling `Async.StartImmediate`. This behavior of Promises is usually referred to as "hot" tasks as opposed to the "cold" tasks of F# with `Async<'t>` expressions that separate the instantiation of the asynchronous operation and actually starting it. This is not to say that "`Async<'t>` is better than `Promise<'t>`" but it is a difference that will confuse most F# developers at first sight, especially those who will assume similar execution semantincs when using `Promise<'t>`.
+First of all, Promises follow different semantics (meaning) than `async` expressions of F#: once a value of type `Promise<'t>` is created which is basically a description of an asynchronous operation just like that of `Async<'t>`, the operation is immediately started. This is a different behavior than that of `Async<'t>` with which you need to initiate the asynchronous operation yourself by calling `Async.StartImmediate`. This behavior of Promises is usually referred to as "hot" tasks as opposed to the "cold" tasks of F# with `Async<'t>` expressions that separate the instantiation of the asynchronous operation and actually starting it. This is not to say that "`Async<'t>` is better than `Promise<'t>`" but it is a difference that will confuse most F# developers at first sight, especially those who will assume similar execution semantics when using `Promise<'t>`.
 
 The second reason which is of most importance is that the `fetch` API mainly uses *exceptions* for error handling and so does `Fable.Fetch` as opposed to using standards of handling HTTP errors by checking the status code of the response which is what `Fable.SimpleHttp` does by never throwing an exception and always returning a status code and a response text (or a full response value with all the metadata when you use `Http.request`).
 
