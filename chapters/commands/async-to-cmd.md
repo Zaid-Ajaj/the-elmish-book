@@ -89,7 +89,7 @@ let delayedMsg (delay: int) (msg: Msg) : Cmd<Msg> =
 ```
 Here `delayedMsg` is rewritten in terms of another function `delayedSleepMsg`. That function takes two inputs of type `Async<unit>` and `Msg`, simply dispatching that `Msg` from the input parameter after `sleep` finishes.
 
-Having two parameteres of type `Async<unit>` and `Msg` being separate doesn't seem very useful. It is not generic enough that you can **reuse** it since your `Async` expressions usually are returning some value other than `unit`. In fact, in Elmish applications you would want your asynchronous operations to return `Msg`. That way when you convert them to `Cmd<Msg>`, that returned message is dispatched and processed further by the application.
+Having two parameters of type `Async<unit>` and `Msg` being separate doesn't seem very useful. It is not generic enough that you can **reuse** it since your `Async` expressions usually are returning some value other than `unit`. In fact, in Elmish applications you would want your asynchronous operations to return `Msg`. That way when you convert them to `Cmd<Msg>`, that returned message is dispatched and processed further by the application.
 
 Let us combine both parameters of `Async<unit>` and `Msg` into a single asynchronous expression `Async<Msg>`. While we are at it, we can also rename the function `delayedSleepMsg` into something more generic like `fromAsync` because we are effectively turning an `Async<Msg>` into `Cmd<Msg>`:
 ```fsharp

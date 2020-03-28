@@ -2,9 +2,9 @@
 
 Very early on in chapter 1, we learnt about [Development Mode](../fable/development-mode) via the webpack development server. This server runs our front-end application and watches for changes in source files. Once any change is detected, only that part of the application and its dependencies are recompiled really fast and the page is refreshed automatically. However, this automatic refresh of the page is not optimal because it is a full-refresh: the application loses its state and data when the page refreshes itself.
 
-Image you have an application where you first have to login to get to the page you are currently working on. Everytime you make a change in the source code like changing the font size of some element, the page is refreshed and you are reset back to the login page where you have to login again to see your changes.
+Image you have an application where you first have to login to get to the page you are currently working on. Every time you make a change in the source code like changing the font size of some element, the page is refreshed and you are reset back to the login page where you have to login again to see your changes.
 
-Here is where *hot module replacement* (HMR for short) comes into play. Instead of refreshing the entire page when some piece of code changes, only that piece is recompiled and *re-executed seperately* to reflect the changes without needing a full page refresh.
+Here is where *hot module replacement* (HMR for short) comes into play. Instead of refreshing the entire page when some piece of code changes, only that piece is recompiled and *re-executed separately* to reflect the changes without needing a full page refresh.
 
 Consider the following example **without** HMR where changing the source code resets the state:
 
@@ -26,7 +26,7 @@ As you can see, changing certain pieces of the user interface updates automatica
 
 Now that I have hyped up this feature, let us see how to enable it in our project. Hot Module Replacement is enabled just a webpack plugin. Just like with dotenv files, we will a plugin to webpack for HMR. However, this time it will be a *development-specific* plugin: only available while developing because we don't want to enable it with our production builds since it adds some extra code to the bundle to communicate with webpack development server via web sockets.
 
-We can add import by first importing the webapck module in the beginning of the `webpack.config.js`file
+We can add import by first importing the webpack module in the beginning of the `webpack.config.js`file
 ```js
 var webpack = require("webpack");
 ```
@@ -130,7 +130,7 @@ Now adding just the HMR plugin is not enough to make our Elmish programs maintai
 cd src
 dotnet add package Fable.Elmish.HMR
 ```
-After installation completes, go to the `App.fs` F# file where the root program is boostrapped like this at the end of the file:
+After installation completes, go to the `App.fs` F# file where the root program is bootstrapped like this at the end of the file:
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"

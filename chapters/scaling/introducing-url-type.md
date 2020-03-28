@@ -45,7 +45,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     Router.application [ activePage ]
   ]
 ```
-Now this is a much cleaner solution. However, it is very important to understand how the `Url` correlates to the `Page` type. I have seen frameworks that to model both in one type and make a mess out of it. The `Url` is not to be mapped one-to-one into a `Page` intance, but rather it should contain enough information for the **initialization** of a `Page`. Suppose I have the following types:
+Now this is a much cleaner solution. However, it is very important to understand how the `Url` correlates to the `Page` type. I have seen frameworks that to model both in one type and make a mess out of it. The `Url` is not to be mapped one-to-one into a `Page` instance, but rather it should contain enough information for the **initialization** of a `Page`. Suppose I have the following types:
 ```fsharp
 type Page =
   | User of User.State

@@ -192,7 +192,7 @@ The resulting application becomes:
   </div>
 </div>
 
-The line `IncrementDelayed when state.Loading -> state, Cmd.none` is very common in Elmish application, many times you want certain events such as `IncrementDelayed` to have no effect in certain state conditions such when there is an ongoing asynchronous operation which is why you "trap" the state into the "empty transition" or the "sink transition" that does nothing to the state and does not execute any futher commands.
+The line `IncrementDelayed when state.Loading -> state, Cmd.none` is very common in Elmish application, many times you want certain events such as `IncrementDelayed` to have no effect in certain state conditions such when there is an ongoing asynchronous operation which is why you "trap" the state into the "empty transition" or the "sink transition" that does nothing to the state and does not execute any further commands.
 
 ### Conclusion
 

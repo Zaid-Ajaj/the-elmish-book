@@ -29,7 +29,7 @@ With these types in mind, we can model the type of the command itself. Remember 
 let httpRequest (request: Request) (responseHandler: Response -> 'Msg) : Cmd<'Msg> =
     (* . . . *)
 ```
-As you can see, `httpRequest` is a function that takes in a `Request` as input along with a `reponseHandler` that *maps* the resulting `Response` into a message that is dispatched into our Elmish application. The function returns a command of that message type that is mapped from the `Response`. Basically this `httpRequest` function is saying: "Give me two things: the HTTP request you want to send as well as a way to map the response into a message *when* the response is available". Let's dive into the implementation:
+As you can see, `httpRequest` is a function that takes in a `Request` as input along with a `responseHandler` that *maps* the resulting `Response` into a message that is dispatched into our Elmish application. The function returns a command of that message type that is mapped from the `Response`. Basically this `httpRequest` function is saying: "Give me two things: the HTTP request you want to send as well as a way to map the response into a message *when* the response is available". Let's dive into the implementation:
 ```fsharp
 let httpRequest (request: Request) (responseHandler: Response -> 'Msg) : Cmd<'Msg> =
     let command (dispatch: 'Msg -> unit) =
@@ -137,7 +137,7 @@ let render (state: State) (dispatch: Msg -> unit) =
             prop.text errorMsg
         ]
 ```
-This program will always succeed, i.e. the HTTP request will always find the contents of the file and the status code will be 200 assuming there are no network errors. To make the status code return something else other than 200 to see how the program behaves, change the url of the HTTP request to a non-exitent resource such as `/non-existent.txt`:
+This program will always succeed, i.e. the HTTP request will always find the contents of the file and the status code will be 200 assuming there are no network errors. To make the status code return something else other than 200 to see how the program behaves, change the url of the HTTP request to a non-existent resource such as `/non-existent.txt`:
 ```fsharp
 let request = { url = "/non-existent.txt"; method = "GET"; body = "" }
 ```
@@ -151,7 +151,7 @@ The application ends up as follows:
 
 ### Composability problems with `httpRequest`
 
-In the section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multipe responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implements an asynchronous function:
+In the section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multiple responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implements an asynchronous function:
 ```fsharp
 type httpRequest : Request -> Async<Response>
 ```

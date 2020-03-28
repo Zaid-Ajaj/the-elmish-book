@@ -145,4 +145,4 @@ Here we are rendering the tabs using the `renderTabs` function which takes as in
 
 There are some changes required for rendering the score and the icon in each loaded story item but I don't think it particularly interesting to go through the code in detail like I did for the rest of the application. You can try to implement it yourself based on the gif in the beginning of this section and use the source code at [Zaid-Ajaj/elmish-hackernews-part2](https://github.com/Zaid-Ajaj/elmish-hackernews-part2) as a reference.
 
-That sums it up for part 2 of the Elmish Hackernews application. I admit there hasn't much new theory for the material in this part but it will provide a nice segway into the next part where we use an entirely differrent technique for loading the story items from Hackernews.
+That sums it up for part 2 of the Elmish Hackernews application. I admit there hasn't much new theory for the material in this part but it will provide a nice segway into the next part where we use an entirely different technique for loading the story items from Hackernews.

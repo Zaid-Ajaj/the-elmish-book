@@ -17,7 +17,7 @@ To answer the question, we take a look at the `App.fsproj` of an Elmish project:
   </ItemGroup>
 </Project>
 ```
-The highlighed lines show the nuget packages used in the project. This project uses `Fable.Elmish.React` which used to make React and Elmish play well together. As for `Feliz` it is used to write React code, i.e. whatever you use in your `render` functions.
+The highlighted lines show the nuget packages used in the project. This project uses `Fable.Elmish.React` which used to make React and Elmish play well together. As for `Feliz` it is used to write React code, i.e. whatever you use in your `render` functions.
 
 Consider the package `Fable.Elmish.React`, it is pulled from nuget and has the following dependency structure:
 

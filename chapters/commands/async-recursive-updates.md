@@ -66,7 +66,7 @@ The following application starts counting from an initial number (5 in this case
   </div>
 </div>
 
-The data model is very similar to that of the timer. We keep track of the current count and the finish number. As for the messages, there is the message `Startcountdown` to kick off the recursive workflow and the `Tick` message that updates the state every second and calls itself again until the `Count` has reached zero:
+The data model is very similar to that of the timer. We keep track of the current count and the finish number. As for the messages, there is the message `StartCountdown` to kick off the recursive workflow and the `Tick` message that updates the state every second and calls itself again until the `Count` has reached zero:
 ```fsharp
 type State = {
   Count : int

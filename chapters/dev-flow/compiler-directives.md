@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-The extended options for `fable-loader` allow to provide compilations options for the Fable compiler. In this case, we assign `options.define` the value `["DEVELOPMENT]` when in development mode, otherwise just an empty array. This array defines the constants that bcome compiler directives which can be used from the code as follows:
+The extended options for `fable-loader` allow to provide compilations options for the Fable compiler. In this case, we assign `options.define` the value `["DEVELOPMENT]` when in development mode, otherwise just an empty array. This array defines the constants that become compiler directives which can be used from the code as follows:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Mode
@@ -94,7 +94,7 @@ Here we are assuming that the function `Data.fromExternalService()` is *unsafe* 
 
 ### `DEBUG` Already Available
 
-We just learnt how to introduce a new compiler directive called `DEVELOPMENT` into the compilation process and actually use it to determince whether the application is being compiled in development or production mode. This was a nice exercise into getting to the know the `define` option of Fable. However, in this very use-case, it was not necessary. Fable already defines a `DEBUG` compiler directive during development mode without any extra configuration. It can be used just like we did with `DEVELOPMENT`:
+We just learnt how to introduce a new compiler directive called `DEVELOPMENT` into the compilation process and actually use it to determine whether the application is being compiled in development or production mode. This was a nice exercise into getting to the know the `define` option of Fable. However, in this very use-case, it was not necessary. Fable already defines a `DEBUG` compiler directive during development mode without any extra configuration. It can be used just like we did with `DEVELOPMENT`:
 ```fsharp {highlight: [6]}
 [<RequireQualifiedAccess>]
 module Mode
@@ -107,4 +107,4 @@ let isDevelopment =
   false
   #endif
 ```
-You might think: "Well, this was unnecessary to go through all configuration steps if was already built-in". Understanding how to customize the `define` option and add more values to it is crucial: a lot of times we would want to introduce more variables for different scenarios. One of these scenarios would be when we are running the F# code in a different *environment* other than a browser like in a Node.js environment. This is common when you want to unit-test some functions of your Elmish application and run the unit tests inside a CI server using Node.js. If you are using browser-specific APIs in your code, the tests will fail so you will have to accomodate the functions you use to suit multiple envionments. This is where multiple compiler directives can come into play.
+You might think: "Well, this was unnecessary to go through all configuration steps if was already built-in". Understanding how to customize the `define` option and add more values to it is crucial: a lot of times we would want to introduce more variables for different scenarios. One of these scenarios would be when we are running the F# code in a different *environment* other than a browser like in a Node.js environment. This is common when you want to unit-test some functions of your Elmish application and run the unit tests inside a CI server using Node.js. If you are using browser-specific APIs in your code, the tests will fail so you will have to accommodate the functions you use to suit multiple environments. This is where multiple compiler directives can come into play.

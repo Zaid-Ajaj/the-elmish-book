@@ -4,7 +4,7 @@ So far in this chapter, we have learnt a lot about asynchronous operations in El
 
 In any modern single page application, HTTP is at the core of the web application as the front-end exchanges data back and forth with a back-end by sending HTTP requests and processing HTTP responses.
 
-Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack developement server for the content of static files inside the `dist` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
+Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack development server for the content of static files inside the `dist` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
 
 <div style="margin-top: 40px; margin-bottom:40px; width:100%">
   <div style="margin: 0 auto; width:75%;">
@@ -121,7 +121,7 @@ We get a status code of 200 (OK) and the response text containing an array of th
 
 The webpack development server is just that: a tool to use *during development*. When you compile your F# project with Fable using the command `npm run build`, the compilation generates static files like `main.js` inside the `dist` directory and that's it, webpack is out of play after compilation has finished.
 
-Now if you compile your project and run the `index.html` page directlty in your favorite web browser, it will be *unable* to send HTTP requests giving you the following error:
+Now if you compile your project and run the `index.html` page directly in your favorite web browser, it will be *unable* to send HTTP requests giving you the following error:
 
 <div style="width:100%;">
   <div style="margin: 0 auto; width:100%;">
@@ -182,5 +182,5 @@ Now we are all set, run the `serve` script by running `npm run serve` to run the
   </div>
 </div>
 
-But you might wondering, why bother with a different static file server other than webpack developement server? The reason is that the development server is kind of special and injects a lot of Javascript artifacts in your `index.html` during development, for example to make the web page refreshed after you edit your source files. These added artifacts could be incompatible with many browsers and might break your actual application in a production environment.
+But you might wondering, why bother with a different static file server other than webpack development server? The reason is that the development server is kind of special and injects a lot of Javascript artifacts in your `index.html` during development, for example to make the web page refreshed after you edit your source files. These added artifacts could be incompatible with many browsers and might break your actual application in a production environment.
 

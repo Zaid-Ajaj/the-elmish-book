@@ -2,9 +2,9 @@
 
 Previously on the Elmish Hackernews application we have using the function `loadStoryItems` to retrieve and parse the items from the Hackernews API. However, hypothetical users of the application are complaining: they say that it takes a long time before any useful information is presented on screen. After diagnosing the problem, we figured out that for some story items, the network latency is longer than 10 seconds. Even though other items might have already been loaded, the application is waiting *all* of the items to be loaded before it can show anything on screen.
 
-After a review of the code, we concluded that the root of this "problem" is the `Async.Parallel` function that is combining all of the asynchronous operations to load story items into a single asynchronous operation and awaiting them untill every one of them has been loaded before returning the result.
+After a review of the code, we concluded that the root of this "problem" is the `Async.Parallel` function that is combining all of the asynchronous operations to load story items into a single asynchronous operation and awaiting them until every one of them has been loaded before returning the result.
 
-In this part, we will try to solve this problem by changing the way the story items are loaded. Instead of awaiting all the loading operations to complete as a single operation, we will load each item *separately* and have the user inteface update whenever an item finishes loading regardless of whether other items have finished loading or not. The end result looks like the following:
+In this part, we will try to solve this problem by changing the way the story items are loaded. Instead of awaiting all the loading operations to complete as a single operation, we will load each item *separately* and have the user interface update whenever an item finishes loading regardless of whether other items have finished loading or not. The end result looks like the following:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">
@@ -12,9 +12,9 @@ In this part, we will try to solve this problem by changing the way the story it
   </div>
 </div>
 
-### Visualzing the strategy for loading
+### Visualizing the strategy for loading
 
-Let me try to show you what I mean by changing how the story items are loaded. The following diagram shows how we start from the `update` function to trigger a command and eventually we end up with a single message `LoadedStoryItems` which is then dispached back to the program and processed again by the `update` function before rerendering the user interface. This is what we have been doing in parts 1 and 2 using `Async.Parallel` to aggregate the asynchronous operations before constructing a *single* message out of the results:
+Let me try to show you what I mean by changing how the story items are loaded. The following diagram shows how we start from the `update` function to trigger a command and eventually we end up with a single message `LoadedStoryItems` which is then dispatched back to the program and processed again by the `update` function before rerendering the user interface. This is what we have been doing in parts 1 and 2 using `Async.Parallel` to aggregate the asynchronous operations before constructing a *single* message out of the results:
 
 <div style="width:100%; margin-top: 50px; margin-bottom: 50px; ">
   <div style="margin: 0 auto; width:100%;">
@@ -40,7 +40,7 @@ Cmd.batch : Cmd<'Msg> list -> Cmd<'Msg>
 
 ### A Realistic Use Case
 
-Imagine you are building a classic content management system (CMS), a common landing page for these systems after you login is a *dashboard* page. The dashboard has many different panels where each panel shows a summary of information for some part of that CMS, whether is it the total sales of the application, the number of viewers or a chart of the unsuccesful orders etc. Since each panel loads information that is independant of other panels, you can use this strategy to load the data of each panel in parallel, updating the user interface of each panel as more data is loaded without waiting for the other panels to finish loading their related information.
+Imagine you are building a classic content management system (CMS), a common landing page for these systems after you login is a *dashboard* page. The dashboard has many different panels where each panel shows a summary of information for some part of that CMS, whether is it the total sales of the application, the number of viewers or a chart of the unsuccessful orders etc. Since each panel loads information that is independent of other panels, you can use this strategy to load the data of each panel in parallel, updating the user interface of each panel as more data is loaded without waiting for the other panels to finish loading their related information.
 
 <div style="width:100%; margin-top: 50px; margin-bottom: 50px; ">
   <div style="margin: 0 auto; width:80%;">
@@ -62,7 +62,7 @@ Here we are using an integer to identify the asynchronous state of each item. Th
 ```fsharp
 Map<int, Deferred<Result<HackernewsItem, string>>>
 ```
-This way, we keep track of the asynchronous state of each story item and we are able to identify these states by the ID of the story item that is being loaded. However, where are these IDs are coming from? These have to be loaded in an earlier stage which in itself is an asycnhronos operation that can be modelled with `Deferred`. The end result for the state becomes something like this:
+This way, we keep track of the asynchronous state of each story item and we are able to identify these states by the ID of the story item that is being loaded. However, where are these IDs are coming from? These have to be loaded in an earlier stage which in itself is an asynchronous operation that can be modelled with `Deferred`. The end result for the state becomes something like this:
 ```fsharp
 type DeferredStoryItem = Deferred<Result<HackernewsItem, string>>
 
@@ -84,7 +84,7 @@ type State =
 ```
 It is just a more compact version of the same type. Personally I would say they are the same but others might find this version to be a bit more readable.
 
-Moving on to the modelling the messagaes, we now know that there are two types of asynchronous events that might occur while the application is running:
+Moving on to the modelling the messages, we now know that there are two types of asynchronous events that might occur while the application is running:
 
  - One event when the IDs of the story items have been loaded
  - One event when a single story item has been loaded
@@ -143,13 +143,13 @@ instead of
 ```fsharp
 int * AsyncOperationStatus<Result<HackernewsItem, string>>
 ```
-This is because we don't need to know whether the operation has started or not. As soon as the IDs of the story items are loaded, the asynchronous state of each item is `Deferred.InProgess` and the commands to load each item are triggered right away so we don't need to bother with the initial state of the items but only the end result when an item has been loaded.
+This is because we don't need to know whether the operation has started or not. As soon as the IDs of the story items are loaded, the asynchronous state of each item is `Deferred.InProgress` and the commands to load each item are triggered right away so we don't need to bother with the initial state of the items but only the end result when an item has been loaded.
 
-> NOTE: You could argue that it is more correct to make a specialized type similar to `Deferred` for this case without an iniitial state, only `InProgress` and `Resolved` but I will not do that in this example because introducing a specialized type that I will likely use once is not worth complicating the model more than it already is.
+> NOTE: You could argue that it is more correct to make a specialized type similar to `Deferred` for this case without an initial state, only `InProgress` and `Resolved` but I will not do that in this example because introducing a specialized type that I will likely use once is not worth complicating the model more than it already is.
 
 ### Implementing the `render` function
 
-Even though the state type looks complicated, once you break it down in the `render` function, you will see that it is pretty straightforward as the user interface needs to account for the asynchronous states of the data we are keeping track of. Here are a couple of the smaller render functions used to make up the whole user interface (refere to [Zaid-Ajaj/elmish-hackernews-part3](https://github.com/Zaid-Ajaj/elmish-hackernews-part3) for the full code):
+Even though the state type looks complicated, once you break it down in the `render` function, you will see that it is pretty straightforward as the user interface needs to account for the asynchronous states of the data we are keeping track of. Here are a couple of the smaller render functions used to make up the whole user interface (refer to [Zaid-Ajaj/elmish-hackernews-part3](https://github.com/Zaid-Ajaj/elmish-hackernews-part3) for the full code):
 ```fsharp
 let renderStoryItem (itemId: int) storyItem =
   let renderedItem =
