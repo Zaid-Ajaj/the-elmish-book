@@ -251,9 +251,9 @@ Html.div [
     style.color.blue
     style.alignContent.flexStart
     style.display.none
-    style.border(3, borderStyle.dashed, colors.crimson)
+    style.border(3, borderStyle.dashed, color.crimson)
     style.borderColor.red
-    style.boxShadow(10, 10, 0, 5, colors.black)
+    style.boxShadow(10, 10, 0, 5, color.black)
     // etc.
   ]
 ]
