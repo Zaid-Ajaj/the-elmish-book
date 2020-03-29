@@ -38,7 +38,7 @@ module App
 printfn "Hello world from Fable"
 ```
 When the F# project is compiled using Fable, a single JavaScript file called `main.js` will be output in the `dist` directory, the `main.js` file in turn, is referenced by `index.html`, also in the `dist` directory:
-```html {highlight:[9]}
+```html {highlight:[10]}
 <!doctype html>
 <html>
 <head>

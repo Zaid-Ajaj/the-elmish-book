@@ -14,7 +14,7 @@ That said, there are many supported APIs from the base class library that Fable 
 
 ### Numeric types
 
-While Javascript only has the `Number` type (64-bit floating number, the same as `System.Double`) to represent numbers, the BCL has many numeric types besides `System.Double` with varying sizes that Fable implements with exact arithmetic precision out of the box: `System.Int16` (short), `System.Int64` (long), `System.Decimal` and `System.Numerics.BigInt` as well as the unsigned counter-parts of the integers.
+While Javascript only has the `Number` type (64-bit floating number, the same as `System.Double`) to represent numbers, the BCL has many numeric types besides `System.Double` with varying sizes. Fable implements those with exact arithmetic precision out of the box: `System.Int16` (short), `System.Int64` (long), `System.Decimal` and even `System.Numerics.BigInt` as well as the unsigned counter-parts of the integers.
 
 ### Date/Time
 
@@ -55,3 +55,11 @@ let usd = moneyFormatter "en-US" "USD"
 euro.format 1000.0 // € 1.000,00
 usd.format 1000.0 // $1,000.00
 ```
+
+### System.Xml
+
+Types from this namespace aren't implemented. Similar to the Globalization namespace, maintenance costs are just too much for a proper implementation in the core Fable library. However, we still are able to write a binding for an existing XML processing library in Javascript and use it from our Fable projects. In the browser, there is already the [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser) type that allows to work with XML documents. This `DOMParser` has an API that is very similar to that of `XmlDocument` from dotnet. Unfortunately, the binding for the API still needs to implemented. Another downside of `DOMParser` is that it cannot be used in a Node.js environment because it is only available in a browser environment by default. I personally don't like the API of `DOMParser` and since the functionality is only available in the broweser, I decided to build my own XML parser library for Fable without any environment-specific dependencies such that it would work out of the box for node.js and the browser. Enter [Fable.SimpleXml](https://github.com/Zaid-Ajaj/Fable.SimpleXml): a very simple XML parser for Fable. It will handle 99% of everyday use-cases when working with XML.
+
+### System.Guid
+
+The `Guid` type is supported in Fable and is represented a string during runtime when compiled to Javascript. You can generate new instances of `Guid` using the `Guid.NewGuid()` function. The function is implemented using `Math.random` under the hood.

@@ -85,7 +85,7 @@ open Fable.Core.JsInterop
 [<Emit("process.env[$0] ? process.env[$0] : ''")>]
 let variable (key: string) : string = jsNative
 ```
-I promise to cover Fable and Javascript interop in a separate chapter. Since it is a very big and important topic, I want to cover it properly and do it justice. One section won't be enough for it so please bear with me for now and believe that the function `Config.variable` will return you the value of configured variable if it exists in the `.env` file or if it is available in the environment where the application was compiled.
+I promise to cover Fable and Javascript interop in a separate chapter. Since it is a very big and important topic, I want to cover it properly and do it justice. One section won't be enough for it. Please bear with me for now, the function `Config.variable` will return you the value of configured variable if it exists in the `.env` file or if it is available in the environment where the application was compiled.
 
 You can the function like this in your `render` functions or any other place for that matter:
 ```fsharp

@@ -1,8 +1,8 @@
 # Introducing Femto
 
-Way back in chapter one, we talked about [Fable Bindings](../fable/fable-bindings). The most important and most common types of bindings are those that require third-party npm dependencies (see type 4.3 packages). Using these packages means that you have to install both the  .NET nuget package which exposes the F# API that is essentially a thin shell (wrapper) on top of a npm package that must be installed as well.
+Way back in chapter one, we talked about [Fable Bindings](../fable/fable-bindings). The most important and most common types of bindings are those that require third-party npm dependencies (see type 4.3 packages). Using these packages means that you have to install both the .NET nuget package and the npm dependency. The nuget package exposes an idiomatic F# API that is essentially a thin shell on top of the underlying npm package that contains the actual functionality.
 
-For example, the [Feliz](https://github.com/Zaid-Ajaj/Feliz) nuget package the we are using for the user interface DSL depends on npm packages `react@16.8.0` and `react-dom@16.8.0`. In order to use Feliz, you need to install the nuget package using
+The [Feliz](https://github.com/Zaid-Ajaj/Feliz) nuget package for example, the one we are using for the user interface DSL depends on npm packages `react@16.8.0` and `react-dom@16.8.0`. In order to use Feliz, you need to install the nuget package using
 ```bash
 dotnet add package Feliz
 ```
@@ -16,7 +16,7 @@ For direct dependencies, the problem isn't as bad as it seems. However, when it 
 
 ### Femto to the rescue!
 
-I build a CLI tool called [Femto](https://github.com/Zaid-Ajaj/Femto) to solve this exact. Femto bridges the gap between nuget Fable bindings and npm dependencies and is able to automagically resolve the required npm packages without any manual work. It allows Fable binding authors to include npm package *metadata* that the binding depends upon. Then, when you install the nuget package, Femto will look up the versions of the required npm dependencies, resolve the correct versions or update existing ones if required.
+I built a CLI tool called [Femto](https://github.com/Zaid-Ajaj/Femto) to solve this exact problem. Femto bridges the gap between nuget Fable bindings and the corresponding npm dependencies that the bindings depend upon. It is able to automatically install the required npm packages without any manual work when you install the Fable binding with it. Femto does that by using *version metadata* of the npm packages included in the Fable binding. Then, when you install the nuget package of that binding, Femto will look up the versions of the required npm dependencies, resolve the correct versions or update existing ones if required automatically, thus removing all manual work and lookups of which version of a npm dependency a Fable binding requires.
 
 To use Femto, install it as a global dotnet CLI tool as follows:
 ```
@@ -52,7 +52,7 @@ $ femto install Feliz.Recharts
 ```
 Just like that, Femto used nuget to install `Feliz.Recharts`, its nuget dependency (Feliz) and all the required npm dependencies automatically.
 
-Femto is not a new package manager, though it has advanced package resolution mechanism, it only instructs `dotnet` and `npm` to download and install the actual packages. You can also install the nuget package manually and let Femto do only the npm package resolution:
+Femto is not a new package manager. It only helps and instructs `dotnet` and `npm` to download and install the actual packages. You can also install the nuget package manually and let Femto do only the npm package resolution step:
 ```bash
 cd ./src
 dotnet add package Feliz.Recharts
@@ -62,6 +62,6 @@ As you can see from the previous logs of Femto, the command `Femto install Feliz
 
 ### Missing npm package metadata
 
-What about Fable bindings without npm metadata? Femto is only useful when authors of Fable bindings actually include this information about supported npm packages within the nuget itself as described in the docs of [Femto - Library Authors docs](https://github.com/Zaid-Ajaj/Femto#library-authors). Please let the authors know about it and ask them to include the metadata into their package to ensure Femto compatibility and thus a great user experience when working wih Fable packages.
+What about Fable bindings without npm metadata? Femto is only useful when authors of Fable bindings include this information about supported npm package versions within the nuget itself as described in the docs of [Femto - Library Authors docs](https://github.com/Zaid-Ajaj/Femto#library-authors). Please let the authors know about it and ask them to include the metadata into their package to ensure Femto compatibility and thus a great user experience when working wih Fable packages.
 
 To learn more about Femto, read the [docs](https://github.com/Zaid-Ajaj/Femto) and blog post [Introducing Femto](https://fable.io/blog/Introducing-Femto.html).
