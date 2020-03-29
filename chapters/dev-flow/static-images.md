@@ -130,4 +130,4 @@ Alternatively, you can run `npm run build` to see how this same file is copied i
   | -- main.js
   | -- dce2757cef5f2cc7b1dbc1416f3732ed.png
 ```
-This is result of the `file-loader` package, it rewrites the path into a hash string and copies the required files into the output directory to have them referenced like you would them expect to.
+This is result of the `file-loader` package, it rewrites the path into a hash string and copies the required files into the output directory to have them referenced like you would expect them to be.

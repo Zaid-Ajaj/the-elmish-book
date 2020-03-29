@@ -14,7 +14,7 @@ type Msg =
   | InputTextMsg of InputText.Msg
   | SwitchPage of Page
 ```
-This is of course not the only way model child programs, let us take a look at some models and discuss their implications.
+This is of course not the only way to model child programs. Let us take a look at some models and discuss their implications.
 
 ### State-Field Composition
 
@@ -165,7 +165,7 @@ let update (msg: Msg) (state: State) =
 ```
 You might say: "Well, we didn't add anything really, we just moved the *decision* to initialize the child program data up to the parent program instead of initializing it from the child program itself". In this example, you would be right. However, a lot of the times, the child program cannot choose the initial state without extra information provided by the parent. This is also why Discriminated Union composition is often more suitable in web applications, because unlike State-Field composition, the parent program doesn't need to initialize *all* of the children during the initialization of the state, simply because some child program might require information that is not available at the time of the initialization of the parent program. So the parent program *gather* enough information for the initialization of another child program before actually initializing it. Think about a user dashboard that loads all kinds of data for a certain user. That would be a page (child program) that requires a *user* as input during initialization. The user information is only available after a user has successfully logged in. This means that we make it is impossible to initialize the dashboard unless we have acquired enough information about the user.
 
-I used the messages `SwitchToCounter` and `SwitchToInputText` to demonstrate the switching between the child programs. In a real web application, we don't need these messages because the switching between the pages happens based in the *current url* of the web page. The application would *listen* for changes in the URL in the address bar and react accordingly. Routing will be discussed in a later chapter. For now, this is the gist of modelling child programs following Discriminated Union composition.
+I used the messages `SwitchToCounter` and `SwitchToInputText` to demonstrate the switching between the child programs. In a real web application, we don't need these messages because the switching between the pages happens based on the *current url* of the web page. The application would *listen* for changes in the URL in the address bar and react accordingly. Routing will be discussed in a later chapter. For now, this is the gist of modelling child programs following Discriminated Union composition.
 
 ### Keyed-Sequence Composition
 

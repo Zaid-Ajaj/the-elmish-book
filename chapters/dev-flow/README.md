@@ -13,7 +13,7 @@ When we compile the project using `npm run build`, the size of the generated Jav
 
 ### Hot module replacement
 
-Also known as HMR for short, is one of the most important features required during development: it is the ability to see the changes you make to the code live **without** fully refreshing the page you are working on! This means if you are tuning the user interface on a page that required you to login first, then you wouldn't need to login again to see your changes whenever you update the UI. Instead, the state of the application is reserved and only the pieces of code are reloaded that were changed. This allows for really short feedback cycles and makes prototyping easier so that you can quickly see the results of your code.
+Also known as HMR for short, is one of the most important features required during development: it is the ability to see the changes you make to the code live **without** fully refreshing the page you are working on! This means if you are tuning the user interface on a page that required you to login first, then you wouldn't need to login again to see your changes whenever you update the UI. Instead, the state of the application is preserved and only the pieces of code are reloaded that were changed. This allows for really short feedback cycles and makes prototyping easier so that you can quickly see the results of your code.
 
 ### Using Static Assets
 

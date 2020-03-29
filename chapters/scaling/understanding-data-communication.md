@@ -124,7 +124,7 @@ Html.div [
     ]
 ]
 ```
-I will let you study the rest of the render function on your own, there isn't much worth noting except for the fact that we are sing [Bulma](https://bulma.io) classes for styling.
+I will let you study the rest of the render function on your own, there isn't much worth noting except for the fact that we are using [Bulma](https://bulma.io) classes for styling.
 
 ### Modelling The Home Page
 

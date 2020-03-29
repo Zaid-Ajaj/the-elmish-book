@@ -350,9 +350,9 @@ val initCounter : unit -> CounterState
 val initInputText : unit -> InputTextState
 val init : unit -> State
 ```
-All of these functions have `unit` as input. It makes sense the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having a `init` signature of `User -> UserDashboardState`. We will take a look at such example at a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
+All of these functions have `unit` as input. It makes sense the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data to initialize their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having a `init` signature of `User -> UserDashboardState`. We will take a look at such an example in a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
 
-Moving on to the `update` function, which has become a bit of a mess because of the types that were introduce earlier, let's take a look:
+Moving on to the `update` function, which has become a bit of a mess because of the types that were introduced earlier, let's take a look:
 ```fsharp
 let update (msg: Msg) (state: State): State =
   match msg with
