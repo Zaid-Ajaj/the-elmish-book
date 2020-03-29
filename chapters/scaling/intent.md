@@ -12,7 +12,7 @@ It might also lead to bugs where a programmer is staring at the `update` functio
 
 ### The `Intent` Type
 
-The best way to communicate intensions of certain parts of the application is to encode them using the type system and have the compiler help us figure out from the parent program point of view what we should inspect and what we should intercept: enter the `Intent` type.
+The best way to communicate intentions of certain parts of the application is to encode them using the type system and have the compiler help us figure out from the parent program point of view what we should inspect and what we should intercept: enter the `Intent` type.
 
 > The `Intent` type is also known as `ExternalMsg`.
 
@@ -27,7 +27,7 @@ type Intent =
     | UserLoggedIn of Api.User
     | DoNothing
 ```
-We also add another case of `Intent.DoNothing` which means that the parent program shouldn't take further action other than propagating the events as is. Then we can can extend the definition of the `update` function and have return the intent as part of its return values:
+We also add another case of `Intent.DoNothing` which means that the parent program shouldn't take further action other than propagating the events as is. Then we can can extend the definition of the `update` function and have it return the intent as part of its return values:
 ```fsharp {highlight: [19, 20, 21]}
 let update (msg: Msg) (state: State) =
     match msg with

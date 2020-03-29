@@ -13,13 +13,13 @@ val init : unit -> State
 val update : Msg -> State -> State
 val render : State -> (Msg -> unit) -> ReactElement
 ```
-Where as the non-simplified program has an extended definition that includes commands
+Whereas the non-simplified program has an extended definition that includes commands
 ```fsharp
 val init : unit -> State * Cmd<Msg>
 val update : Msg -> State -> State * Cmd<Msg>
 val render : State -> (Msg -> unit) -> ReactElement
 ```
-The applications we have building so far were made out of a *single* program
+The applications we have built so far were made out of a *single* program
 
 <div style="width:100%; margin: 50px">
   <div style="margin: 0 auto; width:60%;">

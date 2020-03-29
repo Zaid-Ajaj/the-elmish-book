@@ -45,7 +45,7 @@ Right now these commands aren't doing anything which is fine because this is jus
 
 ### Commands In Counter
 
-Now that the entry program can work with commands, we can start implementing the delayed incrementation of the counter inside the `Counter` child program. There is actually nothing new in this, so I will just present the pieces that were modified:
+Now that the entry program can work with commands, we can start implementing the delayed incrementing of the counter inside the `Counter` child program. There is actually nothing new in this, so I will just present the pieces that were modified:
 ```fsharp {highlight: [8, '19-25', '37-40']}
 (* In Counter.fs *)
 [<RequireQualifiedAccess>]

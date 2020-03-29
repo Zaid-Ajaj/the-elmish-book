@@ -27,7 +27,7 @@ Then when you want to install a package, simply `cd` your way to the F# project 
 cd ./src
 femto install {PackageName}
 ```
-To show how it works, try installing `Feliz.Recharts` into the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository. This repository doesn't have Feliz installed nor it knows about `react`/`react-dom` packages. Now from a fresh repository clone, I will run Femto as follows:
+To show how it works, try installing `Feliz.Recharts` into the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository. This repository doesn't have Feliz installed nor does it know about `react`/`react-dom` packages. Now from a fresh repository clone, I will run Femto as follows:
 ```bash
 git clone https://github.com/Zaid-Ajaj/fable-getting-started.git
 cd fable-getting-started

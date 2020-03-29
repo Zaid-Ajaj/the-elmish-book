@@ -146,7 +146,7 @@ In chapters 2 and 3 we used the [Bulma](https://bulma.io) library for styling. W
 
 > I am taking Bulma as an example but this applies to many other CSS frameworks.
 
-Will will now fix these problems and allow our application to override the default colors used by Bulma. First of all, we install Bulma as an *npm package*:
+We will now fix these problems and allow our application to override the default colors used by Bulma. First of all, we install Bulma as an *npm package*:
 ```bash
 npm install bulma
 ```
@@ -155,7 +155,7 @@ Once that is finished, we will have Bulma installed locally. The thing is, Bulma
 /* main.scss */
 @import "bulma";
 ```
-Now all of Bulma modules are imported into the application. You can cherry pick the modules you want by first including the utilities that other modules:
+Now all of Bulma modules are imported into the application. You can cherry pick the modules you want by first including the utilities that other modules require:
 ```css
 /* main.scss */
 @import "bulma/sass/utilities/_all.sass";

@@ -6,7 +6,7 @@ Since the beginning of first chapter, you introduced to the `webpack.config.js` 
 
 Traditionally, building web pages meant you have write a bunch of Javascript files and include them into an Html page so that the browser starts executing the code. As the page gets bigger and the scripts start to become a mess, people wrote them in separate files and included them one after another in `<script>` tags. Of course, these script tags have to be included in the right order to ensure that one script does not use code it depends upon from another script before that dependency itself is loaded first. Building applications like this is fine when the application is really small or when you don't care about maintainability or your sanity.
 
-Problems start to creep up when you introduce third-party packages which themselves have to included as `<script>` tags along with their (transitive) dependencies.
+Problems start to creep up when you introduce third-party packages which themselves have to be included as `<script>` tags along with their (transitive) dependencies.
 
 Meanwhile when writing Javascript applications to run on the server using the [Node.js](https://nodejs.org/en/) runtime, there was already a great development story: building applications using Javascript modules. These modules are Javascript files that can or `require` other modules by their path relative to the file that is importing them:
 ```js
@@ -26,7 +26,7 @@ The crucial part of this module system in Node.js is that when the runtime execu
 
 Here is where webpack comes into play: it allows Javascript developers to use the same module system available for Node.js and statically generate a single Javascript output file that browsers understand without any dynamic loading at runtime. In other words, webpack takes the Javascript modules and bundles them into a ready-to-run single Javascript file. That is the reason why webpack is called a "Javascript module bundler".
 
-Of course, webpack is not the first tool to try to solve this problem, there were other module bundlers out there like [SystemJs](https://github.com/systemjs/systemjs), [Browserify](http://browserify.org/), [Rollup.js](https://rollupjs.org/guide/en/) and [Parcel](https://parceljs.org/) among others. Some of these are quite old like SystemJs and Browserify. Some provide a simplified getting started experience like Parcel. We go with webpack because it the most feature-full solution and most widely used across the different kinds of front-end applications.
+Of course, webpack is not the first tool to try to solve this problem, there were other module bundlers out there like [SystemJs](https://github.com/systemjs/systemjs), [Browserify](http://browserify.org/), [Rollup.js](https://rollupjs.org/guide/en/) and [Parcel](https://parceljs.org/) among others. Some of these are quite old like SystemJs and Browserify. Some provide a simplified getting started experience like Parcel. We go with webpack because it the solution with most features and most widely used across the different kinds of front-end applications.
 
 ### Webpack Loaders
 
@@ -52,4 +52,4 @@ If something can be compiled into a Javascript module then it can be used with w
   }
 }
 ```
-Of course, `fable-loader` is just one kind of loader that can be used in webpack. There many [loaders out there available](https://webpack.js.org/loaders) to be used and integrated into our webpack build pipeline to bundle different kinds of assets. In the next sections, we will learn how to use a couple of those loaders to extend the capabilities of our projects and enable them to integrate static images and use [Sass](https://sass-lang.com) for styling instead of CSS.
+Of course, `fable-loader` is just one kind of loader that can be used in webpack. There are many [loaders available out there](https://webpack.js.org/loaders) to be used and integrated into our webpack build pipeline to bundle different kinds of assets. In the next sections, we will learn how to use a couple of those loaders to extend the capabilities of our projects and enable them to integrate static images and use [Sass](https://sass-lang.com) for styling instead of CSS.

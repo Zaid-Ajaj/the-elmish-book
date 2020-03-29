@@ -55,4 +55,4 @@ type Url =
 ```
 Then I would assume that `User.init` has input of `int` that can be retrieved from the URL and properly re-initialized in case of a full refresh of the application.
 
-The exception to this rule is if `User.init` required more information that must be obtained during the runtime of the application such as the currently logged in user. This cannot be obtained from the URL unless the user has logged in first in order to be able to navigate to a certain users page. These are called *secure* pages and will look at an example the section [Routing With Login](routing-with-login).
+The exception to this rule is if `User.init` required more information that must be obtained during the runtime of the application such as the currently logged in user. This cannot be obtained from the URL unless the user has logged in first in order to be able to navigate to a certain users page. These are called *secure* pages and will look at an example in the section [Routing With Login](routing-with-login).

@@ -35,7 +35,7 @@ let create (parts: DateParts) : Option<DateTime> =
     | (4 | 6 | 9 | 11), Between 1 30 -> Some (DateTime(year, month, day))
     | _ -> None
 ```
-For all intents and purposes, this small module parses date parts (day, month and year) and tries to convert them into an instance of `DateTime` if the combination of parts is valid. It can be used with `Route.Int` to parse date segments from the URL as follows. First the segment has to be splitted by dashes (`-`) to get the separate parts as strings and match them with `Route.Int` to convert them into integers before using these as input for the `Date.create` function:
+For all intents and purposes, this small module parses date parts (day, month and year) and tries to convert them into an instance of `DateTime` if the combination of parts is valid. It can be used with `Route.Int` to parse date segments from the URL as follows. First the segment has to be split by dashes (`-`) to get the separate parts as strings and match them with `Route.Int` to convert them into integers before using these as input for the `Date.create` function:
 ```fsharp
 let activePage =
   match state.CurrentUrl with
