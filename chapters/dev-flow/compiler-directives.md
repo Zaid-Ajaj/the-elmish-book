@@ -55,7 +55,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-The extended options for `fable-loader` allows you to provide compilations options for the Fable compiler. In this case, we assign `options.define` the value `["DEVELOPMENT]` when in development mode, otherwise just an empty array. This array defines the constants that become compiler directives which can be used from the code as follows:
+The extended options for `fable-loader` allow you to provide compilations options for the Fable compiler. In this case, we assign `options.define` the value `["DEVELOPMENT]` when in development mode, otherwise just an empty array. This array defines the constants that become compiler directives which can be used from the code as follows:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Mode
