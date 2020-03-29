@@ -22,7 +22,7 @@ type HackernewsItem = {
     url : string option
 }
 ```
-Now that we have a type for a story item, we can model the `State` and `Msg`. Just like we did for every example that deals with remote data that has mutliple states (i.e. "initial", "loading" and "resolved") we will be using the `Deferred` type to model the story items as follows:
+Now that we have a type for a story item, we can model the `State` and `Msg`. Just like we did for every example that deals with remote data that has multiple states (i.e. "initial", "loading" and "resolved") we will be using the `Deferred` type to model the story items as follows:
 ```fsharp
 type State = {
   StoryItems: Deferred<Result<HackernewsItem list, string>>
@@ -54,7 +54,7 @@ Result<
 ```
 The difference here is `HackernewsItem` in the latter, simplified case as opposed to `Result<HackernewsItem, string>` in the former, idealistic model. Since we are loading each story item *separately* (due to how Hackernews API works) and each one might fail due to HTTP or JSON, each story item can have an error. However, in our application, I am choosing to ignore these errors to keep the application simple.
 
-In depends on the requirements of your application in how far you want to keep track of the various errors that might occur in the program. In our case we don't care a lot about hthem because we want to keep things simple and we can offord to ignore those items that fail due to the HTTP call or the JSON parsing. The main point is: it is a deliberate choice whether or not we keep track of the errors that might occur because these are known.
+In depends on the requirements of your application in how far you want to keep track of the various errors that might occur in the program. In our case we don't care a lot about them because we want to keep things simple and we can afford to ignore those items that fail due to the HTTP call or the JSON parsing. The main point is: it is a deliberate choice whether or not we keep track of the errors that might occur because these are known.
 
 In most modern APIs, loading a list of something usually happens in single request, not loading each item separately like what Hackernews API does which complicates the situation a little but again, that is why I chose to tackle this API to better understand and learn how to work with asynchronous operations.
 
@@ -87,7 +87,7 @@ The code above is the usual business when working with `Deferred` and `AsyncOper
 ```fsharp
 nextState, Cmd.fromAsync loadStoryItems
 ```
-where `loadStoryItems` has the type `Async<Msg>` which is resposible of requesting the story items from Hackernews API via HTTP and decoding the JSON from the response into a list of `HackernewsItem`. Before we get into that, let us write a dummy implementation of `loadStoryItems` which just returns a hardcoded list of items after a delay:
+where `loadStoryItems` has the type `Async<Msg>` which is responsible of requesting the story items from Hackernews API via HTTP and decoding the JSON from the response into a list of `HackernewsItem`. Before we get into that, let us write a dummy implementation of `loadStoryItems` which just returns a hardcoded list of items after a delay:
 ```fsharp
 let loadStoryItems = async {
     // simulate network delay
@@ -221,11 +221,11 @@ let loadStoryItems = async {
       return LoadStoryItems (Finished (Error responseText))
 }
 ```
-First we call `Http.get` to make a GET request against the top stories end point and if the status code of the response is 200 then we decode the response text which is in JSON format as a list of intergers using
+First we call `Http.get` to make a GET request against the top stories end point and if the status code of the response is 200 then we decode the response text which is in JSON format as a list of integers using
 ```fsharp
 Decode.fromString (Decode.list Decode.int) responseText
 ```
-When the JSON decoding is successful (i.e. you get a `int list` back) which contains the IDs of the story items, we will use each ID to load the item. To load each story item, I will write another function which itselt loads a single item based on an ID and decodes it into a `HackernewsItem`:
+When the JSON decoding is successful (i.e. you get a `int list` back) which contains the IDs of the story items, we will use each ID to load the item. To load each story item, I will write another function which itself loads a single item based on an ID and decodes it into a `HackernewsItem`:
 ```fsharp
 let itemDecoder : Decoder<HackernewsItem> =
   Decode.object (fun fields -> {
@@ -288,11 +288,11 @@ It is important to understand what is going on with the highlighted lines in the
 ```fs
 Async<Option<HackernewsItem>> list
 ```
-This type reads: "I have a list of asynchronous operations where each operations might or might not give me a `HackernewsItem`". Of course, we don't want a list of asyncrhronous operations but instead a single operation which is why aggregate those async operations into one using `Async.Parallel` which has type:
+This type reads: "I have a list of asynchronous operations where each operations might or might not give me a `HackernewsItem`". Of course, we don't want a list of asynchronous operations but instead a single operation which is why aggregate those async operations into one using `Async.Parallel` which has type:
 ```fs
 Async.Parallel : Async<'t> seq -> Async<'t array>
 
-// Subtitute 't -> Option<HackernewsItem>
+// Substitute 't -> Option<HackernewsItem>
 Async.Parallel : Async<Option<HackernewsItem>> list -> Async<Option<HackernewsItem> array>
 ```
 Finally when we have `Async<Option<HackernewsItem> array>`, we pass into `Async.map (Array.choose id >> List.ofArray)` where:
@@ -305,12 +305,12 @@ Async.map (Array.choose id >> List.ofArray)
   : Async<Option<'t> array>
  -> Async<'t list>
 
-// Subtitute 't -> HackernewItem
+// Substitute 't -> HackernewsItem
 Async.map (Array.choose id >> List.ofArray)
   : Async<Option<HackernewsItem> array>
  -> Async<HackernewsItem list>
 ```
-Phew! That was quite packed to be honest. If the functions get compilcated, *follow the types* and you will see the light at the end of the tunnel. That said, we are actually done here, the last expressions gives us `Async<HackernewsItem list>` and because we are using *let bang* in the `let! storyItems = ...` defintions, the type of `storyItems` becomes simply `HackernewsItem list` which is exactly what we want after we have aggregated all of the asynchronous operations into one and filtered out those that operations that were unsuccesful using the `Array.choose id` part.
+Phew! That was quite packed to be honest. If the functions get complicated, *follow the types* and you will see the light at the end of the tunnel. That said, we are actually done here, the last expressions gives us `Async<HackernewsItem list>` and because we are using *let bang* in the `let! storyItems = ...` definitions, the type of `storyItems` becomes simply `HackernewsItem list` which is exactly what we want after we have aggregated all of the asynchronous operations into one and filtered out those that operations that were unsuccessfully using the `Array.choose id` part.
 
 > `Async.map` unfortunately isn't part of the F# standard library. I'll leave it as an exercise for the reader to implement.
 

@@ -2,14 +2,15 @@
 
 In this section, we will take a detailed look into splitting an Elmish program into multiple programs. The key is that in this example, we are working with *simple* programs: without commands in the definition of `init` and `update`. Splitting Elmish programs with commands will be tackled in the next section. We will be covering a lot in this section, here is the table of contents of what is up next:
 
-- [Counter And Text Input](#counter-and-text-input)
-- [Refactoring The State](#refactoring-the-state)
-- [Composing Dispatch Functions](#composing-dispatch-functions)
-- [Refactoring `update` and `init`](#refactoring-update-and-init)
-- [Programs As Modules](#programs-as-modules)
-- [Bootstrapping The Application](#bootstrapping-the-application)
-- [Flow Of Messages](#flow-of-messages)
-- [Modules In Separate Files](#modules-in-separate-files)
+- [Splitting Programs](#splitting-programs)
+    - [Counter And Text Input](#counter-and-text-input)
+    - [Refactoring The State](#refactoring-the-state)
+    - [Composing Dispatch Functions](#composing-dispatch-functions)
+    - [Refactoring `update` and `init`:](#refactoring-update-and-init)
+    - [Programs As Modules](#programs-as-modules)
+    - [Bootstrapping The Application](#bootstrapping-the-application)
+    - [Flow of Messages](#flow-of-messages)
+    - [Modules In Separate Files](#modules-in-separate-files)
 
 ### Counter And Text Input
 
@@ -119,7 +120,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 ```
 The highlighted parts shows two buttons that dispatch the `SwitchPage` messages that causes the application to switch from the counter view to the text input and vice-versa.
 
-At this point, you must be thinking: "Zaid, why are we going through this simple stuff, we have seen this before! Just get to the compostion techniques already." The thing is, I want to show you that composing larger programs or in this case, splitting a bigger program into smaller ones, naturally arises from *refactoring* the common parts into separate type definitions and separate functions that handle these types. Let us try to refactor the counter view and text input view such that the implementation of either views is entirely separate from one another.
+At this point, you must be thinking: "Zaid, why are we going through this simple stuff, we have seen this before! Just get to the composition techniques already." The thing is, I want to show you that composing larger programs or in this case, splitting a bigger program into smaller ones, naturally arises from *refactoring* the common parts into separate type definitions and separate functions that handle these types. Let us try to refactor the counter view and text input view such that the implementation of either views is entirely separate from one another.
 
 ### Refactoring The State
 
@@ -167,7 +168,7 @@ type State =
     InputText: InputTextState
     CurrentPage : Page }
 ```
-Now the render functions for both views can have access only to the information thay actually require:
+Now the render functions for both views can have access only to the information they actually require:
 ```fsharp {highlight: [1, 3, 15, 26]}
 let renderCounter (state: CounterState) (dispatch: Msg -> unit) = (*...*)
 
@@ -222,9 +223,9 @@ let renderInputText (state: InputTextState) (dispatch: InputTextMsg -> unit) = (
 
 ### Composing Dispatch Functions
 
-There is a little bit of a problem. Now the smaller render functions no longer can take the `dispatch` function as input coming from the top-level `render`. Instead, the functions `renderCounter` and `renderInputText` take `CounterMsg -> unit` and `InpuTextMsg -> unit` as input, respectively.
+There is a little bit of a problem. Now the smaller render functions no longer can take the `dispatch` function as input coming from the top-level `render`. Instead, the functions `renderCounter` and `renderInputText` take `CounterMsg -> unit` and `InputTextMsg -> unit` as input, respectively.
 
-The question is, how do we make such functions when we only have the *original* function of type `Msg -> unit`? The answer is not straighforward at first glance, but it is not complicated or difficult either. It goes as follows: given an already provided dispatch function of type `Msg -> unit`, you can create *derivative* functions from it, one for the `renderCounter` and another for the `renderInputText`:
+The question is, how do we make such functions when we only have the *original* function of type `Msg -> unit`? The answer is not straightforward at first glance, but it is not complicated or difficult either. It goes as follows: given an already provided dispatch function of type `Msg -> unit`, you can create *derivative* functions from it, one for the `renderCounter` and another for the `renderInputText`:
 ```fsharp {highlight: [3, 4, 6, 7, 18, 29]}
 let render (state: State) (dispatch: Msg -> unit) =
 
@@ -403,7 +404,7 @@ And there we have it! Took us a while but we now have an `init` function, an `up
 
 ### Programs As Modules
 
-To enforce the concept that the two programs, the counter and input text, are totally separate, we can put their relavant program pieces into a *module*. In an Elmish application, we will put programs into their respective modules which expose a composable API to the outside world while hiding the small helper functions inside that module.
+To enforce the concept that the two programs, the counter and input text, are totally separate, we can put their relevant program pieces into a *module*. In an Elmish application, we will put programs into their respective modules which expose a composable API to the outside world while hiding the small helper functions inside that module.
 
 Let us move the pieces around and put them in modules: the counter goes into a `Counter` module and the input text goes into the `InputText` module. We will put the types for the state and messages in these modules as well so there will be no need for example to call the state of the counter as "CounterState" but rather simply `State` and refer to it from the parent as `Counter.State`. The same train of thought follows for `Counter.Msg`, `init`, `update` and `render`.
 

@@ -1,4 +1,4 @@
-# Elmish Hackernews: Exercices
+# Elmish Hackernews: Exercises
 
 In this section, you will be tasked to add a number of features to the Elmish Hackernews sample application starting from where we left off in [Part 3](elmish-hackernews-part3). You can clone the code repository from [Zaid-Ajaj/elmish-hackernews-part3](https://github.com/Zaid-Ajaj/elmish-hackernews-part3) and proceed from that point to implement the new requirements.
 

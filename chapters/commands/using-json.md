@@ -112,7 +112,7 @@ let update (msg: Msg) (state: State) =
       // Now we try to parse thr JSON to a `StoreInfo` instance
       match parseStoreInfo storeInfoJson with
       | Ok storeInfo ->
-          // JSON was paresed succesfully into `StoreInfo`
+          // JSON was parsed successfully into `StoreInfo`
           let nextState = { state with StoreInfo = Resolved (Ok storeInfo) }
           nextState, Cmd.none
 
@@ -127,7 +127,7 @@ let update (msg: Msg) (state: State) =
 ```
 Here, nothing changed when we receive the `LoadStoreInfo Started` message into the program, we simply load the JSON from the server. However, when message `LoadStoreInfo (Finished (Ok storeInfoJson))` is received where `storeInfoJson` is a `string`, we try to parse that piece of string into an instance of `StoreInfo` using the `parseStoreInfo` function. We haven't defined that function yet and we will be using with `Thoth.Json` to do so.
 
-> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involding any side-effects which are sometimes easier to discarded when unit-testing the `update` function.
+> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involving any side-effects which are sometimes easier to discarded when unit-testing the `update` function.
 
 We also now get a compile error in the `render` function because it doesn't know how to render the `StoreInfo`:
 ```fsharp {highlight: [11, 12, 13]}
@@ -167,7 +167,7 @@ let render (state: State) (dispatch: Msg -> unit) =
       ]
 ```
 
-Now we can get back to the implementation `parseStoreInfo` function. From the way it is used in the code, you can infer that the type of such function is `string -> Result<StoreInfo, string>`. This is because parsing usually might either be succesful and returns an instance of `StoreInfo` or might fail and returns a `string` in case the JSON is not well formatted or the decoding functions (see below) are looking for required fields that aren't present in the JSON content. Let us see how we can use `Thoth.Json` for decoding that JSON.
+Now we can get back to the implementation `parseStoreInfo` function. From the way it is used in the code, you can infer that the type of such function is `string -> Result<StoreInfo, string>`. This is because parsing usually might either be successful and returns an instance of `StoreInfo` or might fail and returns a `string` in case the JSON is not well formatted or the decoding functions (see below) are looking for required fields that aren't present in the JSON content. Let us see how we can use `Thoth.Json` for decoding that JSON.
 
 ### Decoding JSON with `Thoth.Json`
 
@@ -176,7 +176,7 @@ First of all, let us install the library into the project so that we have that o
 cd src
 dotnet add package Thoth.Json
 ```
-`Thoth.Json` is built around functional contructs called "Coders". Coders are *functions* that convert JSON and are divided into two categories:
+`Thoth.Json` is built around functional constructs called "Coders". Coders are *functions* that convert JSON and are divided into two categories:
  - *Encoders* that transform typed objects and values into JSON
  - *Decoders* that transform JSON into typed objects.
 
@@ -287,4 +287,4 @@ open Thoth.Json
 let parseStoreInfo (json: string) : Result<StoreInfo, string> =
   Decode.Auto.fromString<StoreInfo>(json)
 ```
-That is it! The function `Decode.Auto.fromString<'t>(json: string)` uses the metadata of type `'t` to infer how the type should be decoded from the input JSON string. This function is also *safe*: it returns `Result<'t, string>` which can either be the succesfully decoded `'t` or a nice error message telling you where the decoding went wrong.
+That is it! The function `Decode.Auto.fromString<'t>(json: string)` uses the metadata of type `'t` to infer how the type should be decoded from the input JSON string. This function is also *safe*: it returns `Result<'t, string>` which can either be the successfully decoded `'t` or a nice error message telling you where the decoding went wrong.

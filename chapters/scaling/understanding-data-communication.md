@@ -12,7 +12,7 @@ Consider the following application that for now only consists of a Login page as
   </div>
 </div>
 
-The end goal of this example is that after a succesful login attempt, the user is redirected to the home page where the username is shown in big bold letters. This means that we have to introduce a new page called Home and have some way of taking the result of the login operation and sharing it with the Home page. Once the Home page is active, we want the user to be able to "log out" in which case the application will reset back to the Login page. Take a second to think about how this would work and how the information would have to flow from the Login page to the Home page.
+The end goal of this example is that after a successful login attempt, the user is redirected to the home page where the username is shown in big bold letters. This means that we have to introduce a new page called Home and have some way of taking the result of the login operation and sharing it with the Home page. Once the Home page is active, we want the user to be able to "log out" in which case the application will reset back to the Login page. Take a second to think about how this would work and how the information would have to flow from the Login page to the Home page.
 
 You can find the source code of the initial repository in [Zaid-Ajaj/login-sample-initial](https://github.com/Zaid-Ajaj/login-sample-initial.git), clone it locally and follow along with the section.
 
@@ -72,7 +72,7 @@ let login (username: string) (password: string) =
             return UsernameOrPasswordIncorrect
     }
 ```
-This `LoginResult` type can either give you `UsernameOrPasswordIncorrect` if you happen to give it the wrong credentials (anything other than "admin") or it can give you a `LoggedIn of User` where `User` contains information about the use who logged in. Currently, this `User` type has only the username and an *access token*. In real world single page applications, it is common that authenticated users receive an access token after a succesful login attempt. Using this token, they can issue subsequent requests to the back-end by which they are identified and authorized. Access tokens usually do not contain sensitive information and often expire after a couple of hours. During a session, a single page application keeps track of the token from the currently logged in user because it needs this token to issue requests and ask for data about that user.
+This `LoginResult` type can either give you `UsernameOrPasswordIncorrect` if you happen to give it the wrong credentials (anything other than "admin") or it can give you a `LoggedIn of User` where `User` contains information about the use who logged in. Currently, this `User` type has only the username and an *access token*. In real world single page applications, it is common that authenticated users receive an access token after a successful login attempt. Using this token, they can issue subsequent requests to the back-end by which they are identified and authorized. Access tokens usually do not contain sensitive information and often expire after a couple of hours. During a session, a single page application keeps track of the token from the currently logged in user because it needs this token to issue requests and ask for data about that user.
 
 Enough with the little detour of security management, what we care about now is that after we get a `User` instance from logging in, we can track the currently logged in user and share his or her information across the pages of the application so that these pages can themselves issue requests to the back-end and ask for data.
 
@@ -101,7 +101,7 @@ let renderLoginOutcome (loginResult: Deferred<Api.LoginResult>)=
     | Resolved (Api.LoginResult.LoggedIn user) ->
         Html.paragraph [
             prop.style [ style.color.green; style.padding 10 ]
-            prop.text (sprintf "User '%s' has succesfully logged in" user.Username)
+            prop.text (sprintf "User '%s' has successfully logged in" user.Username)
         ]
 
     | otherwise ->
@@ -282,9 +282,9 @@ let update (msg: Msg) (state: State) =
     | _, _ ->
         state, Cmd.none
 ```
-Let that sink in for a moment because this pretty much the gist of data communication in Elmish apps: parent applications **inspect** and **intercept** events coming from child programs in order to initialize or trigger more events in the current program and other child programs. We effectively took the data from an event that occured in the Login page and used it to initialize the Home page.
+Let that sink in for a moment because this pretty much the gist of data communication in Elmish apps: parent applications **inspect** and **intercept** events coming from child programs in order to initialize or trigger more events in the current program and other child programs. We effectively took the data from an event that occurred in the Login page and used it to initialize the Home page.
 
-It is very important to understand that inspection and interception are very different: the former is only peeking into the data of the event but the latter is also preventing the child program from processing that event. In the snippet above, once the parent program has intercepted the event of a succesful login attempt, it directly initializes the Home page without letting the Login page process that event. Keep this in mind because sometime you still want to the state of the child program to change or let execute side-effects in which case you only want to do inspection. More on this coming up. Now let us see the results of the application:
+It is very important to understand that inspection and interception are very different: the former is only peeking into the data of the event but the latter is also preventing the child program from processing that event. In the snippet above, once the parent program has intercepted the event of a successful login attempt, it directly initializes the Home page without letting the Login page process that event. Keep this in mind because sometime you still want to the state of the child program to change or let execute side-effects in which case you only want to do inspection. More on this coming up. Now let us see the results of the application:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">

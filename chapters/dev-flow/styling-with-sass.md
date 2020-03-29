@@ -123,7 +123,7 @@ body {
     background-color: $primary-color
 }
 ```
-Finally you can use it from the application by importing the file as a *"side-effect"*. These so-called side-effectful imports are those that do something when imported but don't return any value. In this case with styles, the side-effect is applying the stylesheet into the application. Other side-effectul modules can be those that add missing APIs into the page, also known as *polyfilling*.
+Finally you can use it from the application by importing the file as a *"side-effect"*. These so-called side-effectful imports are those that do something when imported but don't return any value. In this case with styles, the side-effect is applying the stylesheet into the application. Other side-effectful modules can be those that add missing APIs into the page, also known as *polyfilling*.
 
 Alright, now just like what we did with the static images, I like to write a specialized module for importing these stylesheets:
 ```fsharp
@@ -146,7 +146,7 @@ In chapters 2 and 3 we used the [Bulma](https://bulma.io) library for styling. W
 
 > I am taking Bulma as an example but this applies to many other CSS frameworks.
 
-Will will now fix these problems and allow our application to override the default colors used by Bulma. First of all, we install Bulma as an *npm package*:
+We will now fix these problems and allow our application to override the default colors used by Bulma. First of all, we install Bulma as an *npm package*:
 ```bash
 npm install bulma
 ```

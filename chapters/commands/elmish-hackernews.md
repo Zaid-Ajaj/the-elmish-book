@@ -1,6 +1,6 @@
 # Elmish Hackernews
 
-In this chapter, we hopefully learnt a lot about Elmish commands, HTTP and JSON. It is time to wrap up the chapter with an application that lets us apply these concepts within a realistic scenario. We will be attempting to build a clone application of [Hackernews](https://news.ycombinator.com). Hackersnews, as you might have guessed, is a news website where people post links to interesting topics in programming, math and entrepreneurship. The cool thing about Hackernews is that they have a public API that you can query and get the news items yourself and then render them however you like in your application. This public API provided by Hackernews is *interesting* in the sense that it isn't particularly developer friendly like most common web APIs which makes it a perfect candidate to tackle and learn from.
+In this chapter, we hopefully learnt a lot about Elmish commands, HTTP and JSON. It is time to wrap up the chapter with an application that lets us apply these concepts within a realistic scenario. We will be attempting to build a clone application of [Hackernews](https://news.ycombinator.com). Hackernews, as you might have guessed, is a news website where people post links to interesting topics in programming, math and entrepreneurship. The cool thing about Hackernews is that they have a public API that you can query and get the news items yourself and then render them however you like in your application. This public API provided by Hackernews is *interesting* in the sense that it isn't particularly developer friendly like most common web APIs which makes it a perfect candidate to tackle and learn from.
 
 ### Hackernews API
 "So what makes Hackernews so *interesting*?" I hear you say. Well, to be able to build a meaningful page with links to stories and posts, you have to issue *multiple HTTP requests* and combine their results before you can render these links and posts on screen.
@@ -31,7 +31,7 @@ Understanding the API you are working with is crucial before you are able to pro
 
 For the purposes of our Elmish Hackernews clone we will be restricting ourselves into just getting the information of items and render them as a list with links to the `url` of those items. Building an entire clone that maps to the API is out of scope for this application, though definitely possible using the techniques that we will be applying in the remainder of this chapter.
 
-Just like with chapter 2, I have divivded the implementation of the Elmish Hackernews aoplication into three parts where we incrementally add more features as we go based on some requirements. The chapter wraps up with exercises where I will ask you to add features to it.
+Just like with chapter 2, I have divided the implementation of the Elmish Hackernews application into three parts where we incrementally add more features as we go based on some requirements. The chapter wraps up with exercises where I will ask you to add features to it.
 
 > Besides the exercises of the chapter, there is *always* the mental exercise of how to translate the application requirements into a model we use for the `State` type of the application and the associated events (i.e `Msg`) for it. This shapes your train of thought whenever you encounter different requirements for future applications.
 

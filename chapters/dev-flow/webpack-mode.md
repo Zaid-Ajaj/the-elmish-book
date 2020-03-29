@@ -35,7 +35,7 @@ Now set mode to `production` and run `npm run build` again. The generated `main.
 
 ### Automatically Configuring Mode
 
-Now while you are writing your application, you don't to want to manually change the mode from `development` to `production` manually. First of all because it is tedious and because we want to configure multiple things based on the mode. To do that, we can provide the `mode` from the place where we call webpack: npm scripts. There, we can simply provide the `mode` as a command-line argument for webpack:
+Now, while you are writing your application, you don't want to change the mode from `development` to `production` manually. First of all because it is tedious and because we want to configure multiple things based on the mode. To do that, we can provide the `mode` from the place where we call webpack: npm scripts. There, we can simply provide the `mode` as a command-line argument for webpack:
 ```json {highlight: [4, 5]}
 {
   "private": true,

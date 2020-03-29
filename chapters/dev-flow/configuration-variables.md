@@ -25,7 +25,7 @@ Start by creating such file named `.env` *next* to the `webpack.config.js` file 
 MESSAGE=Welcome to Fable from config
 MESSAGE_COLOR=blue
 ```
-Even though we don't use any secrets or API keys in this example, it is good pratice to put this file in the list of `git-ignored` files and only use it during development per developer machine. Later on if you are building your application inside of a CI server, the variables will be loaded from the configured envionment variables which every CI server supports instead of the values in this file.
+Even though we don't use any secrets or API keys in this example, it is good practice to put this file in the list of `git-ignored` files and only use it during development per developer machine. Later on if you are building your application inside of a CI server, the variables will be loaded from the configured environment variables which every CI server supports instead of the values in this file.
 
 After you have added file, you need to install a webpack plugin that will load the key-pair values as well as all environment variables and make them available for use from within the application. Install this plugin using `npm`:
 ```bash
@@ -81,7 +81,7 @@ open Fable.Core
 open Fable.Core.JsInterop
 
 /// Returns the value of a configured variable using its key.
-/// Retursn empty string when the value is not defined
+/// Returns empty string when the value is not defined
 [<Emit("process.env[$0] ? process.env[$0] : ''")>]
 let variable (key: string) : string = jsNative
 ```
