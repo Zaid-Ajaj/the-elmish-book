@@ -1,8 +1,8 @@
 # Styling With Sass
 
-In Elmish applications, we can add stying to our applications by simply customizing the `style` property of individual UI elements. This is called *inline-stying*. Another way to use styles is to write CSS files and include them in the `index.html` file. I think that if you are writing your application styling from scratch, that inline-styling would be the way to go because the API is nice to work with and you have the power of all the F# language to do all kinds of manipulations and transformations required for the styles.
+In Elmish applications, we can add styling to our applications by simply customizing the `style` property of individual UI elements. This is called *inline-styling*. Another way to use styles is to write CSS files and include them in the `index.html` file. I think that if you are writing your application styling from scratch, that inline-styling would be the way to go because the API is nice to work with and you have the power of all the F# language to do all kinds of manipulations and transformations required for the styles.
 
-However, chances are you will not write inline styles from scratch for the entire application. You will either be using some kind of CSS framework like Bulma or React library like AntDesign that has predefined styles or the designers on your team prefere to write the styling in a language that they are most familiar with: old-school CSS.
+However, chances are you will not write inline styles from scratch for the entire application. You will either be using some kind of CSS framework like Bulma or React library like AntDesign that has predefined styles or the designers on your team prefer to write the styling in a language that they are most familiar with: old-school CSS.
 
 The CSS language has been around for quite sometime now. Nowadays, there are better tools to build the styling of an application. One such tool is the [Sass](https://sass-lang.com/) language: A modern *superset* of CSS that allows developers to build modular and maintainable style sheets for an application.
 
@@ -125,7 +125,7 @@ body {
 ```
 Finally you can use it from the application by importing the file as a *"side-effect"*. These so-called side-effectful imports are those that do something when imported but don't return any value. In this case with styles, the side-effect is applying the stylesheet into the application. Other side-effectul modules can be those that add missing APIs into the page, also known as *polyfilling*.
 
-Alrgiht, now just like what we did with the static images, I like to write a specialized module for importing these stylesheets:
+Alright, now just like what we did with the static images, I like to write a specialized module for importing these stylesheets:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Stylesheet
@@ -146,7 +146,7 @@ In chapters 2 and 3 we used the [Bulma](https://bulma.io) library for styling. W
 
 > I am taking Bulma as an example but this applies to many other CSS frameworks.
 
-Will will now fix these problems and allow our application to override the default colors used by Bulma. First of all, we install Bulam as an *npm package*:
+Will will now fix these problems and allow our application to override the default colors used by Bulma. First of all, we install Bulma as an *npm package*:
 ```bash
 npm install bulma
 ```
@@ -155,7 +155,7 @@ Once that is finished, we will have Bulma installed locally. The thing is, Bulma
 /* main.scss */
 @import "bulma";
 ```
-Now all of Bulma modules are imported into the application. You can cherry pick the modules you want by first including the utilities that other modules:
+Now all of Bulma modules are imported into the application. You can cherry pick the modules you want by first including the utilities that other modules require:
 ```css
 /* main.scss */
 @import "bulma/sass/utilities/_all.sass";
@@ -183,6 +183,6 @@ Another language that compiles to CSS is [Less](http://lesscss.org) which is sim
 
 ### Further Reading
 
-Sass and less are entire world of their own. I would recommend you read the official documentation of both [Sass](https://sass-lang.com/documentation) and [Less](http://lesscss.org/features) to learn more about them. Even though if you don't plan on becomming a specialist in either technologies, it would benifit you and your team if you can read the code and be able to do just a tad more than what you would be able to do with CSS.
+Sass and less are entire world of their own. I would recommend you read the official documentation of both [Sass](https://sass-lang.com/documentation) and [Less](http://lesscss.org/features) to learn more about them. Even though if you don't plan on becoming a specialist in either technologies, it would benefit you and your team if you can read the code and be able to do just a tad more than what you would be able to do with CSS.
 
-Last point I want to talk about is the fact that we are compiling the stylesheets into (side-effectful) Javascript modules which are imported at the entry point of the Fable project. Depending on how big your stylesheets are, the main generated bundle can become bigger than it should be and take longer to download on initial loading of the application. In many cases, we would like to *extract* the used stylesheets into a seperate CSS output file. This requires a combination of using the awesome [mini-css-extract](https://github.com/webpack-contrib/mini-css-extract-plugin) plugin which is usually included in most webpack templates that you can come across.
+Last point I want to talk about is the fact that we are compiling the stylesheets into (side-effectful) Javascript modules which are imported at the entry point of the Fable project. Depending on how big your stylesheets are, the main generated bundle can become bigger than it should be and take longer to download on initial loading of the application. In many cases, we would like to *extract* the used stylesheets into a separate CSS output file. This requires a combination of using the awesome [mini-css-extract](https://github.com/webpack-contrib/mini-css-extract-plugin) plugin which is usually included in most webpack templates that you can come across.

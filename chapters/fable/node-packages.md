@@ -44,8 +44,8 @@ The location of the `package.json` file *implies* that this directory is indeed 
   }
 }
 ```
-### Developement dependencies
-This `package.json` has two very important sections: the `devDependencies` and `scripts`. The former section defines *development* dependencies which are libraries and cli programs used during developement. When you run `npm install` in the directory where `package.json` lives, all these dependencies are downloaded into a directory called `node_modules` next to `package.json`.
+### Development dependencies
+This `package.json` has two very important sections: the `devDependencies` and `scripts`. The former section defines *development* dependencies which are libraries and cli programs used during development. When you run `npm install` in the directory where `package.json` lives, all these dependencies are downloaded into a directory called `node_modules` next to `package.json`.
 
 This means your development dependencies are installed on a *per-project* basis which is really great because first, you do not need to install any program to compile your project and second because the versions of these programs are maintained inside `package.json` allowing you to work on multiple projects on the same machine that uses different versions of the same programs. For example, you can work on a project A that uses Fable `1.x` and another project B that uses Fable `2.x` without the two interfering with each other.
 

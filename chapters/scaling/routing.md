@@ -1,6 +1,6 @@
 # Routing And Navigation
 
-Routing is an essential part of building single page applications. It is the main machanism for switching the currently active page for any program. The idea revolves around a simple concept: listen to changes in the URL and react to those changes in the application. These changes can be manual when the user enters a URL in the address bar by hand or they could programmatic where the application itself changes the URL. An important characteristic of routing in single page applications is that the application reacts to the changes of the URL *without* reloading the entire page. This means the application maintains its state as route changes which is great because you can pass data around pages when you switch between them, for example passing information about the currently logged in user without having them to login again every time they navigate to another page. However, since the application maintains its state, it should be able to *retain* it if the user happens to fully refresh the page using F5. So we have to think about the *re-initialization* conditions when a full refresh occurs. More on that later, for now let us start with the simple examples.
+Routing is an essential part of building single page applications. It is the main mechanism for switching the currently active page for any program. The idea revolves around a simple concept: listen to changes in the URL and react to those changes in the application. These changes can be manual when the user enters a URL in the address bar by hand or they could programmatic where the application itself changes the URL. An important characteristic of routing in single page applications is that the application reacts to the changes of the URL *without* reloading the entire page. This means the application maintains its state as route changes which is great because you can pass data around pages when you switch between them, for example passing information about the currently logged in user without having them to login again every time they navigate to another page. However, since the application maintains its state, it should be able to *retain* it if the user happens to fully refresh the page using F5. So we have to think about the *re-initialization* conditions when a full refresh occurs. More on that later, for now let us start with the simple examples.
 
 ### Listening For URL Changes
 
@@ -9,7 +9,7 @@ In Elmish terms, when we say "listening for URL changes" we really mean that the
 type Msg =
     | UrlChanged of string
 ```
-We model URL changes using an event called `UrlChanged` which contains the newly modified URL. It is really that simple. Here is a psuedo-application that makes use of this feature where you only have to maintain the URL in the state and render different UI elements based on that URL:
+We model URL changes using an event called `UrlChanged` which contains the newly modified URL. It is really that simple. Here is a pseudo-application that makes use of this feature where you only have to maintain the URL in the state and render different UI elements based on that URL:
 ```fsharp
 type State = { CurrentUrl : string }
 
@@ -29,7 +29,7 @@ let render state dispatch =
     | "/contact" -> Html.h1 "Contact"
     | _ -> Html.h1 "Not Found"
 ```
-The only piece missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows how to with work URLs, parse them correctly and provide utilities to manage the history API: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truely as an essential part of the Feliz ecosystem.
+The only piece missing from the application above is the actual "listening to URL changes" part. The implementation for the listening for URL changes is best left out for a third-party library that knows how to with work URLs, parse them correctly and provide utilities to manage the history API: introducing [Feliz.Router](https://github.com/Zaid-Ajaj/Feliz.Router), a specialized library for routing in Elmish applications that is both very powerful to use and really simple to work with, written by yours truly as an essential part of the Feliz ecosystem.
 
 ### Using `Feliz.Router`
 

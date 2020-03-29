@@ -4,7 +4,7 @@ In the previous section when we were [wiring up the pages](understanding-data-co
 - Intercept the event without propagating it further down to child programs.
 - Inspect the event and propagate it to the child program for further processing.
 
-The App program intercepted the event from the Login page when a user has succesfully logged in and decided not to propagate that event further down to the Login program. It makes to do so because we switched the currently active page to Home when that event occured so there is no point from having Login process the event any further. We can take this as a high-level guideline: when intercepting events from child programs, we do not have to propagate these events down if we are switching the currently active page.
+The App program intercepted the event from the Login page when a user has successfully logged in and decided not to propagate that event further down to the Login program. It does so because we switched the currently active page to Home when that event occurred so there is no point in having Login process the event any further. We can take this as a high-level guideline: when intercepting events from child programs, we do not have to propagate these events down if we are switching the currently active page.
 
 Although this makes sense from the parent program perspective, it feels weird from the child program point of view where it expects that the events will be processed no matter which event that is.
 
@@ -12,7 +12,7 @@ It might also lead to bugs where a programmer is staring at the `update` functio
 
 ### The `Intent` Type
 
-The best way to communicate intensions of certain parts of the application is to encode them using the type system and have the compiler help us figure out from the parent program point of view what we should inspect and what we should intercept: enter the `Intent` type.
+The best way to communicate intentions of certain parts of the application is to encode them using the type system and have the compiler help us figure out from the parent program point of view what we should inspect and what we should intercept: enter the `Intent` type.
 
 > The `Intent` type is also known as `ExternalMsg`.
 
@@ -27,7 +27,7 @@ type Intent =
     | UserLoggedIn of Api.User
     | DoNothing
 ```
-We also add another case of `Intent.DoNothing` which means that the parent program shouldn't take further action other than propagating the events as is. Then we can can extend the definition of the `update` function and have return the intent as part of its return values:
+We also add another case of `Intent.DoNothing` which means that the parent program shouldn't take further action other than propagating the events as is. Then we can can extend the definition of the `update` function and have it return the intent as part of its return values:
 ```fsharp {highlight: [19, 20, 21]}
 let update (msg: Msg) (state: State) =
     match msg with

@@ -45,7 +45,7 @@ Right now these commands aren't doing anything which is fine because this is jus
 
 ### Commands In Counter
 
-Now that the entry program can work with commands, we can start implementing the delayed incrementation of the counter inside the `Counter` child program. There is actually nothing new in this, so I will just present the pieces that were modified:
+Now that the entry program can work with commands, we can start implementing the delayed incrementing of the counter inside the `Counter` child program. There is actually nothing new in this, so I will just present the pieces that were modified:
 ```fsharp {highlight: [8, '19-25', '37-40']}
 (* In Counter.fs *)
 [<RequireQualifiedAccess>]
@@ -113,7 +113,7 @@ let update (msg: Msg) (state: State) =
   | SwitchPage page ->
       { state with CurrentPage = page }, Cmd.none
 ```
-The `Counter.update` function now returns a tuple: the updated state and a command. As things stand now from the snippet above, only the updated state of the counter is being used to update the next state of the parent program. However, the command returned from the function, i.e. the `counnterCmd` value, is just ignored there. What do we do with it? If it was a root program, we just return the command and the Elmish dispatch loop takes care of it, but now since it is coming from the child program, the parent program is responsible for it.
+The `Counter.update` function now returns a tuple: the updated state and a command. As things stand now from the snippet above, only the updated state of the counter is being used to update the next state of the parent program. However, the command returned from the function, i.e. the `counterCmd` value, is just ignored there. What do we do with it? If it was a root program, we just return the command and the Elmish dispatch loop takes care of it, but now since it is coming from the child program, the parent program is responsible for it.
 
 Consider the type signature of `counterCmd`, it is `Cmd<Counter.Msg>`. What we actually need is a `Cmd<App.Msg>` so that it becomes the command that is able to dispatch messages of the top-level `Msg` type and let the Elmish dispatch loop take care of the rest.
 

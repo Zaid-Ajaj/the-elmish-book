@@ -4,7 +4,7 @@ What happens within a child program is often of interest for other child program
 
 Since all events of child programs has to go through the parent, the parent program can decide whether to just pass down these events to the child programs for further processing or it can initiate different events in other child programs after initializing them. To better understand what I am talking about, let us go through an example.
 
-Consider the following application that for now only consists of a Login page as you can see below. After logging in, the result of the login attempt is shown below the Login button where it will be a succesful attempt when the username and password are both "admin". Using other credentials will fail to login and an error "Username or password is incorrect" is shown on screen.
+Consider the following application that for now only consists of a Login page as you can see below. After logging in, the result of the login attempt is shown below the Login button where it will be a successful attempt when the username and password are both "admin". Using other credentials will fail to login and an error "Username or password is incorrect" is shown on screen.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">
@@ -124,11 +124,11 @@ Html.div [
     ]
 ]
 ```
-I will let you study the rest of the render function on your own, there isn't much worth noting except for the fact that we are sing [Bulma](https://bulma.io) classes for stying.
+I will let you study the rest of the render function on your own, there isn't much worth noting except for the fact that we are using [Bulma](https://bulma.io) classes for styling.
 
 ### Modelling The Home Page
 
-Once the currently logged in user lands on the Home page, he or she should see their username on that page. This means that the Home page has information about currently logged in user. Regardless of where this information comes from, it is a *requirement* for initializing the Home page: it shoudn't be possible to go the Home page without obtaining an instance of a `User` first. This can be inforced by modelling the exposed program API of Home to reflect this requirement, specifically in the `init` function of Home:
+Once the currently logged in user lands on the Home page, he or she should see their username on that page. This means that the Home page has information about currently logged in user. Regardless of where this information comes from, it is a *requirement* for initializing the Home page: it shouldn't be possible to go the Home page without obtaining an instance of a `User` first. This can be enforced by modelling the exposed program API of Home to reflect this requirement, specifically in the `init` function of Home:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Home
@@ -249,7 +249,7 @@ This implementation is basically saying these things:
  - "Whenever you receive events from Home while the Home page is active, then process these events in Home and update the state accordingly"
  - "Otherwise, do nothing at all and return the state as is"
 
-If you were to run the application using this implementation of `update`, the user will be presented with the Login page and stay there forever! Indeed, this is because we are missing an important piece of logic here: initializing the Home page. We have to ask ourselves: "At which point should the Home page get initialized?" or in other words, "Which *events* cause the Home page to be initialized?" Well, we know exactly when that should happen. Namely, when a user has succesfully logged in. Specifically when the parent App receives a `LoginMsg loginMsg` where `loginMsg` is:
+If you were to run the application using this implementation of `update`, the user will be presented with the Login page and stay there forever! Indeed, this is because we are missing an important piece of logic here: initializing the Home page. We have to ask ourselves: "At which point should the Home page get initialized?" or in other words, "Which *events* cause the Home page to be initialized?" Well, we know exactly when that should happen. Namely, when a user has successfully logged in. Specifically when the parent App receives a `LoginMsg loginMsg` where `loginMsg` is:
 ```fsharp
 Msg.Login (Finished (LoginResult.LoggedIn user))
 ```
@@ -320,7 +320,7 @@ let update (msg: Msg) (state: State) =
 ```
 Intercepting the `Logout` will simply reset the data to its initial state using the `init` which effectively resets the application right back into the Login page.
 
-> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and F# compiler will complain that the second pattern will never match but I will keep it nontheless because usually there are more than one event that can occur in child programs.
+> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and F# compiler will complain that the second pattern will never match but I will keep it nonetheless because usually there are more than one event that can occur in child programs.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">

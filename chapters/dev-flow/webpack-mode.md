@@ -29,13 +29,13 @@ cd elmish-getting-started
 npm install
 npm run build
 ```
-At the time of writing using webpack v4.38.0, the generated `main.js` file is 1414KB big! that is 1.4 megabytes for the simple counter application before we even get started to write more code or add more libraries. This size of an application is simply not acceptable in production because the users have to download the application before they can use it: time is wasted not just on downloading but also parsing and evalulating 1.4MB of Javascript code.
+At the time of writing using webpack v4.38.0, the generated `main.js` file is 1414KB big! that is 1.4 megabytes for the simple counter application before we even get started to write more code or add more libraries. This size of an application is simply not acceptable in production because the users have to download the application before they can use it: time is wasted not just on downloading but also parsing and evaluating 1.4MB of Javascript code.
 
 Now set mode to `production` and run `npm run build` again. The generated `main.js` has now become 161KB! That is just crazy; webpack used all the tricks of the trade to shave off every possible bit of unused code in a process called tree-shaking then made the bundle even smaller during obfuscation by removing comments, whitespace and renaming functions and variables to a very short equivalent.
 
 ### Automatically Configuring Mode
 
-Now while you are writing your application, you don't to want to manually change the mode from `development` to `production` manually. First of all because it is tedius and because we want to configure multiple things based on the mode. To do that, we can provide the `mode` from the place where we call webpack: npm scripts. There, we can simply provide the `mode` as a command-line argument for webpack:
+Now while you are writing your application, you don't to want to manually change the mode from `development` to `production` manually. First of all because it is tedious and because we want to configure multiple things based on the mode. To do that, we can provide the `mode` from the place where we call webpack: npm scripts. There, we can simply provide the `mode` as a command-line argument for webpack:
 ```json {highlight: [4, 5]}
 {
   "private": true,
@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-Here, the configuration module doesn't export the configuration object anymore but rather exports a *function* that returns the build configuration. That function takes in the command-line arguments in the form of `argv` paramter from which we extract the `mode` and supply it to the returned object.
+Here, the configuration module doesn't export the configuration object anymore but rather exports a *function* that returns the build configuration. That function takes in the command-line arguments in the form of `argv` parameter from which we extract the `mode` and supply it to the returned object.
 
 That is pretty much it. We have optimized the workflow to use the proper build mode based on the npm script that we run. Using `npm run build` now passes the `production` mode and using `npm start` passes `development` mode to webpack automatically.
 

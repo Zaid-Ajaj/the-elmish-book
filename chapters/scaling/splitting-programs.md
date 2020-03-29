@@ -321,7 +321,7 @@ let render (state: State) (dispatch: Msg -> unit) =
 ```
 It comes down to the syntax of `(ChildMsg >> dispatch)` which effectively *translates* messages from the child program message type (i.e. `CounterMsg` and `CounterMsg`) into a message type of the parent program (i.e. `Msg`) which is then `dispatch`-ed back into the dispatch loop to be handled by the `update` function and so on and so forth.
 
-In many examples out there, this final form is shown as a first example which could prove to be quite of a head-scratcher, I know for me it was. However, once you disect where it comes from and the reasoning behind it then it all makes sense.
+In many examples out there, this final form is shown as a first example which could prove to be quite of a head-scratcher, I know for me it was. However, once you dissect where it comes from and the reasoning behind it then it all makes sense.
 
 ### Refactoring `update` and `init`:
 
@@ -349,9 +349,9 @@ val initCounter : unit -> CounterState
 val initInputText : unit -> InputTextState
 val init : unit -> State
 ```
-All of these functions have `unit` as input. It makes sense the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having a `init` signature of `User -> UserDashboardState`. We will take a look at such example at a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
+All of these functions have `unit` as input. It makes sense the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data to initialize their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having a `init` signature of `User -> UserDashboardState`. We will take a look at such an example in a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
 
-Moving on to the `update` function, which has become a bit of a mess because of the types that were introducee earlier, let's take a look:
+Moving on to the `update` function, which has become a bit of a mess because of the types that were introduced earlier, let's take a look:
 ```fsharp
 let update (msg: Msg) (state: State): State =
   match msg with
@@ -440,7 +440,7 @@ module Counter =
       Html.h1 state.Count
     ]
 ```
-As simple as that, this `Counter` module is a self-contained program exposing all the required parts to become compasable with a parent program as we will see in a bit. Notice the `RequireQualifiedAccess` attribute added to the module to simplify API discoverability and know which function is coming from which module.
+As simple as that, this `Counter` module is a self-contained program exposing all the required parts to become composable with a parent program as we will see in a bit. Notice the `RequireQualifiedAccess` attribute added to the module to simplify API discoverability and know which function is coming from which module.
 
 The same logic follows for the `InputText` module:
 
@@ -485,7 +485,7 @@ module InputText =
       Html.h3 (if state.IsUpperCase then state.InputText.ToUpper() else state.InputText)
     ]
 ```
-Again, the module `InputText` is written such that it contains all the pieces required for an Elmish program. Of course, these pieces don't do anything on their own unless the outside world - the parent program - consumes them and puts the pieces together: composing the lego blocks into bigger pieces. This is the resposibility of the parent program which I will call `App`:
+Again, the module `InputText` is written such that it contains all the pieces required for an Elmish program. Of course, these pieces don't do anything on their own unless the outside world - the parent program - consumes them and puts the pieces together: composing the lego blocks into bigger pieces. This is the responsibility of the parent program which I will call `App`:
 ```fsharp
 [<RequireQualifiedAccess>]
 module App =

@@ -75,7 +75,7 @@ type State =
       CurrentUrl  : Url
       CurrentPage : Page }
 ```
-Here, the `Page.Index` and `Url.Index` both refere to the Home page itself. Another curious case of URL is the `Logout` case. We are implementing it here such that if the application navigated to the `/logout` URL, then the user of the application will be reset back to `Anonymous`. Of course, I could have implement a specialized case in the `Msg` called `Logout` but I want to follow a simple rule for consistency: Page changes are always driven URL changes. This includes logging out.
+Here, the `Page.Index` and `Url.Index` both refer to the Home page itself. Another curious case of URL is the `Logout` case. We are implementing it here such that if the application navigated to the `/logout` URL, then the user of the application will be reset back to `Anonymous`. Of course, I could have implement a specialized case in the `Msg` called `Logout` but I want to follow a simple rule for consistency: Page changes are always driven URL changes. This includes logging out.
 
 We are also assuming we have two pages, `Login` and `Overview` implemented as child programs of `Home` in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user (requires a user for initialization). We will not be focussing a lot on the `Login` and `Overview` modules because the interesting stuff are happening in the parent `Home` that is managing which page to show based on the URL and how to propagate the information based on whether or not a user has logged in.
 
@@ -260,7 +260,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         ]
     ]
 ```
-And with that, we finish up our last sample application of this chapter. A lot of large applications follow this exact sturcture, only with many more pages and different behaviors per page. I have demonstrated the fundamental aspects of data communication with respect to routing and hope that you will be able to adapt the techniques learnt in this chapter to suit your application's needs.
+And with that, we finish up our last sample application of this chapter. A lot of large applications follow this exact structure, only with many more pages and different behaviors per page. I have demonstrated the fundamental aspects of data communication with respect to routing and hope that you will be able to adapt the techniques learnt in this chapter to suit your application's needs.
 
 You can find the full source code of this application in the repository [Zaid-Ajaj/login-with-url-extended](https://github.com/Zaid-Ajaj/login-with-url-extended)
 

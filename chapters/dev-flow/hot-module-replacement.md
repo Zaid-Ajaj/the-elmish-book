@@ -4,7 +4,7 @@ Very early on in chapter 1, we learnt about [Development Mode](../fable/developm
 
 Image you have an application where you first have to login to get to the page you are currently working on. Everytime you make a change in the source code like changing the font size of some element, the page is refreshed and you are reset back to the login page where you have to login again to see your changes.
 
-Here is where *hot module replacement* (HMR for short) comes into play. Instead of refreshing the entire page when some piece of code changes, only that piece is recompiled and *re-executed seperately* to reflect the changes without needing a full page refresh.
+Here is where *hot module replacement* (HMR for short) comes into play. Instead of refreshing the entire page when some piece of code changes, only that piece is recompiled and *re-executed separately* to reflect the changes without needing a full page refresh.
 
 Consider the following example **without** HMR where changing the source code resets the state:
 
@@ -24,9 +24,9 @@ However, when Hot Module Replacement is enabled, it is a whole new level of grea
 
 As you can see, changing certain pieces of the user interface updates automatically while *maintaining the state* without full refresh. This makes prototyping the user interface a real joy and once you get used, you never want to go back.
 
-Now that I have hyped up this feature, let us see how to enable it in our project. Hot Module Replacement is enabled just a webpack plugin. Just like with dotenv files, we will a plugin to webpack for HMR. However, this time it will be a *development-specific* plugin: only available while developing because we don't want to enable it with our production builds since it adds some extra code to the bundle to communicate with webpack development server via web sockets.
+Now that I have hyped up this feature, let us see how to enable it in our project. Hot Module Replacement is enabled by just adding a webpack plugin. Just like with dotenv files, we will add the plugin to webpack for HMR. However, this time it will be a *development-specific* plugin: only available while developing because we don't want to enable it with our production builds since it adds some extra code to the bundle to communicate with webpack development server via web sockets.
 
-We can add import by first importing the webapck module in the beginning of the `webpack.config.js`file
+We can add import by first importing the webpack module in the beginning of the `webpack.config.js`file
 ```js
 var webpack = require("webpack");
 ```
@@ -123,14 +123,14 @@ module.exports = (env, argv) => {
     }
 }
 ```
-What is going on there? It is a simple check: if we are in development mode, the configured plugins are the dotenv and HMR plugin, otherwise in production just the HMR plugin. Now you can easily add mode-specific plugins to your webpack configuration file.
+What is going on there? It is a simple check: if we are in development mode, the configured plugins are the dotenv and HMR plugin, otherwise in production just the dotenv plugin. Now you can easily add mode-specific plugins to your webpack configuration file.
 
 Now adding just the HMR plugin is not enough to make our Elmish programs maintain their state while modifying the code. We have to modify the bootstrapping of the Elmish program a bit by first installing a package called `Fable.Elmish.HMR` like this:
 ```bash
 cd src
 dotnet add package Fable.Elmish.HMR
 ```
-After installation completes, go to the `App.fs` F# file where the root program is boostrapped like this at the end of the file:
+After installation completes, go to the `App.fs` F# file where the root program is bootstrapped like this at the end of the file:
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
@@ -146,7 +146,7 @@ Program.mkSimple init update render
 ```
 That's it! Make absolutely sure that you open the `Elmish.HMR` namespace as the last one just before bootstrapping the root program. What happens is that functions from the `Program` module are *shadowed* by functions coming from the namespace `Elmish.HMR` which is why `Elmish.HMR` has to be the last opened namespace (before `Elmish` and `Elmish.React` anyways) when enabling Hot Module Replacement in our application.
 
-Since the bootstrapping of the program now uses always enables HMR in Elmish, we can go one step further and make it development-specific like we did with the plugin:
+Since the bootstrapping of the program currently always enables HMR in Elmish, we can go one step further and make it development-specific like we did with the plugin:
 ```fsharp
 #if !DEBUG
 open Elmish

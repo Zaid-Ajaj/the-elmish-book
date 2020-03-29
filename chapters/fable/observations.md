@@ -4,7 +4,7 @@ You might be wondering why we made the trivial counter application in the previo
 
 ### Fable is a general-purpose compiler
 
-Assuming you have done any JavaScript developement before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure javascript to implement the same app it would look something like this:
+Assuming you have done any JavaScript development before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure javascript to implement the same app it would look something like this:
 ```js
 const increase = document.getElementById("increase")
 const decrease = document.getElementById("decrease")
