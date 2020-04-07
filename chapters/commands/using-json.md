@@ -253,11 +253,11 @@ Decoder.map Decoder.int (fun parsedInt -> string parsedInt) : Decoder<string>
 Now we have our decoders ready to define the `parseStoreInfo` function that we want to use inside of the `update` function:
 ```fsharp
 let parseStoreInfo (inputJson: string) : Result<StoreInfo, string> =
-  Decoder.fromString storeInfoDecoder inputJson
+  Decode.fromString storeInfoDecoder inputJson
 ```
 This can be simplified even further:
 ```fsharp
-let parseStoreInfo = Decoder.fromString storeInfoDecoder
+let parseStoreInfo = Decode.fromString storeInfoDecoder
 ```
 Et voilà, the application is now parsing the JSON and showing data on screen.
 
