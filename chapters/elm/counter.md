@@ -29,7 +29,7 @@ Then we define the `State` type, also known as the data model of the application
 type State =
     { Count : int }
 ```
-Within every Elmish application, the very first part to think about it the `State` type. This type captures the data model we want to keep track of while the application is running. In the case of our simple counter application, we want to keep track of the current count which happens to be an integer.
+Within every Elmish application, the very first part to think about is the `State` type. This type captures the data model we want to keep track of while the application is running. In the case of our simple counter application, we want to keep track of the current count which happens to be an integer.
 
 This is a recurring theme in Elmish applications, we always start by asking the question: "What is the data model I want to keep track of that will hold the state of the application?" or more specifically "Which pieces of information do I need to keep track of in order to be able to build the entire user interface?"
 
@@ -85,13 +85,13 @@ let render (state: State) (dispatch: Msg -> unit) =
 ```
 > This function is also commonly known as the `view` function. I will use `render` and `view` interchangeably throughout the book.
 
-The `render` function computes the user interface of the application based on the *current* state of the application (i.e. the first parameter) and the second parameter ("dispatch") is function that *translates* UI events into Elmish messages or events.
+The `render` function computes the user interface of the application based on the *current* state of the application (i.e. the first parameter) and the second parameter ("dispatch") is the function that *translates* UI events into Elmish messages or events.
 
-The `render` function returns a tree-like structure similar to that of HTML that can be built using just functions. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. This DSL consists of functions that represent Html tags, such as `div` and `button`. These function take a list of "properties", also known as "props". These properties dictate the various properties that the elements can have such there `id`, `class` and `style` that correspond the Html attributes the associated tags have. Alongside attributes, these props also include the event handlers for the elements such as the `onClick` event handler. Using this DSL in place, you can easily build Html trees in F# code. More on the `render` function in the next section.
+The `render` function returns a tree-like structure similar to that of HTML that can be built using just functions. The syntax takes a bit of time to get used to but essentially it is a representation of how the Html will look like when it is rendered. This DSL consists of functions that represent Html tags, such as `div` and `button`. These functions take a list of "properties", also known as "props". These props dictate the various properties that the elements can have such there `id`, `class` and `style` that correspond the Html attributes the associated tags have. Alongside attributes, these props also include the event handlers for the elements such as the `onClick` event handler. Using this DSL in place, you can easily build Html trees in F# code. More on the `render` function in the next section.
 
-What's more important is the `dispatch` function, the second argument of `render`. It is responsible for triggering the events of the `Msg` type from within the user interface. We call `dispatch` on a specific message after attaching it to certain event handlers of the user interface such as the `onClick` handlers of buttons. This effectively translates an raw event occurring at the user interface level into an Elmish event that the `update` function can respond to.
+What's more important is the `dispatch` function, the second argument of `render`. It is responsible for triggering the events of the `Msg` type from within the user interface. We call `dispatch` on a specific message after attaching it to certain event handlers of the user interface such as the `onClick` handlers of buttons. This effectively translates a raw event occurring at the user interface level into an Elmish event that the `update` function can respond to.
 
-Now that we have all the pieces in place: `init`, `update` and `render`, we can tie them together to create an Elmish "program" that will bootstraps the application:
+Now that we have all the pieces in place: `init`, `update` and `render`, we can tie them together to create an Elmish "program" that will bootstrap the application:
 ```fsharp
 Program.mkSimple init update render
 |> Program.withReactSynchronous "elmish-app"
@@ -137,7 +137,7 @@ For part (1), lets examine `dist/index.html`, we will see the placeholder elemen
 ```
 As for part (2), it is a bit more complicated. As we have discussed before, Elmish as an implementation of The Elm Architecture addresses two main concerns (1) managing and keeping track of data (= state) and (2) rendering user interface based on that state  (*re-rendering* the user interface whenever the state changes).
 
-The second concern (rendering user interfaces) is commonly referred to as the "view part" of The Elm Architecture. Elmish delegates this concern to a third-party library that knows how to work with user interfaces really well, in this case it is the [React.js](https://reactjs.org/) library, one of the three most popular libraries in the javascript ecosystem to build web application. Section [React in Elmish](react-in-elmish) goes into greater details of this subject matter.
+The second concern (rendering user interfaces) is commonly referred to as the "view part" of The Elm Architecture. Elmish delegates this concern to a third-party library that knows how to work with user interfaces really well, in this case it is the [React.js](https://reactjs.org/) library, one of the three most popular libraries in the javascript ecosystem to build web applications. Section [React in Elmish](react-in-elmish) goes into greater details of this subject matter.
 
 Although React is only one type of these rendering engines, it is the most popular in the Fable community because it fits really well with the functional approach and because we can use a plethora of pre-existing React components in our Elmish applications without re-implementing them ourselves from scratch.
 
