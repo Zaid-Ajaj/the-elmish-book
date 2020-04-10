@@ -10,7 +10,7 @@ To get started, I have set up a small application in the [elmish-with-json](http
   </div>
 </div>
 
-The application just shows the JSON content as a *string* which represents information about a coffee shop. Currently the state and message of the application are modelled as follows, using `string` as the result of remote data we get back from the server.
+The application just shows the JSON content as a *string* which represents information about a coffee shop. Currently the state and message of the application are modelled as follows, using `string` as the result of remote data we get back from the server:
 
 ```fsharp
 type State =
@@ -125,7 +125,7 @@ let update (msg: Msg) (state: State) =
       let nextState = { state with StoreInfo = Resolved (Error httpError) }
       nextState, Cmd.none
 ```
-Here, nothing changed when we receive the `LoadStoreInfo Started` message into the program, we simply load the JSON from the server. However, when message `LoadStoreInfo (Finished (Ok storeInfoJson))` is received where `storeInfoJson` is a `string`, we try to parse that piece of string into an instance of `StoreInfo` using the `parseStoreInfo` function. We haven't defined that function yet and we will be using with `Thoth.Json` to do so.
+Here, nothing changed when we receive the `LoadStoreInfo Started` message into the program, we simply load the JSON from the server. However, when the message `LoadStoreInfo (Finished (Ok storeInfoJson))` is received where `storeInfoJson` is a `string`, we try to parse that `string` into an instance of `StoreInfo` using the `parseStoreInfo` function. We haven't defined that function yet and we will be using `Thoth.Json` to do so.
 
 > We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involving any side-effects which are sometimes easier to discarded when unit-testing the `update` function.
 
@@ -167,7 +167,7 @@ let render (state: State) (dispatch: Msg -> unit) =
       ]
 ```
 
-Now we can get back to the implementation `parseStoreInfo` function. From the way it is used in the code, you can infer that the type of such function is `string -> Result<StoreInfo, string>`. This is because parsing usually might either be successful and returns an instance of `StoreInfo` or might fail and returns a `string` in case the JSON is not well formatted or the decoding functions (see below) are looking for required fields that aren't present in the JSON content. Let us see how we can use `Thoth.Json` for decoding that JSON.
+Now we can get back to the implementation of the `parseStoreInfo` function. From the way it is used in the code, you can infer that the type of this function is `string -> Result<StoreInfo, string>`. This is because the parsing might either be successful and return an instance of `StoreInfo`, or might fail and return a `string` in case the JSON is not well formatted or the decoding functions (see below) are looking for required fields that aren't present in the JSON content. Let us see how we can use `Thoth.Json` for decoding that JSON.
 
 ### Decoding JSON with `Thoth.Json`
 
@@ -215,12 +215,12 @@ let productJson = """
 let product : Result<Product, string> =
   Decode.fromString productDecoder productJson
 ```
-Here, we use the function `Decode.fromString` and giving it two things: the decoder we want to use and the string to decode from (i.e. to deserialize). The output of that function is a proper `Result<Product, string>` because the parsing might either succeed and gives you a `Product` back or it can fail and returns you the parsing error. The function has type:
+Here, we use the function `Decode.fromString` and give it two things: the decoder we want to use and the string to decode from (i.e. to deserialize). The output of that function is a proper `Result<Product, string>` because the parsing might either succeed and give you a `Product` back or it can fail and return the parsing error. This function has type:
 ```fsharp
 Decode.fromString : Decoder<'t> -> string -> Result<'t, string>
 ```
 
-The parsing can fail for many reasons, for example because of invalid JSON formatting, the JSON not being an object literal which is what we are decoding against, the fields being missing or having the wrong the JSON type (i.e. `price` is a string).
+The parsing can fail for many reasons, for example because of invalid JSON formatting, the JSON not being an object literal which is what we are decoding against, the fields being missing or having the wrong the JSON type (e.g. `price` is a string).
 
 Now that we have a `Decoder<Product>` we can use it as part of another, bigger decoder: `Decoder<StoreInfo>` because that is our object we want to parse:
 ```fsharp
@@ -271,7 +271,7 @@ You can see the full worked out example at [elmish-with-json-thoth](https://gith
 
 ### Automatic Converters In Thoth.Json
 
-In this example of parsing the JSON, we have been using the *manual* way of parsing with decoders using `Thoth.Json`. You might have wondered, if the library already knows the types of the record fields, can't the library automatically implement a decoder based on the record type itself? Yes, it can! Thoth.Json makes use of the Reflection capabilities in Fable which allows it to inspect the type information and metadata from which it can infer a decoder that can parse the corresponding JSON structure. However, in order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor the `StoreInfo` and change the `since` field into an integer as well:
+In this example of parsing the JSON, we have been using the *manual* way of parsing with decoders using `Thoth.Json`. You might have wondered, if the library already knows the types of the record fields, can't the library automatically implement a decoder based on the record type itself? Yes, it can! Thoth.Json makes use of the Reflection capabilities in Fable which allows it to inspect the type information and metadata from which it can infer a decoder that can parse the corresponding JSON structure. However, in order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor `StoreInfo` and change the `since` field into an integer as well:
 ```fsharp {highlight: [3]}
 type StoreInfo = {
   name: string
