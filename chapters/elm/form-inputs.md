@@ -37,7 +37,7 @@ let render state dispatch =
     Html.span state.TextInput
   ]
 ```
-Notice here the `onChange` event handler takes a function of type `string -> unit` where the input the current value of the input element. This function is triggered every time the value changes which in turn dispatches the `SetTextInput` message into our Elmish program and into the update function.
+Notice here the `onChange` event handler takes a function of type `string -> unit` where the input is the current value of the input element. This function is triggered every time the value changes, which in turn dispatches the `SetTextInput` message into our Elmish program and into the update function.
 
 When the state is updated with the new `TextInput`, the user interface is re-rendered and thus the `span` (highlighted below) will reflect the current value of the text input element:
 ```fsharp {highlight: [4]}
@@ -50,7 +50,7 @@ let render state dispatch =
 
 We should mention here that even when the UI is re-rendered, the input box element preserves the text that has been entered. We *didn't* tell the `input` element that it should use `state.TextInput` but still with each render cycle, the text is kept as it is. This makes sense because if it *did* reset the internal state with every cycle, then the text box would be cleared after each keyboard stroke which is not exactly what your users would be expecting.
 
-This happens because HTML input elements such a text box keep track of an *internal* state of their own so we don't have to tell the input box what text it should have now. However, sometimes we do want to tell the input box which value it should have, for example when initializing the application, maybe we don't want the input element to start empty but instead have an initial value. For this, we would use the `valueOrDefault` property that forces the input element to change the internal state:
+This happens because HTML input elements such as a text box keep track of an *internal* state of their own so we don't have to tell the input box what text it should have now. However, sometimes we do want to tell the input box which value it should have, for example when initializing the application, maybe we don't want the input element to start empty but instead have an initial value. For this, we would use the `valueOrDefault` property that forces the input element to change the internal state:
 
 ```fsharp {highlight: [5]}
 let render state dispatch =
@@ -85,7 +85,7 @@ let update msg state =
   | SetNumberInput numberInput ->
       { state with NumberInput = numberInput }
 ```
-Now to `render` function, how can we trigger `SetNumberInput` from the `Html.input` element if the `onChange` event takes a string? That is simple, just parse as an integer before dispatching the `SetNumberInput` event, i.e.
+Now in the `render` function, how can we trigger `SetNumberInput` from the `Html.input` element if the `onChange` event takes a string? That is simple, just parse as an integer before dispatching the `SetNumberInput` event, i.e.
 ```fsharp
 prop.onChange (int >> SetNumberInput >> dispatch)
 ```
@@ -312,4 +312,4 @@ Program.mkSimple init update render
 |> Program.run
 ```
 
-In the next section [React in Elmish](react-in-elmish) we will talk about what it means to use `React` as a rendering engine in Elmish application and the consequences of this choice.
+In the next section [React in Elmish](react-in-elmish) we will talk about what it means to use `React` as a rendering engine in an Elmish application and the consequences of this choice.

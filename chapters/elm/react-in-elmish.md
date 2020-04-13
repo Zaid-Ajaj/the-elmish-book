@@ -28,7 +28,7 @@ Now understanding the `render` function comes down to understanding a bit of Rea
 
 ### What is React?
 
-React is a Javascript library and framework for building web application. From Javascript's perspective, this library can be standalone to build application, Elmish builds upon the capabilities of React and helps move the data and state around. When it comes to rendering the elements on screen, that is when React comes into play.
+React is a Javascript library and framework for building web applications. From Javascript's perspective, this library can be standalone to build applications, Elmish builds upon the capabilities of React and helps move the data and state around. When it comes to rendering the elements on screen, that is when React comes into play.
 
 React starts doing it's magic when the `render` function is evaluated for the first time and a `ReactElement` is returned. Suppose the evaluated element looked something as follows regardless of the state:
 ```fsharp
