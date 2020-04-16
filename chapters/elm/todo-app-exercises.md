@@ -36,11 +36,24 @@ let renderFilterTabs (state: State) (dispatch: Msg -> unit) =
     Html.ul [
       Html.li [
         prop.className "is-active"
-        prop.text "All"
+        prop.children [
+          Html.a [
+            prop.text "All"
+          ]
+        ]
       ]
 
-      Html.li "Completed"
-      Html.li "Not Completed"
+      Html.li [
+        Html.a [
+          prop.text "Completed"
+        ]
+      ]
+
+      Html.li [
+        Html.a [
+          prop.text "Not Completed"
+        ]
+      ]
     ]
   ]
 ```
