@@ -320,7 +320,7 @@ let render (state: State) (dispatch: Msg -> unit) =
         renderInputText state.InputText (InputTextMsg >> dispatch)
       ]
 ```
-It comes down to the syntax of `(ChildMsg >> dispatch)` which effectively *translates* messages from the child program message type (i.e. `CounterMsg` and `CounterMsg`) into a message type of the parent program (i.e. `Msg`) which is then `dispatch`-ed back into the dispatch loop to be handled by the `update` function and so on and so forth.
+It comes down to the syntax of `(ChildMsg >> dispatch)` which effectively *translates* messages from the child program message type (i.e. `CounterMsg` and `InputTextMsg`) into a message type of the parent program (i.e. `Msg`) which is then `dispatch`-ed back into the dispatch loop to be handled by the `update` function and so on and so forth.
 
 In many examples out there, this final form is shown as a first example which could prove to be quite of a head-scratcher, I know for me it was. However, once you dissect where it comes from and the reasoning behind it then it all makes sense.
 
