@@ -1,6 +1,6 @@
 # Audience
 
-Naturally, the book is aimed at developers who wish to build front-end web applications using F#, experts and beginners alike. Except for a bit of HTML and CSS knowledge, no prior experience is assumed concerning front-end web development as I will try to explain the concepts needed from the very scratch.
+Naturally, the book is aimed at developers who wish to build front-end web applications using F#, experts and beginners alike. Except for a bit of HTML and CSS knowledge, no prior experience is assumed concerning front-end web development as I will try to explain the concepts needed from the ground up.
 
 However, the book is *not* an introduction to F# itself. Although proficiency of the language is not required, I will assume you know the basics such as the general syntax, the concept of immutability, pattern matching and a bit of `Async`. I will try to keep it as simple as possible, but this goes to say that I will not spend time explaining F# language constructs from the code snippets unless deemed necessary.
 
