@@ -5,4 +5,4 @@ This book is licensed under a [Creative Commons 4.0 International License](https
  - NonCommercial — You may not use the material for commercial purposes.
  - NoDerivatives — If you remix, transform, or build upon the material, you may not distribute the modified material.
 
-In non-technical terms this means that this book is for free to read it as it is publicly available. You can share links from it and reference it anywhere you like. However, you may not copy-paste the contents of the material, call it your own and then sell it commercially.
+In non-technical terms this means that this book is free to read it as it is publicly available. You can share links from it and reference it anywhere you like. However, you may not copy-paste the contents of the material, call it your own and then sell it commercially.
