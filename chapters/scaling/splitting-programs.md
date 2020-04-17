@@ -569,7 +569,7 @@ Take for example what happens when you click the "Increment" button while the co
 To put in a timeline, this is what happens:
  - Button "Increment" clicked
  - `Increment` message is dispatched using the Counter dispatcher `(CounterMsg >> dispatch)`
- - `Increment` is wrapped into `CounterMsg` (top-level `Msg` type) and it called by the top-level `dispatch` function.
+ - `Increment` is wrapped into `CounterMsg` (top-level `Msg` type) and is called by the top-level `dispatch` function
  - `App.update` is called with message `CounterMsg Increment`
  - `App.update` *unwraps* the `Increment` event from the `CounterMsg` by means of pattern matching and *passes it down* to `Counter.update` to compute the next state of the counter
  - The updated counter state is then used to update the `Counter` field of the state from the main program
@@ -601,6 +601,6 @@ Project
   | -- Main.fs
 ```
 
-You can the source code of the finished result in the repository [Zaid-Ajaj/multiple-simple-programs-finished](https://github.com/Zaid-Ajaj/multiple-simple-programs-finished). Take a second and compare it with the project structure we started with in [Zaid-Ajaj/multiple-simple-programs](https://github.com/Zaid-Ajaj/multiple-simple-programs).
+You can view the source code of the finished result in the repository [Zaid-Ajaj/multiple-simple-programs-finished](https://github.com/Zaid-Ajaj/multiple-simple-programs-finished). Take a second and compare it with the project structure we started with in [Zaid-Ajaj/multiple-simple-programs](https://github.com/Zaid-Ajaj/multiple-simple-programs).
 
 That's it for this section, next up we look into integrating commands while wiring up child programs with parent ones.
