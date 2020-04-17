@@ -1,6 +1,6 @@
 # Hello World
 
-To get started with Fable, it is easier to use a template instead of building your application from scratch, for that I have set up a simple hello world fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository, clone it locally on your machine as follows:
+To get started with Fable, it is easier to use a template instead of building your application from scratch, so I have set up a simple hello world fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository. Clone it locally on your machine as follows:
 
 ```bash
 git clone https://github.com/Zaid-Ajaj/fable-getting-started.git
@@ -71,7 +71,7 @@ module.exports = {
     }
 }
 ```
-the `entry` options specifies the path to the project that should be compiled. The other options will be discussed in a later chapter.
+the `entry` option specifies the path to the project that should be compiled. The other options will be discussed in a later chapter.
 
 ### Compiling the project
 To get your F# code to run in the browser, you will first need to compile the project and then open `index.html` in your browser. However, before being able to compile the project, there are a couple of requirements that you need to have installed on your machine:
@@ -92,7 +92,7 @@ cd fable-getting-started
 npm install
 npm run build
 ```
-I use windows, so the compilation looks as follows on my machine
+I use Windows, so the compilation looks as follows on my machine
 
 <resolved-image source='/images/fable/compile.gif' />
 
