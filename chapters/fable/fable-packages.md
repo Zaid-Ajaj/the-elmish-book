@@ -18,7 +18,7 @@ Now take a closer look at the highlighted line: a package reference is included 
 
 ### Fable-specific packages
 
-A normal .NET package published to the `nuget` registry is essentially a zip file containing the compiled assemblies of the library. Such zip file has the following structure:
+A normal .NET package published to the `nuget` registry is essentially a zip file containing the compiled assemblies of the library. Such a zip file has the following structure:
 ```
 Library.nupkg
   ├── lib
@@ -31,7 +31,7 @@ Library.nupkg
 ```
 Where `net461` and `netstandard2.0` are directories containing the library assemblies compiled against different target frameworks.
 
-A Fable package is almost the same as a standard .NET package but with the source files of the library included in the package in a special `fable` directory as highlighted below:
+A Fable package is almost the same as a standard .NET package but with the library's source files included in the package in a special `fable` directory as highlighted below:
 ```bash {highlight: [8,9,10]}
 Fable.Library.nupkg
   ├── lib
@@ -49,9 +49,9 @@ Fable.Library.nupkg
 
 ### Fable compiles source code
 
-The *source files* are included in the NuGet package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not compatible by default in Fable projects. To make an F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code of that package is also Fable-compatible: doesn't use APIs that Fable cannot recognize as discussed in [.NET Compatibility](compatibility.md).
+The *source files* are included in the NuGet package. This is very important because Fable operates on source code instead of compiled assemblies. This has the consequence that F# packages are not automatically compatible with Fable projects. To make an F# package compilable by Fable, you need to publish a new version of the package with the source code included with the condition that the source code of that package is also Fable-compatible: doesn't use APIs that Fable cannot recognize as discussed in [.NET Compatibility](compatibility.md).
 
-You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable NuGet package if Fable only requires the source files?" It is not Fable that is using these compiled files, but it is your IDE. Whether you are using Ionide, Visual Studio, or Rider, these IDE's provide their intellisense and auto-complete features using the definitions within these compiled `dll` files.
+You might be wondering and thinking to yourself: "Well, then why are the compiled assemblies are still included in the Fable NuGet package if Fable only requires the source files?" It is not Fable that is using these compiled files, but it is your IDE. Whether you are using Ionide, Visual Studio, or Rider, these IDEs provide their intellisense and auto-complete features using the definitions within these compiled `dll` files.
 
 ### Fable compiles dependencies
 
