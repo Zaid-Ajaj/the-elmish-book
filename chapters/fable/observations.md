@@ -24,7 +24,7 @@ decrease.onclick = function (ev) {
 
 countViewer.innerText = `Count is at ${count}`;
 ```
-Crazy right?! this is almost what we wrote but with F# instead. This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F# code, whatever it does, to JavaScript and lets your code run in any JavaScript runtime, whether it is the browser, [Node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others.
+Crazy right?! This is almost what we wrote but with F# instead. This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F# code, whatever it does, to JavaScript and lets your code run in any JavaScript runtime, whether it is the browser, [Node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others.
 
 
 ### Fable uses *bindings* to interact with native JavaScript APIs
@@ -38,7 +38,7 @@ In the previous example, we used two different constructs: mutability and `async
 
 ### F# Async in Javascript
 
-As for `async`, it is natural for Fable to support such construct because javascript runtime make heavy use of continuations, also known as callbacks. In fact, many if not all native javascript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in javascript into an async "sleep" function, you can write the following:
+As for `async`, it is natural for Fable to support that construct because the javascript runtime make heavy use of continuations, also known as callbacks. In fact, many if not all native javascript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in javascript into an async "sleep" function, you can write the following:
 
 ```fsharp
 open Fable.Core
@@ -70,4 +70,4 @@ The above snippet uses native javascript and makes use of Fable's interop capabi
 
 ### Unsupported Features
 
-At the time of writing, a couple of F# features are not yet supported, for example, F# code quotations and `query` computation expression because it depends on quotations feature.
+At the time of writing, a couple of F# features are not yet supported, for example, F# code quotations and `query` computation expression because it depends on the quotations feature.

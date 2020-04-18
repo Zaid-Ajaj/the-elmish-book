@@ -23,14 +23,14 @@ Because there are different platforms that Fable can target, we end up with diff
 
  - Type 2: Browser-specific APIs
    - The `window` object
-   - The `document` that let's manipulate UI elements
+   - The `document` that lets you manipulate UI elements
    - `XMLHttpRequest` type that allows us to make HTTP calls
    - `FileReader` allows you to read content of files in the browser
    - `CanvasRenderingContext2D` allows you to draw 2d shapes on a `canvas` element
    - `WebSocket` allows for duplex communication with server-side technologies
    - `IndexedDb` a client-side database API
    - `Blob` types that represent binary data
-   - Many [many more](https://developer.mozilla.org/en-US/docs/Web/API) you didn't even know they existed
+   - Many [many more](https://developer.mozilla.org/en-US/docs/Web/API) you didn't even know existed
    - Libraries included in the page through script tags.
 
  - Type 3: Node-specific APIs
@@ -48,9 +48,9 @@ Because there are different platforms that Fable can target, we end up with diff
   - Type 4.2: Libraries made to run inside a Node.js host
   - Type 4.3: Libraries made to run everywhere, the so-called "isomorphic" libraries.
 
-The list above is quite involved, it is a consequence of how JavaScript code is used and distributed throughout the different platforms. Historically, you could only use JavaScript inside a browser, and the only libraries you could use are the ones you included in a web page using a script tag. A library included in this way becomes globally available on the page as an object under the global `window` variable. Later on, a proper package registry was introduced along with the Node.js runtime, what is known today as [npm](https://www.npmjs.com/): the largest package registry of libraries in the world.
+The list above is quite involved, which is a consequence of how JavaScript code is used and distributed throughout the different platforms. Historically, you could only use JavaScript inside a browser, and the only libraries you could use were the ones you included in a web page using a script tag. A library included this way becomes globally available on the page as an object under the global `window` variable. Later on, a proper package registry was introduced along with the Node.js runtime, what is known today as [npm](https://www.npmjs.com/): the largest package registry of libraries in the world.
 
-Interacting with libraries included using a script tag in a web page is a different story than interacting with a library that is downloaded using `npm`: the former uses global variables, and the latter uses javascript modules for exposing the code.
+Interacting with libraries included using a script tag in a web page is a different story than interacting with a library that is downloaded using `npm`. The former uses global variables, and the latter uses javascript modules for exposing the code.
 Let's go through some example Fable bindings and explain on which target they would be compatible.
 
 ### Examples of Fable bindings
@@ -84,8 +84,8 @@ dotnet add package Fable.DateFunctions
 npm install --save date-fns
 ```
 
-This may sound worrisome since you have to know which versions of npm packages go with which versions of the nuget packages. I will say worry not about it because it is a problem that is pretty much solved. We will talk about the solution later in chapter five in section [Introducing Femto](../dev-flow/introducing-femto.md)
+This may sound worrisome since you have to know which versions of npm packages go with which versions of the nuget packages. I would say not to worry about it because it is a problem that is pretty much solved. We will talk about the solution later in chapter five in section [Introducing Femto](../dev-flow/introducing-femto.md)
 
 ### Authoring Fable libraries and bindings
 
-This was just a glimpse of how Fable packages can integrate native javascript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
+This was just a glimpse at how Fable packages can integrate native javascript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
