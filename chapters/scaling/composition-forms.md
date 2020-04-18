@@ -182,7 +182,7 @@ Although the example above uses a list to model many child states, you can use a
 ```fsharp
 type State = { Counters : Map<Guid, Counter.State> }
 ```
-When working with Keyed-Sequences, it is important to realize how the much work is involved with rendering the sequence of child programs on screen, especially when **adding**, **removing** or **reordering** the their states. Take the following function that renders the `Counters` from the definition above:
+When working with Keyed-Sequences, it is important to realize how much work is involved with rendering the sequence of child programs on screen, especially when **adding**, **removing** or **reordering** their states. Take the following function that renders the `Counters` from the definition above:
 ```fsharp
 let renderCounters counters dispatch =
   Html.div [
