@@ -256,4 +256,4 @@ type AsyncOperationStatus<'t> =
   | Started
   | Finished of 't
 ```
-When you use these in your application, feel free to change the terminology to yours and your team's liking as the as names of the types and the separate union cases is not as important as the concepts they represent. We will be using these types in the next sections when we start working with HTTP.
+When you use these in your application, feel free to change the terminology to yours and your team's liking as the names of the types and the separate union cases is not as important as the concepts they represent. We will be using these types in the next sections when we start working with HTTP.
