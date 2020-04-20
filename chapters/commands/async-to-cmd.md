@@ -94,7 +94,7 @@ Having two parameters of type `Async<unit>` and `Msg` being separate doesn't see
 Let us combine both parameters of `Async<unit>` and `Msg` into a single asynchronous expression `Async<Msg>`. While we are at it, we can also rename the function `delayedSleepMsg` into something more generic like `fromAsync` because we are effectively turning an `Async<Msg>` into `Cmd<Msg>`:
 ```fsharp
 let fromAsync (operation: Async<Msg>) : Cmd<Msg> =
-    let delayedCmd (dispatch: Msg -> unit) : unit = =
+    let delayedCmd (dispatch: Msg -> unit) : unit =
         let delayedDispatch = async {
             let! msg = operation
             dispatch msg
