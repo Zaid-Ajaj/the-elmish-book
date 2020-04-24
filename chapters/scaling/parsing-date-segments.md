@@ -48,7 +48,7 @@ let activePage =
       | _ ->
         Html.h1 "Not Found"
 
-  | [ "orders"; "filter"; Route.Query [ "from"; dateSegment ] ] ->
+  | [ "orders"; "filter"; Route.Query [ "from", dateSegment ] ] ->
       match dateSegment.Split '-' with
       | [| Route.Int day; Route.Int month; Route.Int year |] ->
           match Date.create { day = day; month = month; year = year } with
@@ -76,7 +76,7 @@ let activePage =
   // matches /visitors/report/{Date}
   | [ "visitors"; "report"; Date date ] -> Html.h1 "Show visitors report"
   // matches /orders/filter?from={Date}
-  | [ "orders"; "filter"; Route.Query [ "from"; Date date ] ] -> Html.h1 "Show filtered orders"
+  | [ "orders"; "filter"; Route.Query [ "from", Date date ] ] -> Html.h1 "Show filtered orders"
   // matches anything else
   | _ -> Html.h1 "Not Found"
 
