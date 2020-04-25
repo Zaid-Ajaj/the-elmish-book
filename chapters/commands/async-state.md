@@ -5,19 +5,19 @@ Asynchronous updates usually follow a simple pattern: every asynchronous operati
 If your program happens to work with multiple asynchronous operations, then your `Msg` type could end up looking like this:
 ```fsharp
 type Msg =
-  // messages for Operation 1 -> might fail
+  // messages for Operation 1 -> always succeeds  
   | StartOperationOne
-  | FinishOperationOneSuccessfully of ResultOfOne
-  | FinishOperationOneWithError of exn
-  // messages for Operation 2 -> always succeeds
+  | FinishOperationOne of ResultOfOne
+  // messages for Operation 2 -> might fail
   | StartOperationTwo
-  | FinishOperationTwo of ResultOfTwo
+  | FinishOperationTwoSuccessfully of ResultOfTwo
+  | FinishOperationTwoWithError of exn  
   // messages for Operation N
   | (* etc. *)
 ```
-The union cases `StartOperationOne`, `FinishOperationOneSuccessfully` and `FinishOperationOneWithError` are associated with one operation while cases `StartOperationTwo` and `FinishOperationTwo` are associated with another. As you can see, modelling asynchronous events this way can get really messy, especially as your program grows larger and larger. In order not to lose track of the big picture, it is better to model these events associated with an asynchronous operation as a single type. Before we do that, let's think about the types of asynchronous operations we care about:
+The union cases `StartOperationOne` and `FinishOperationOne` are associated with one operation while cases `StartOperationTwo`, `FinishOperationTwoSuccessfully` and `FinishOperationTwoWithError` are associated with another. As you can see, modelling asynchronous events this way can get really messy, especially as your program grows larger and larger. In order not to lose track of the big picture, it is better to model these events associated with an asynchronous operation as a single type. Before we do that, let's think about the types of asynchronous operations we care about:
  - (1) Operations that always succeed (for example, a delay)
- - (2) Operations that fail
+ - (2) Operations that might fail
 
 ### Operations that always succeed
 Events for operations of type (1) can be encoded in a type. Since an asynchronous operation almost always is coupled with a start and finish events, we could describe such types nicely as a discriminated union where the finish event carries information about the result of that operation:
