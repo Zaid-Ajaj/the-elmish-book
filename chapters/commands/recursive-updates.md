@@ -56,7 +56,7 @@ It is very important to recognize and identify this pattern as it can become ver
 
 There is only one alternative to `Cmd.ofMsg`: not using this command at all inside the update function!
 
-There is never a good reason to use `Cmd.ofMsg` in `update` because in reality it is a command that changes the control flow of the `update` function. Instead of telling the Elmish runtime: "Hey, dispatch message `X` for me", you factor out the branch of of the `update` function that handles message `X` into a utility function and call that function from where you issue the command.
+There is never a good reason to use `Cmd.ofMsg` in `update` because in reality it is a command that changes the control flow of the `update` function. Instead of telling the Elmish runtime: "Hey, dispatch message `X` for me", you factor out the branch of the `update` function that handles message `X` into a utility function and call that function from where you issue the command.
 
 ### Eliminating `Cmd.ofMsg` Usage
 
@@ -116,7 +116,7 @@ let parseInput (state: State) =
         let errMsg = sprintf "Input '%s' is not a valid date" state.InputDate
         { state with ParsedDate = Error errMsg }
 ```
-Then use this function the branch of `SetInputDate`:
+Then use this function in the body of the `SetInputDate` branch:
 ```fsharp {highlight: [5]}
 let update msg state =
     match msg with
