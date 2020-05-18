@@ -34,7 +34,7 @@ type Msg =
 
 > The types `Deferred<'t>` and `AsyncOperationStatus<'t>` are covered in section [Modelling Asynchronous State](async-state.md)
 
-Not here that we are using `Result<HackernewsItem list, string>` because the loading might fail due to one of the reasons:
+Note here that we are using `Result<HackernewsItem list, string>` because the loading might fail due to one of the reasons:
  - HTTP error: not being able to reach the Hackernews API at all because maybe the server is down or receiving a non-successful status code in the response of the HTTP request.
  - JSON parsing error: decoding the JSON might fail due to fact that the JSON structure returned from the Hackernews API doesn't match with what the `HackernewsItem` decoder is parsing. (We need to write such decoder).
 
