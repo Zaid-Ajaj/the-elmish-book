@@ -282,7 +282,7 @@ let update (msg: Msg) (state: State) =
     | _, _ ->
         state, Cmd.none
 ```
-Let that sink in for a moment because this pretty much the gist of data communication in Elmish apps: parent applications **inspect** and **intercept** events coming from child programs in order to initialize or trigger more events in the current program and other child programs. We effectively took the data from an event that occurred in the Login page and used it to initialize the Home page.
+Let that sink in for a moment because this is pretty much the gist of data communication in Elmish apps: parent applications **inspect** and **intercept** events coming from child programs in order to initialize or trigger more events in the current program and other child programs. We effectively took the data from an event that occurred in the Login page and used it to initialize the Home page.
 
 It is very important to understand that inspection and interception are very different: the former is only peeking into the data of the event but the latter is also preventing the child program from processing that event. In the snippet above, once the parent program has intercepted the event of a successful login attempt, it directly initializes the Home page without letting the Login page process that event. Keep this in mind because sometime you still want to the state of the child program to change or let execute side-effects in which case you only want to do inspection. More on this coming up. Now let us see the results of the application:
 
