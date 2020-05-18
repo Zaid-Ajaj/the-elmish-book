@@ -36,7 +36,7 @@ type Msg =
 
 Note here that we are using `Result<HackernewsItem list, string>` because the loading might fail due to one of the reasons:
  - HTTP error: not being able to reach the Hackernews API at all because maybe the server is down or receiving a non-successful status code in the response of the HTTP request.
- - JSON parsing error: decoding the JSON might fail due to fact that the JSON structure returned from the Hackernews API doesn't match with what the `HackernewsItem` decoder is parsing. (We need to write such decoder).
+ - JSON parsing error: decoding the JSON might fail due to the fact that the JSON structure returned from the Hackernews API doesn't match with what the `HackernewsItem` decoder is parsing. (We need to write such decoder).
 
 Technically, to model the *exact* situation, including all the possible errors (from HTTP or JSON) we would need to use this type:
 ```fsharp {highlight: [2]}
