@@ -1,6 +1,6 @@
 # Importing Static Images
 
-In this section, we pick the template project from we left it off after integrating [Hot Module Replacement](hot-module-replacement) and enable it to import static images into the project. First things first, what does it even mean to import an image into our Elmish project? Imagine having the following structure of source code in an Elmish project:
+In this section, we pick the template project from where we left it off after integrating [Hot Module Replacement](hot-module-replacement) and enable it to import static images into the project. First things first, what does it even mean to import an image into our Elmish project? Imagine having the following structure of source code in an Elmish project:
 ```bash {highlight: [3]}
  src
   |
