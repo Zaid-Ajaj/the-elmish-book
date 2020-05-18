@@ -26,7 +26,7 @@ The crucial part of this module system in Node.js is that when the runtime execu
 
 Here is where webpack comes into play: it allows Javascript developers to use the same module system available for Node.js and statically generate a single Javascript output file that browsers understand without any dynamic loading at runtime. In other words, webpack takes the Javascript modules and bundles them into a ready-to-run single Javascript file. That is the reason why webpack is called a "Javascript module bundler".
 
-Of course, webpack is not the first tool to try to solve this problem, there were other module bundlers out there like [SystemJs](https://github.com/systemjs/systemjs), [Browserify](http://browserify.org/), [Rollup.js](https://rollupjs.org/guide/en/) and [Parcel](https://parceljs.org/) among others. Some of these are quite old like SystemJs and Browserify. Some provide a simplified getting started experience like Parcel. We go with webpack because it the solution with most features and most widely used across the different kinds of front-end applications.
+Of course, webpack is not the first tool to try to solve this problem, there were other module bundlers out there like [SystemJs](https://github.com/systemjs/systemjs), [Browserify](http://browserify.org/), [Rollup.js](https://rollupjs.org/guide/en/) and [Parcel](https://parceljs.org/) among others. Some of these are quite old like SystemJs and Browserify. Some provide a simplified getting started experience like Parcel. We go with webpack because it is the solution with most features and most widely used across the different kinds of front-end applications.
 
 ### Webpack Loaders
 
