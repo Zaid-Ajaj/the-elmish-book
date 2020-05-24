@@ -2,7 +2,16 @@
 
 I could spend days, tediously going through code and explaining the concepts behind it but nothings helps you understand these concepts like actually trying to build something yourself. Many times one doesn't know what to build so instead of asking you to build something from scratch, I have decided that it would be nicer to work with and add features to something that by now you should hopefully be already familiar with: our To-Do list application.
 
-### Exercise 1: Add Filter Tabs
+### Exercise 1: Refactor to-do IDs from `int` to `System.Guid`
+
+Currently each to-do's ID is an `int`, however .Net framework has a built-in module specifically for generating unique IDs: `System.Guid`.
+
+The point of this exercise is to change the `Todo` type so the ID is of type `System.Guid`, then, using the IDE's, or even compiler errors, find all the places the change breaks the type-system and refactor them to make the application compile again.
+
+To cut down on keystrokes, don't forget to `open System.Guid`, after which you can refer to the module's content simply as `Guid`.  
+Also, to generate a new ID using the module, use `Guid.New()`.
+
+### Exercise 2: Add Filter Tabs
 
 Your first exercise is a fairly simple one, adding filter tabs to your list that lets the user view all the items, the ones that are completed or the ones that still To-Do. It looks like this:
 
@@ -61,7 +70,7 @@ Notice that this implementation doesn't do or check anything with the state. It 
 
 You can view and use the application [live here](https://zaid-ajaj.github.io/elmish-todo-exercises/).
 
-### Exercise 2: Disable save button when user hasn't changed the text
+### Exercise 3: Disable save button when user hasn't changed the text
 
 When in edit mode, the save button (the one with the floppy disk icon) has the class "is-primary" which gives the button the green-blue color. Your task is as follows: change the class "is-primary" to "is-outlined" when the description of `TodoBeingEdited` is equal to that of the To-Do item that is being edited. This tells the user that the save button will have no effect. It looks like this:
 
@@ -75,7 +84,7 @@ Of course, this is not "disabling" the button for real, it just shows the user t
 
 *Hint: remember how we implemented the completed check box*
 
-### Exercise 3: Multi-Edit Mode
+### Exercise 4: Multi-Edit Mode
 
 The way we implemented the To-Do list application only allows to edit a *single* To-Do item at a time. In this exercise, you will extend this feature and allow the user to edit multiple items at the same time. It will look like this:
 
@@ -93,7 +102,7 @@ Both approaches are OK because they are keeping track of the same amount of data
 
 You can view and use the application [live here](https://zaid-ajaj.github.io/elmish-todo-exercises/).
 
-### Exercise 4: Refactor Bulma With TypedCssClasses
+### Exercise 5: Refactor Bulma With TypedCssClasses
 
 Throughout the user interface of the To-Do list, we have been using Bulma's classes to enhance the look and feel of the application. These classes are just strings that we have to look up in the documentation and remember to write correctly in our application, we can do much better than magic strings to avoid having to remember them or writing then incorrectly. The first approach is simply writing a module called `Bulma` that includes the class names:
 ```fsharp
