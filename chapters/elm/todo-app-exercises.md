@@ -4,12 +4,12 @@ I could spend days, tediously going through code and explaining the concepts beh
 
 ### Exercise 1: Refactor to-do IDs from `int` to `System.Guid`
 
-Currently each to-do's ID is an `int`, however .Net framework has a built-in module specifically for generating unique IDs: `System.Guid`.
+Currently each to-do's ID is an `int`, however .Net framework has a built-in module specifically for generating unique IDs: [`System.Guid`](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-3.1).
 
-The point of this exercise is to change the `Todo` type so the ID is of type `System.Guid`, then, using the IDE's, or even compiler errors, find all the places the change breaks the type-system and refactor them to make the application compile again.
+The point of this exercise is to change the `Todo` type so the ID is of type `Guid`, then, using the IDE's errors, or even compiler errors, find all the places the change breaks the type-system and refactor them to make the application compile again.
 
-To cut down on keystrokes, don't forget to `open System.Guid`, after which you can refer to the module's content simply as `Guid`.  
-Also, to generate a new ID using the module, use `Guid.New()`.
+To cut down on keystrokes, don't forget to `open System`, after which you can refer to the module's simply as `Guid`.  
+Also, to generate a new ID using the module (_after opening it, of course)_, use `Guid.NewGuid()`.
 
 ### Exercise 2: Add Filter Tabs
 
