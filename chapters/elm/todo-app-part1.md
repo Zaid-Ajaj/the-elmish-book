@@ -23,7 +23,7 @@ Here, `TodoList` represents the list of the todo items and `NewTodo` represents 
 
 ### Modelling The Events
 
-Now that we have the data model, we have to think about *which* events occur while the application is running. In this case, the user can only do two things: typing in the text box and clicking the the `Add` button. So we have two events that we model with a `Msg` type:
+Now that we have the data model, we have to think about *which* events occur while the application is running. In this case, the user can only do two things: typing in the text box and clicking the `Add` button. So we have two events that we model with a `Msg` type:
 ```fsharp
 type Msg =
     | SetNewTodo of string
