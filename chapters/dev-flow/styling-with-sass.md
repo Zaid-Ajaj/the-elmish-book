@@ -97,7 +97,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-Here, there is a rather interesting part: `use: ["style-loader", "css-loader", "sass-loader"]`. This is called *loader chaining*. One loader uses the output of the previous loader to build the final result. In this case, the output is actually not a CSS file but rather a Javascript module which applies the compiled styles once it is imported from a main application.
+Here, there is a rather interesting part: `use: ["style-loader", "css-loader", "sass-loader"]`. This is called *loader chaining*. One loader uses the output of the previous loader to build the final result. In this case, the output is actually not a CSS file but rather a JavaScript module which applies the compiled styles once it is imported from a main application.
 
 First things first, let us add a style sheet to the application. I like to add a `styles` directory inside of `src` where I would write my style sheets
 ```bash {highlight: [7]}
@@ -134,7 +134,7 @@ open Fable.Core.JsInterop
 
 let inline apply (relativePath: string) : unit = importSideEffects relativePath
 ```
-This time we are using the `importSideEffects` function that imports a side-effectful Javascript module like the one we are importing which will apply the styles in runtime. Afterwards, call the `Stylesheet.apply` function just before bootstrapping the application like this:
+This time we are using the `importSideEffects` function that imports a side-effectful JavaScript module like the one we are importing which will apply the styles in runtime. Afterwards, call the `Stylesheet.apply` function just before bootstrapping the application like this:
 ```fsharp
 Stylesheet.apply "./styles/main.scss"
 ```
@@ -185,4 +185,4 @@ Another language that compiles to CSS is [Less](http://lesscss.org) which is sim
 
 Sass and less are an entire world of their own. I would recommend you read the official documentation of both [Sass](https://sass-lang.com/documentation) and [Less](http://lesscss.org/features) to learn more about them. Even though if you don't plan on becoming a specialist in either technologies, it would benefit you and your team if you can read the code and be able to do just a tad more than what you would be able to do with CSS.
 
-Last point I want to talk about is the fact that we are compiling the stylesheets into (side-effectful) Javascript modules which are imported at the entry point of the Fable project. Depending on how big your stylesheets are, the main generated bundle can become bigger than it should be and take longer to download on initial loading of the application. In many cases, we would like to *extract* the used stylesheets into a separate CSS output file. This requires a combination of using the awesome [mini-css-extract](https://github.com/webpack-contrib/mini-css-extract-plugin) plugin which is usually included in most webpack templates that you can come across.
+Last point I want to talk about is the fact that we are compiling the stylesheets into (side-effectful) JavaScript modules which are imported at the entry point of the Fable project. Depending on how big your stylesheets are, the main generated bundle can become bigger than it should be and take longer to download on initial loading of the application. In many cases, we would like to *extract* the used stylesheets into a separate CSS output file. This requires a combination of using the awesome [mini-css-extract](https://github.com/webpack-contrib/mini-css-extract-plugin) plugin which is usually included in most webpack templates that you can come across.

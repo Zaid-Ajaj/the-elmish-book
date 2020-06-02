@@ -9,7 +9,7 @@ Here are the chapters I have in mind. They are listed in no particular order. I 
 - **Writing Unit Tests** extends the project we have working to be able to write unit tests for Elmish programs, run them with live reloading during development and prepare them for CI server integration.
 
 - **Full-Stack F# with SAFE** discusses how to build full-stack web applications entirely in F# following the tools combined in the [SAFE stack](https://safe-stack.github.io/docs/)
-- **Interop with Javascript** covers advanced interop techniques in Fable that allow us to write F# code which generates custom Javascript code and it able to talk to third-party Javascript libraries.
+- **Interop with JavaScript** covers advanced interop techniques in Fable that allow us to write F# code which generates custom JavaScript code and it able to talk to third-party JavaScript libraries.
 - **Elmish Data Visualizations** is concerned with using charting and map libraries to visualize data in Elmish applications.
 - **Elmish Desktop Applications** with [Electron.js](https://www.electronjs.org/) using Fable. Possibly covering [React-NodeGui](https://github.com/nodegui/react-nodegui) or [Avalonia.FuncUI](https://github.com/AvaloniaCommunity/Avalonia.FuncUI).
 - **Elmish Mobile Development** with [ReactNative](https://reactnative.dev/) and Fable. Possibly covering [Fabulous](https://github.com/fsprojects/Fabulous) with Xamarin Forms.

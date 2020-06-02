@@ -10,10 +10,10 @@ type httpRequest : Request -> Async<Response>
 ```
 Before that, let us discuss some background on the subject matter.
 
-### On the composability of Javascript callbacks
-In a Javascript environment, almost all asynchronous operations are implemented using callbacks attached to events, just like with the `onreadystatechange` event, we attach a callback to it and kick off the asynchronous operation (i.e. calling the `xhr.send()` function), then wait for the event to trigger which in turn runs the code we attached in the event handler. Another name for Javascript callbacks is continuations: a fancy word for saying "Do something that might take a while and when you finish it, do something else."
+### On the composability of JavaScript callbacks
+In a JavaScript environment, almost all asynchronous operations are implemented using callbacks attached to events, just like with the `onreadystatechange` event, we attach a callback to it and kick off the asynchronous operation (i.e. calling the `xhr.send()` function), then wait for the event to trigger which in turn runs the code we attached in the event handler. Another name for JavaScript callbacks is continuations: a fancy word for saying "Do something that might take a while and when you finish it, do something else."
 
-Now combining multiple callbacks together in Javascript can be a cumbersome task, take the `setTimeout` function as an example. The function takes a callback and timeout in milliseconds, waits for the timeout and runs the callback. Now suppose we want to print five messages to the console, waiting for one second between each print statement, we would have to the following:
+Now combining multiple callbacks together in JavaScript can be a cumbersome task, take the `setTimeout` function as an example. The function takes a callback and timeout in milliseconds, waits for the timeout and runs the callback. Now suppose we want to print five messages to the console, waiting for one second between each print statement, we would have to the following:
 ```js
 setTimeout(() => {
     console.log("First");
@@ -31,13 +31,13 @@ setTimeout(() => {
     }, 1000)
 }, 1000)
 ```
-Here, in every callback, we trigger another `setTimeout` operation in the callback of the one before it in order to run the next print statement in sequence and we end up with the infamous "callback pyramid of hell" of Javascript where code starts to get really hard to read and confusing because of the nesting of callbacks.
+Here, in every callback, we trigger another `setTimeout` operation in the callback of the one before it in order to run the next print statement in sequence and we end up with the infamous "callback pyramid of hell" of JavaScript where code starts to get really hard to read and confusing because of the nesting of callbacks.
 
-You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world Javascript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs and also applies to any callback based API such that of the file system when running Javascript in a Node.js environment.
+You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world JavaScript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs and also applies to any callback based API such that of the file system when running JavaScript in a Node.js environment.
 
-Now since this is a common problem in the Javascript world, developers have found solutions to make it easier to combine multiple callbacks in a linear fashion instead of the nesting applied in the code snippet above: Enter Promises!
+Now since this is a common problem in the JavaScript world, developers have found solutions to make it easier to combine multiple callbacks in a linear fashion instead of the nesting applied in the code snippet above: Enter Promises!
 
-Promises are constructs that help Javascript developers combine callbacks, writing them in a linear fashion that *looks* synchronous even though the code is running asynchronously. Here is an example `Promise` that is created from `setTimeout`:
+Promises are constructs that help JavaScript developers combine callbacks, writing them in a linear fashion that *looks* synchronous even though the code is running asynchronously. Here is an example `Promise` that is created from `setTimeout`:
 ```js
 const wait = timeout => {
     return new Promise((resolve, reject) => {
@@ -70,9 +70,9 @@ wait(1000)
 ```
 Much much better, easy to read and to understand. Promises don't change the computation, they provide a nice syntactic sugar (using the `.then()` function) around callback-based APIs and make them easier to reason about.
 
-Alright, after this little detour you must be wondering why this is relevant to our F# implementation of `httpRequest`. To put it simply: F#'s `Async` expressions compiled with Fable are more or less the equivalent of Javascript's Promises, they are just syntax sugar around callback-based APIs.
+Alright, after this little detour you must be wondering why this is relevant to our F# implementation of `httpRequest`. To put it simply: F#'s `Async` expressions compiled with Fable are more or less the equivalent of JavaScript's Promises, they are just syntax sugar around callback-based APIs.
 
-In the same way we created the `wait` function that returns a Promise from the `setTimeout` function in Javascript, we could write a `wait` function in F# that does exactly the same thing, except it is implemented as `Async<unit>`:
+In the same way we created the `wait` function that returns a Promise from the `setTimeout` function in JavaScript, we could write a `wait` function in F# that does exactly the same thing, except it is implemented as `Async<unit>`:
 ```fsharp
 open Browser
 
@@ -97,7 +97,7 @@ async {
 }
 |> Async.StartImmediate
 ```
-Converting callback-based APIs from Javascript into F#'s `async` is really powerful and will allow to build abstractions upon existing Javascript libraries into idiomatic F# API that uses the `async` computation expressions.
+Converting callback-based APIs from JavaScript into F#'s `async` is really powerful and will allow to build abstractions upon existing JavaScript libraries into idiomatic F# API that uses the `async` computation expressions.
 
 ### Implementing `httpRequest`
 
@@ -142,7 +142,7 @@ let update msg state =
         let nextState = { state with LoremIpsum = Resolved result }
         nextState, Cmd.none
 ```
-There we have it, HTTP requests with Elmish in an idiomatic F# API. By this time, I hope we have gained a better understanding applying HTTP in Elmish applications but more importantly how to work with Javascript callbacks and turn them into F# `async` expressions.
+There we have it, HTTP requests with Elmish in an idiomatic F# API. By this time, I hope we have gained a better understanding applying HTTP in Elmish applications but more importantly how to work with JavaScript callbacks and turn them into F# `async` expressions.
 
 Now that we have seen how to implement a simple HTTP request, we are only scratching the surface of the full API provided by `XMLHttpRequest`, you might have the idea of implementing a nice F#/Fable library that covers that API but yours truly has already done it for you, let us take a look at [Fable.SimpleHttp](https://github.com/Zaid-Ajaj/Fable.SimpleHttp) for working with HTTP.
 
@@ -213,9 +213,9 @@ To learn more, refer to the documentation of [Fable.SimpleHttp](https://github.c
 
 ### `Fable.Fetch` as an alternative to `Fable.SimpleHttp`
 
-The use of `XMLHttpRequests` API directly in modern Javascript applications is nowadays considered "too old school" and in some cases, not even recommended! This is because `XMLHttpRequest` mainly uses callbacks for handling the requests and responses. We have seen how callbacks cannot be easily composed, making it hard to issue multiple requests in sequence without bloating the code with noise.
+The use of `XMLHttpRequests` API directly in modern JavaScript applications is nowadays considered "too old school" and in some cases, not even recommended! This is because `XMLHttpRequest` mainly uses callbacks for handling the requests and responses. We have seen how callbacks cannot be easily composed, making it hard to issue multiple requests in sequence without bloating the code with noise.
 
-Modern Javascript application will opt for the so-called `fetch()` API when it comes to working with HTTP because it uses Promises for chaining and processing requests and because the API of `fetch` is relatively simpler compared to that of `XMLHttpRequest`. Of course, since this `fetch()` thing is really cool, the Fable community has built a binding library around it which is the `Fable.Fetch` package. Since `fetch` uses Promises, `Fable.Fetch` uses `Fable.Promise` as a dependency to implement the API to implement the binding because `Fable.Promise` provides a `promise` computation expression to work with Promises as a generic `Promise<'t>` similar to how the `async` computation expression makes it easy to work with `Async<'t>`. This means that with `Fable.Fetch` we are able to compose requests just as easy as with `Fable.SimpleHttp`.
+Modern JavaScript application will opt for the so-called `fetch()` API when it comes to working with HTTP because it uses Promises for chaining and processing requests and because the API of `fetch` is relatively simpler compared to that of `XMLHttpRequest`. Of course, since this `fetch()` thing is really cool, the Fable community has built a binding library around it which is the `Fable.Fetch` package. Since `fetch` uses Promises, `Fable.Fetch` uses `Fable.Promise` as a dependency to implement the API to implement the binding because `Fable.Promise` provides a `promise` computation expression to work with Promises as a generic `Promise<'t>` similar to how the `async` computation expression makes it easy to work with `Async<'t>`. This means that with `Fable.Fetch` we are able to compose requests just as easy as with `Fable.SimpleHttp`.
 
 However, I would still recommend using `Fable.SimpleHttp` over `Fable.Fetch` and here is why
 

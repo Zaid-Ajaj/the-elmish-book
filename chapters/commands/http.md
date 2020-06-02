@@ -14,9 +14,9 @@ Since we are only building a front-end, you might be wondering: "How will we wor
 
 In the same way that the browser sends HTTP requests to the server, our Elmish application too can make HTTP requests, send them to webpack development server and process the HTTP responses it gets back. In the following sections, we will look into how that actually works and how we can can integrate HTTP communication into our Elmish applications from the very scratch.
 
-### HTTP from the browser with Javascript
+### HTTP from the browser with JavaScript
 
-A common question developers ask when getting started with Elmish is: "How to work with HTTP in Elmish?" The short answer is to use Elmish commands and asynchronous workflows, but before getting into any of that we should rephrase the question into "How to work with HTTP in Javascript?" It is easy to forget that Fable compiles to plain old Javascript and that the techniques used in plain old Javascript are still very much applicable in Fable and Elmish applications.
+A common question developers ask when getting started with Elmish is: "How to work with HTTP in Elmish?" The short answer is to use Elmish commands and asynchronous workflows, but before getting into any of that we should rephrase the question into "How to work with HTTP in JavaScript?" It is easy to forget that Fable compiles to plain old JavaScript and that the techniques used in plain old JavaScript are still very much applicable in Fable and Elmish applications.
 
 There are many libraries in the javascript world to work with HTTP but they all depend upon a single foundational building block which is the so-called `XMLHttpRequest` object available in all browsers.
 
@@ -182,5 +182,5 @@ Now we are all set, run the `serve` script by running `npm run serve` to run the
   </div>
 </div>
 
-But you might wondering, why bother with a different static file server other than webpack development server? The reason is that the development server is kind of special and injects a lot of Javascript artifacts in your `index.html` during development, for example to make the web page refreshed after you edit your source files. These added artifacts could be incompatible with many browsers and might break your actual application in a production environment.
+But you might wondering, why bother with a different static file server other than webpack development server? The reason is that the development server is kind of special and injects a lot of JavaScript artifacts in your `index.html` during development, for example to make the web page refreshed after you edit your source files. These added artifacts could be incompatible with many browsers and might break your actual application in a production environment.
 
