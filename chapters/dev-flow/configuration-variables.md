@@ -68,11 +68,11 @@ module.exports = module.exports = (env, argv) => {
     }
 }
 ```
-That is it! These variables are now available for use from within the application. To use and extract a value from the variables using a key, we do it like this in Javascript:
+That is it! These variables are now available for use from within the application. To use and extract a value from the variables using a key, we do it like this in JavaScript:
 ```js
 const value = process.env["KEY"]
 ```
-However, there is no such module to use from F# in Fable. We can use a bit of Fable interop capabilities with Javascript to write a function that takes a key and returns the value of a configured variable if it exists or returns an empty string otherwise:
+However, there is no such module to use from F# in Fable. We can use a bit of Fable interop capabilities with JavaScript to write a function that takes a key and returns the value of a configured variable if it exists or returns an empty string otherwise:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Config
@@ -85,7 +85,7 @@ open Fable.Core.JsInterop
 [<Emit("process.env[$0] ? process.env[$0] : ''")>]
 let variable (key: string) : string = jsNative
 ```
-I promise to cover Fable and Javascript interop in a separate chapter. Since it is a very big and important topic, I want to cover it properly and do it justice. One section won't be enough for it. Please bear with me for now, the function `Config.variable` will return you the value of configured variable if it exists in the `.env` file or if it is available in the environment where the application was compiled.
+I promise to cover Fable and JavaScript interop in a separate chapter. Since it is a very big and important topic, I want to cover it properly and do it justice. One section won't be enough for it. Please bear with me for now, the function `Config.variable` will return you the value of configured variable if it exists in the `.env` file or if it is available in the environment where the application was compiled.
 
 You can use the function like this in your `render` functions or any other place for that matter:
 ```fsharp

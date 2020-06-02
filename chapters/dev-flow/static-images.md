@@ -17,13 +17,13 @@ Html.img [
     prop.alt "Fable Logo"
 ]
 ```
-It will not work: the problem comes from the fact that after compiling the project, the source files are turned into a single Javascript file and the relative paths that were used in the source files wouldn't mean anything at that point to the generated Javascript bundle because the output file is generated in another directory.
+It will not work: the problem comes from the fact that after compiling the project, the source files are turned into a single JavaScript file and the relative paths that were used in the source files wouldn't mean anything at that point to the generated JavaScript bundle because the output file is generated in another directory.
 
-One solution would be to put the images into the same output directory, the `dist` directory in our template and reference the images in the `prop.src` as if they were relative to the path of the generated Javascript bundle. However, that solution it is not ideal because now all images and other static files have to be included in the output directory while being referenced from multiple source files. You will easily lose track of which images are used from which files and it becomes a mess.
+One solution would be to put the images into the same output directory, the `dist` directory in our template and reference the images in the `prop.src` as if they were relative to the path of the generated JavaScript bundle. However, that solution it is not ideal because now all images and other static files have to be included in the output directory while being referenced from multiple source files. You will easily lose track of which images are used from which files and it becomes a mess.
 
 Isn't there a way to be able to reference images by their relative path from source files and have it *just work* even after compiling the application? Webpack loaders to the rescue!
 
-"Wait a second, I thought you said loaders were used for assets that can compile to Javascript modules. Images cannot be compiled to Javascript modules, right?" Yes, you are correct but that doesn't stop webpack loaders from being able to *modify* the paths of static files that are relatively referenced from source files and copy them into the output directory automatically. In fact, that is exactly what the [file-loader](https://github.com/webpack-contrib/file-loader) does to help us import the images easily.
+"Wait a second, I thought you said loaders were used for assets that can compile to JavaScript modules. Images cannot be compiled to JavaScript modules, right?" Yes, you are correct but that doesn't stop webpack loaders from being able to *modify* the paths of static files that are relatively referenced from source files and copy them into the output directory automatically. In fact, that is exactly what the [file-loader](https://github.com/webpack-contrib/file-loader) does to help us import the images easily.
 
 ### Using `file-loader`
 
@@ -97,7 +97,7 @@ module Image =
 
     let inline load (relativePath: string) : string = importDefault relativePath
 ```
-This module has one function: `Image.load` which is basically an alias for `importDefault` function coming from the `Fable.Core.JsInterop` namespace. The function `importDefault` is the equivalent of `require` in Javascript and depending on what you are importing, it can return different things, that is why I made a specialized module dedicated to loading images. This is also the reason why the function returns `string`: it is the modified path of the imported image.
+This module has one function: `Image.load` which is basically an alias for `importDefault` function coming from the `Fable.Core.JsInterop` namespace. The function `importDefault` is the equivalent of `require` in JavaScript and depending on what you are importing, it can return different things, that is why I made a specialized module dedicated to loading images. This is also the reason why the function returns `string`: it is the modified path of the imported image.
 
 To use this module, simply call it with the input being a relative path and it will give you the modified path of the image that itself can be used as input for `prop.src` as follows:
 ```fsharp

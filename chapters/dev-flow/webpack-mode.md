@@ -1,6 +1,6 @@
 # Webpack Mode
 
-At the heart of the build pipeline for the entire compilation process stands webpack. The role of webpack is central in Fable project and many types of modern front-end projects. It is the tool that calls the Fable to subsequently compile your F# project into Javascript. The contents of the file `webpack.config.js` define the build configuration for a project. The [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template configures the build pipeline in the simplest possible way:
+At the heart of the build pipeline for the entire compilation process stands webpack. The role of webpack is central in Fable project and many types of modern front-end projects. It is the tool that calls the Fable to subsequently compile your F# project into JavaScript. The contents of the file `webpack.config.js` define the build configuration for a project. The [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template configures the build pipeline in the simplest possible way:
 ```js {highlight: [4]}
 const path = require("path")
 
@@ -19,9 +19,9 @@ module.exports = {
 }
 ```
 
-> The webpack configuration file is actually a Javascript module that runs when webpack starts and returns (exports) the configured options at the end.
+> The webpack configuration file is actually a JavaScript module that runs when webpack starts and returns (exports) the configured options at the end.
 
-Webpack includes many more options to fine-tune the build pipeline. One of the most important variables to configure is the [webpack mode](https://webpack.js.org/configuration/mode/) highlighted above. Mode can have values `none`, `development` or `production`. Using either `development` or `production` will *optimize* the compilation process significantly for the configured environment: using 'production' for example optimizes the build pipeline for production use by removing unused code from the generated Javascript bundle and obfuscates the code. Likewise, using `development` mode will make the project nicer to work with during development and makes that information available for the application to use in the code so that you can execute development-specific code.
+Webpack includes many more options to fine-tune the build pipeline. One of the most important variables to configure is the [webpack mode](https://webpack.js.org/configuration/mode/) highlighted above. Mode can have values `none`, `development` or `production`. Using either `development` or `production` will *optimize* the compilation process significantly for the configured environment: using 'production' for example optimizes the build pipeline for production use by removing unused code from the generated JavaScript bundle and obfuscates the code. Likewise, using `development` mode will make the project nicer to work with during development and makes that information available for the application to use in the code so that you can execute development-specific code.
 
 To get a taste of just how important `mode` is, clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template from scratch and build it using:
 ```bash
@@ -29,7 +29,7 @@ cd elmish-getting-started
 npm install
 npm run build
 ```
-At the time of writing using webpack v4.38.0, the generated `main.js` file is 1414KB big! that is 1.4 megabytes for the simple counter application before we even get started to write more code or add more libraries. This size of an application is simply not acceptable in production because the users have to download the application before they can use it: time is wasted not just on downloading but also parsing and evaluating 1.4MB of Javascript code.
+At the time of writing using webpack v4.38.0, the generated `main.js` file is 1414KB big! that is 1.4 megabytes for the simple counter application before we even get started to write more code or add more libraries. This size of an application is simply not acceptable in production because the users have to download the application before they can use it: time is wasted not just on downloading but also parsing and evaluating 1.4MB of JavaScript code.
 
 Now set mode to `production` and run `npm run build` again. The generated `main.js` has now become 161KB! That is just crazy; webpack used all the tricks of the trade to shave off every possible bit of unused code in a process called tree-shaking then made the bundle even smaller during obfuscation by removing comments, whitespace and renaming functions and variables to a very short equivalent.
 

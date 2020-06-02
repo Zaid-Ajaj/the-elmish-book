@@ -25,9 +25,9 @@ let renderStories items =
 
 ### Exercise 2: Show how long ago an item is posted
 
-Convert the `time` field from the previous exercise from a Unix-time `int` into a `DateTime` instance and show *in words* how long ago the Hackernews item is posted, for example "2 days ago" or "1 year ago" etc. You don't have to implement the wording of time period yourself, for that you can use the Javascript library [date-fns](https://date-fns.org/) which has time formatting utilities. There already exists a binding for this library that allows you to use most of its functionality from F# and Fable. It is the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package with the [docs here](https://zaid-ajaj.github.io/Fable.DateFunctions/).
+Convert the `time` field from the previous exercise from a Unix-time `int` into a `DateTime` instance and show *in words* how long ago the Hackernews item is posted, for example "2 days ago" or "1 year ago" etc. You don't have to implement the wording of time period yourself, for that you can use the JavaScript library [date-fns](https://date-fns.org/) which has time formatting utilities. There already exists a binding for this library that allows you to use most of its functionality from F# and Fable. It is the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package with the [docs here](https://zaid-ajaj.github.io/Fable.DateFunctions/).
 
-To use this library and binding from the Hackernews project, you have to install *both* the Javascript `date-fns` package and the nuget `Fable.DateFunctions`:
+To use this library and binding from the Hackernews project, you have to install *both* the JavaScript `date-fns` package and the nuget `Fable.DateFunctions`:
 ```bash
 cd {repository-root}
 npm install date-fns@1.30.1

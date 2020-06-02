@@ -1,6 +1,6 @@
 # Development Mode
 
-Before we dive any further, we have to talk about the development workflow. So far we were building the project using the commands `npm install` and then `npm run build`. These commands execute a *full build* which is what you are used to whenever you compile an F# project in .NET. However, when we are building web applications, recompiling the whole project with every little change will result in a very slow iteration cycle. Javascript developers have already figured out that they want a development tool that picks up only the code that was changed and refreshes the web page: enter webpack development server.
+Before we dive any further, we have to talk about the development workflow. So far we were building the project using the commands `npm install` and then `npm run build`. These commands execute a *full build* which is what you are used to whenever you compile an F# project in .NET. However, when we are building web applications, recompiling the whole project with every little change will result in a very slow iteration cycle. JavaScript developers have already figured out that they want a development tool that picks up only the code that was changed and refreshes the web page: enter webpack development server.
 
 ### Webpack development server
 

@@ -9,7 +9,7 @@ In many scenarios, we want the ability to execute different pieces of the code w
 
 ### Large bundle size
 
-When we compile the project using `npm run build`, the size of the generated Javascript is too big because it includes code that might not have been used. When you pull packages in, you might use a function or two from that package, the rest of the code from said package shouldn't be included in the final output if it isn't used.
+When we compile the project using `npm run build`, the size of the generated JavaScript is too big because it includes code that might not have been used. When you pull packages in, you might use a function or two from that package, the rest of the code from said package shouldn't be included in the final output if it isn't used.
 
 ### Hot module replacement
 
