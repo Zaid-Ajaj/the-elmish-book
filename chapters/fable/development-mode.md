@@ -22,14 +22,14 @@ module.exports = {
     }
 }
 ```
-Within the section, you see the `contentBase` options pointing to the `dist` directory. These options are the configuration for the development server of webpack. This setup says: "Start a local server that serves files from the `dist` directory". The development server runs on port 8080 by default. To use the development server, run the commands:
+Within the `devServer` section, you see the `contentBase` options pointing to the `dist` directory. These options are the configuration for the development server of webpack. This setup says, "Start a local server that serves files from the `dist` directory." The development server runs on port 8080 by default. To use the development server, run the following commands:
 ```bash
 npm install
 npm start
 ```
-The command `npm start` will start the webpack development server, compiles the project *only once* and will keep watching the project files for any changes. You can then navigate to `http://localhost:8080` to see your project running.
+The command `npm start` will start the webpack development server, compile the project *only once*, and keep watching the project files for any changes. You can then navigate to `http://localhost:8080` to see your project running.
 
-> Learn how `npm start` relates to webpack development server in the paragraph [Npm Scripts](node-packages#npm-scripts) of section [Node.js Packages](node-packages)
+> Learn how `npm start` relates to webpack development server in the paragraph [Npm Scripts](node-packages#npm-scripts) of section [Node.js Packages](node-packages).
 
 Once you start modifying your F# source code, only a subset of the project will be recompiled: the code you changed and other pieces that depend on the code you changed. After a successful recompilation cycle, webpack will refresh the browser for you to see the changes you made.
 

@@ -4,9 +4,9 @@ Bindings are specialized Fable packages that allow a Fable project to access nat
 
 When we talk about bindings, we are just talking about a shell for an underlying JavaScript API or library. This means that a Fable binding is *always* used in combination with some specific JavaScript code that the binding calls or interacts with under the hood.
 
-Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs; for example, the APIs available in the browser are different than those available on a Node.js runtime. In the browser, you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile, on the Node.js side of things, you can read file contents, call cryptographic functions or host a web server.
+Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs. For example, the APIs available in the browser are different than those available on a Node.js runtime. In the browser, you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile, on the Node.js side of things, you can read file contents, call cryptographic functions or host a web server.
 
-There are more popular platforms that Fable can target, one of which is [Github Electron](https://electronjs.org/) which combines both Node.js *and* the browser APIs to build powerful desktop applications. Another platform is [React Native](https://facebook.github.io/react-native/), which runs a Node.js-like environment that lets you create mobile apps.
+In addition to the browser APIs and Node.js, there are other popular platforms that Fable can target. Fable can target [Github Electron](https://electronjs.org/) which combines both Node.js *and* the browser APIs to build powerful desktop applications. Another platform is [React Native](https://facebook.github.io/react-native/), which runs a Node.js-like environment for creating mobile apps.
 
 ### Types of bindings
 
@@ -30,7 +30,7 @@ Because there are different platforms that Fable can target, we end up with diff
    - `WebSocket` allows for duplex communication with server-side technologies
    - `IndexedDb` a client-side database API
    - `Blob` types that represent binary data
-   - Many [many more](https://developer.mozilla.org/en-US/docs/Web/API) you didn't even know existed
+   - Many, [many more](https://developer.mozilla.org/en-US/docs/Web/API) you didn't even know existed
    - Libraries included in the page through script tags.
 
  - Type 3: Node-specific APIs
@@ -43,7 +43,7 @@ Because there are different platforms that Fable can target, we end up with diff
     - `path` module contains function to resolve relative and absolute paths
     - See [the rest](https://nodejs.org/dist/latest/docs/api/) of the modules
 
- - Type 4: JavaScript libraries published to npm, which is the heart of the JavaScript ecosystem. These can be further divided into
+ - Type 4: JavaScript libraries published to npm, which is the heart of the JavaScript ecosystem. These can be further divided into the following:
   - Type 4.1: Libraries made to run inside a browser
   - Type 4.2: Libraries made to run inside a Node.js host
   - Type 4.3: Libraries made to run everywhere, the so-called "isomorphic" libraries.
@@ -65,7 +65,7 @@ Some Fable packages may build upon existing bindings, such as [Fable.SimpleHttp]
 
 <resolved-image source="/images/fable/type-two.png" />
 
-As for Type 3 package, there is the package [Fable.Node](https://github.com/fable-compiler/fable-node) that covers most system modules of the Node.js runtime
+As for Type 3 packages, there is the package [Fable.Node](https://github.com/fable-compiler/fable-node) that covers most system modules of the Node.js runtime.
 
 <resolved-image source="/images/fable/type-three.png" />
 
@@ -84,10 +84,10 @@ dotnet add package Fable.DateFunctions
 npm install --save date-fns
 ```
 
-This may sound worrisome since you have to know which versions of npm packages go with which versions of the nuget packages. I would say not to worry about it because it is a problem that is pretty much solved. We will talk about the solution later in chapter five in section [Introducing Femto](../dev-flow/introducing-femto.md)
+This may sound worrisome since you have to know which versions of npm packages go with which versions of the nuget packages. I would say not to worry about it because it is a problem that is pretty much solved. We will talk about the solution later in chapter five in section [Introducing Femto](../dev-flow/introducing-femto.md).
 
 ### Authoring Fable libraries and bindings
 
 This was just a glimpse at how Fable packages can integrate native JavaScript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
 
-If you would like to find out more about how to write bindings, here is a write-up of my own on Medium. It is a little out of date, e.g. Pojo attributes, but the ideas are pretty much the same. [F# Interop with Javascript in Fable: The Complete Guide](https://medium.com/@zaid.naom/f-interop-with-javascript-in-fable-the-complete-guide-ccc5b896a59f)
+If you would like to find out more about how to write bindings, here is a write-up of my own on Medium. It is a little out of date, e.g. Pojo attributes, but the ideas are pretty much the same. [F# Interop with Javascript in Fable: The Complete Guide](https://medium.com/@zaid.naom/f-interop-with-javascript-in-fable-the-complete-guide-ccc5b896a59f).

@@ -1,10 +1,10 @@
 # Observations
 
-You might be wondering why we made the trivial counter application in the previous section and had it implement some silly requirements. Well, this is because it is simple enough to qualify as "Hello world" and at the same time shows you what Fable is all about, so let us go through the main points I wanted to conclude from the tiny counter app:
+You might be wondering why we made the trivial counter application in the previous section and had it implement some silly requirements. Well, this is because it is simple enough to qualify as "Hello world" and at the same time shows you what Fable is all about. So let us go through the main points I wanted to conclude from the tiny counter app.
 
 ### Fable is a general-purpose compiler
 
-Assuming you have done any JavaScript development before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure JavaScript to implement the same app it would look something like this:
+Assuming you have done any JavaScript development before, you surely noticed how similar the F# code looked to a JavaScript program. In fact, if I was using pure JavaScript to implement the same app it would look something like this:
 ```js
 const increase = document.getElementById("increase")
 const decrease = document.getElementById("decrease")
@@ -24,15 +24,15 @@ decrease.onclick = function (ev) {
 
 countViewer.innerText = `Count is at ${count}`;
 ```
-Crazy right?! This is almost what we wrote but with F# instead. This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F# code, whatever it does, to JavaScript and lets your code run in any JavaScript runtime, whether it is the browser, [Node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others.
+Crazy, right?! This is almost what we wrote but with F# instead. This goes to say that Fable is not a specific framework to build web apps but rather a compiler that translates your F# code, whatever it does, to JavaScript. It lets your code run in any JavaScript runtime, whether it is the browser, [Node.js](https://nodejs.org/en/), [react-native](http://facebook.github.io/react-native/), [github electron](https://electronjs.org/) or others.
 
 
 ### Fable uses *bindings* to interact with native JavaScript APIs
 
-Already introduced in section [Hello World](/chapters/fable/hello-world), a Fable *binding* is a special F# library that contains type definitions and method signatures of native JavaScript APIs (similar to `.ts.d` files of typescript). In the previous samples, we used `document` from the `Fable.Browser.Dom` binding package which was included in the template, but the library consists of very large and comprehensive bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) to name a few. Later on, we will explore many other bindings that not only support native APIs like the ones from the browsers but also APIs from third-party libraries that can be seamlessly consumed from within our Fable applications.
+Already introduced in section [Hello World](/chapters/fable/hello-world), a Fable *binding* is a special F# library that contains type definitions and method signatures of native JavaScript APIs (similar to `.ts.d` files of TypeScript). In the previous samples, we used `document` from the `Fable.Browser.Dom` binding package which was included in the template. The library consists of very large and comprehensive bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) to name a few. Later on, we will explore many other bindings that not only support native APIs like the ones from the browsers but also APIs from third-party libraries that can be seamlessly consumed from within our Fable applications.
 
 ### Fable preserves F# semantics
-One of the most essential aspects of Fable is that it preserves the semantics of F# code and has full support for the F# core library modules such as `List`, `Seq`, `Array`, `Option`, `Map`, `Set`, `Async`, `String` etc. This means that your F# code should run the same way would you expect F# to behave on .NET. The following language constructs are supported: pattern matching, active patterns, object expressions, structural equality, sequence and list comprehensions, lazy values, anonymous records, classes and computations expressions.
+One of the most essential aspects of Fable is that it preserves the semantics of F# code and has full support for the F# core library modules such as `List`, `Seq`, `Array`, `Option`, `Map`, `Set`, `Async`, `String` etc. This means that your F# code should run the same way you would expect F# to behave on .NET. The following language constructs are supported: pattern matching, active patterns, object expressions, structural equality, sequence and list comprehensions, lazy values, anonymous records, classes and computations expressions.
 
 In the previous example, we used two different constructs: mutability and `async` computation expressions. Although mutability is to be avoided in F# applications, sometimes it makes sense to use it for performance gains and Fable supports it.
 
