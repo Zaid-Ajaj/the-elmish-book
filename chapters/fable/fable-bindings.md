@@ -1,8 +1,8 @@
 # Fable bindings
 
-Bindings are specialized Fable packages that allow a Fable project to access native javascript APIs. These packages hide away the complexity of JavaScript libraries behind type-safe and idiomatic F# code, checked for correctness by the powerful F# compiler and type system.
+Bindings are specialized Fable packages that allow a Fable project to access native JavaScript APIs. These packages hide away the complexity of JavaScript libraries behind type-safe and idiomatic F# code, checked for correctness by the powerful F# compiler and type system.
 
-When we talk about bindings, we are just talking about a shell for an underlying javascript API or library. This means that a Fable binding is *always* used in combination with some specific JavaScript code that the binding calls or interacts with under the hood.
+When we talk about bindings, we are just talking about a shell for an underlying JavaScript API or library. This means that a Fable binding is *always* used in combination with some specific JavaScript code that the binding calls or interacts with under the hood.
 
 Which binding you can use depends entirely on the platform or environment in which your compiled F# code is running. Different platforms provide different APIs; for example, the APIs available in the browser are different than those available on a Node.js runtime. In the browser, you can manipulate user interface elements and draw 2D shapes on a canvas. Meanwhile, on the Node.js side of things, you can read file contents, call cryptographic functions or host a web server.
 
@@ -10,7 +10,7 @@ There are more popular platforms that Fable can target, one of which is [Github 
 
 ### Types of bindings
 
-Because there are different platforms that Fable can target, we end up with different types of bindings that are applicable in each one of these platforms. Let's break down all the possibilities of javascript code that a Fable binding can interact with:
+Because there are different platforms that Fable can target, we end up with different types of bindings that are applicable in each one of these platforms. Let's break down all the possibilities of JavaScript code that a Fable binding can interact with:
 
  - Type 1: Globally available functions in every JavaScript runtime
    - `Math.*` functions such as `Math.random()`, `Math.sin()`, `Math.cos()` etc.
@@ -50,12 +50,12 @@ Because there are different platforms that Fable can target, we end up with diff
 
 The list above is quite involved, which is a consequence of how JavaScript code is used and distributed throughout the different platforms. Historically, you could only use JavaScript inside a browser, and the only libraries you could use were the ones you included in a web page using a script tag. A library included this way becomes globally available on the page as an object under the global `window` variable. Later on, a proper package registry was introduced along with the Node.js runtime, what is known today as [npm](https://www.npmjs.com/): the largest package registry of libraries in the world.
 
-Interacting with libraries included using a script tag in a web page is a different story than interacting with a library that is downloaded using `npm`. The former uses global variables, and the latter uses javascript modules for exposing the code.
+Interacting with libraries included using a script tag in a web page is a different story than interacting with a library that is downloaded using `npm`. The former uses global variables, and the latter uses JavaScript modules for exposing the code.
 Let's go through some example Fable bindings and explain on which target they would be compatible.
 
 ### Examples of Fable bindings
 
-The first example is one we used in the very first [Hello World](hello-world.md) application, the package `Fable.Browser.Dom`. Using this package, we were able to interact with the `document` object and manipulate UI elements on the page. `Fable.Browser.Dom` is a binding for Type 2 javascript code. This package is one of the family of Fable packages under the [Fable.Browser](https://www.nuget.org/packages?q=Fable.Browser) namespace designed to be used in the browser.
+The first example is one we used in the very first [Hello World](hello-world.md) application, the package `Fable.Browser.Dom`. Using this package, we were able to interact with the `document` object and manipulate UI elements on the page. `Fable.Browser.Dom` is a binding for Type 2 JavaScript code. This package is one of the family of Fable packages under the [Fable.Browser](https://www.nuget.org/packages?q=Fable.Browser) namespace designed to be used in the browser.
 
 The packages [Thoth.Json](https://github.com/thoth-org/Thoth.Json) and [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson), two general-purpose libraries for working with JSON are bindings of Type 1 because they both use the `JSON.*` module under the hood. These two can be used both inside the browser and Node.js runtime.
 
@@ -73,7 +73,7 @@ Type 4 packages are by far the most common bindings in Fable's ecosystem, simply
 
 <resolved-image source="/images/fable/type-four.png" />
 
-Fable bindings will usually prefer the modern `npm` modules. This means that a Fable binding, distributed to NuGet, has a *dependency* on a javascript package distributed to `npm`. In order to use these bindings of Type 4, you need to install the binding from NuGet and the actual library from npm. Let's take the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package which is a binding for the native javascript library [date-fns](https://date-fns.org/). This library provides many useful functions to manipulate `DateTime`, and you can use it in your Fable projects through this binding.
+Fable bindings will usually prefer the modern `npm` modules. This means that a Fable binding, distributed to NuGet, has a *dependency* on a JavaScript package distributed to `npm`. In order to use these bindings of Type 4, you need to install the binding from NuGet and the actual library from npm. Let's take the [Fable.DateFunctions](https://github.com/Zaid-Ajaj/Fable.DateFunctions) package which is a binding for the native JavaScript library [date-fns](https://date-fns.org/). This library provides many useful functions to manipulate `DateTime`, and you can use it in your Fable projects through this binding.
 
 To use it inside your project, you have to install both `Fable.DateFunction` from NuGet and `date-fns` from npm:
 
@@ -88,4 +88,4 @@ This may sound worrisome since you have to know which versions of npm packages g
 
 ### Authoring Fable libraries and bindings
 
-This was just a glimpse at how Fable packages can integrate native javascript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
+This was just a glimpse at how Fable packages can integrate native JavaScript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.

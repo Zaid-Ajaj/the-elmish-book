@@ -137,7 +137,7 @@ For part (1), lets examine `dist/index.html`, we will see the placeholder elemen
 ```
 As for part (2), it is a bit more complicated. As we have discussed before, Elmish as an implementation of The Elm Architecture addresses two main concerns (1) managing and keeping track of data (= state) and (2) rendering user interface based on that state  (*re-rendering* the user interface whenever the state changes).
 
-The second concern (rendering user interfaces) is commonly referred to as the "view part" of The Elm Architecture. Elmish delegates this concern to a third-party library that knows how to work with user interfaces really well, in this case it is the [React.js](https://reactjs.org/) library, one of the three most popular libraries in the javascript ecosystem to build web applications. Section [React in Elmish](react-in-elmish) goes into greater details of this subject matter.
+The second concern (rendering user interfaces) is commonly referred to as the "view part" of The Elm Architecture. Elmish delegates this concern to a third-party library that knows how to work with user interfaces really well, in this case it is the [React.js](https://reactjs.org/) library, one of the three most popular libraries in the JavaScript ecosystem to build web applications. Section [React in Elmish](react-in-elmish) goes into greater details of this subject matter.
 
 Although React is only one type of these rendering engines, it is the most popular in the Fable community because it fits really well with the functional approach and because we can use a plethora of pre-existing React components in our Elmish applications without re-implementing them ourselves from scratch.
 

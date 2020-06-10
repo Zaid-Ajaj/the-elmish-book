@@ -18,7 +18,7 @@ In the same way that the browser sends HTTP requests to the server, our Elmish a
 
 A common question developers ask when getting started with Elmish is: "How to work with HTTP in Elmish?" The short answer is to use Elmish commands and asynchronous workflows, but before getting into any of that we should rephrase the question into "How to work with HTTP in JavaScript?" It is easy to forget that Fable compiles to plain old JavaScript and that the techniques used in plain old JavaScript are still very much applicable in Fable and Elmish applications.
 
-There are many libraries in the javascript world to work with HTTP but they all depend upon a single foundational building block which is the so-called `XMLHttpRequest` object available in all browsers.
+There are many libraries in the JavaScript world to work with HTTP but they all depend upon a single foundational building block which is the so-called `XMLHttpRequest` object available in all browsers.
 
 The object `XMLHttpRequest` can be used to make HTTP requests from the browser to a web server and make it possible to process the HTTP responses returned from that server. Despite the historical name, `XMLHttpRequest` is not tied to just XML as a data format for data exchange. In fact, it can use any generic data format like JSON or raw binary data.
 
