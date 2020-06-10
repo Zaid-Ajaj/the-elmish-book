@@ -53,7 +53,7 @@ You might have wondered: "How did Fable compile the project if I didn't install 
 
 ### Npm scripts
 
-The latter section of `package.json` is the `scripts` sections, also known as npm scripts. This section provides shortcuts to *running* the cli programs that were installed as development dependencies or any shell command from the system. For example, we installed `webpack` and `webpack-dev-server` which are programs that work with Fable to turn the F# project into a nicely bundled javascript file. We provide shortcuts to run these programs using the npm scripts `start` and `build`. To run such a script, you run the command:
+The latter section of `package.json` is the `scripts` sections, also known as npm scripts. This section provides shortcuts to *running* the cli programs that were installed as development dependencies or any shell command from the system. For example, we installed `webpack` and `webpack-dev-server` which are programs that work with Fable to turn the F# project into a nicely bundled JavaScript file. We provide shortcuts to run these programs using the npm scripts `start` and `build`. To run such a script, you run the command:
 ```bash
 npm run <script name>
 ```

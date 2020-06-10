@@ -4,7 +4,7 @@ You might be wondering why we made the trivial counter application in the previo
 
 ### Fable is a general-purpose compiler
 
-Assuming you have done any JavaScript development before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure javascript to implement the same app it would look something like this:
+Assuming you have done any JavaScript development before, you surely have noticed how similar the F# code looked like in the first listing. In fact, if I was using pure JavaScript to implement the same app it would look something like this:
 ```js
 const increase = document.getElementById("increase")
 const decrease = document.getElementById("decrease")
@@ -38,7 +38,7 @@ In the previous example, we used two different constructs: mutability and `async
 
 ### F# Async in JavaScript
 
-As for `async`, it is natural for Fable to support that construct because the javascript runtime make heavy use of continuations, also known as callbacks. In fact, many if not all native javascript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in javascript into an async "sleep" function, you can write the following:
+As for `async`, it is natural for Fable to support that construct because the JavaScript runtime make heavy use of continuations, also known as callbacks. In fact, many if not all native JavaScript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in JavaScript into an async "sleep" function, you can write the following:
 
 ```fsharp
 open Fable.Core
@@ -65,7 +65,7 @@ async {
 <code>Async.Sleep</code> with Fable is implemented using <code>setTimeout</code> under the hood, however the implementation is more advanced and provides built-in support for cancellation.
 </div>
 
-The above snippet uses native javascript and makes use of Fable's interop capabilities. Don't worry if you do not understand this right away because of the `Emit` attribute or the `jsNative` value; there will be a whole chapter devoted to interoperability from Fable. The take away from this is that it is straightforward and easy to use native functionality when needed.
+The above snippet uses native JavaScript and makes use of Fable's interop capabilities. Don't worry if you do not understand this right away because of the `Emit` attribute or the `jsNative` value; there will be a whole chapter devoted to interoperability from Fable. The take away from this is that it is straightforward and easy to use native functionality when needed.
 
 
 ### Unsupported Features

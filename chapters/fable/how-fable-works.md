@@ -8,4 +8,4 @@ This diagram below shows an overview of the process.
 
 <resolved-image source="/images/fable/fable.png" />
 
-The generated JavaScript doesn't have to be a minified JavaScript file. This is only the convention when compiling F# source code for the browser. When building F# projects for Node.js environments, the output can be multiple javascript files referencing (i.e. `requiring`) each other while preserving the same input F# project structure that Fable compiled.
+The generated JavaScript doesn't have to be a minified JavaScript file. This is only the convention when compiling F# source code for the browser. When building F# projects for Node.js environments, the output can be multiple JavaScript files referencing (i.e. `requiring`) each other while preserving the same input F# project structure that Fable compiled.
