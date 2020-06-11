@@ -30,7 +30,7 @@ Parent programs are special kinds of programs. They manage the state of their da
   </div>
 </div>
 
-Even though the programs operate independently, they need to have a way to exchange data with the other programs (i.e. web pages). For example, while you are in the Dashboard page, you need to know the username of the user who is currently logged in order to show it in the header of the page, but the information related to the user such as the username and current session are first obtained from the Login page after a user is able to successfully login with proper credentials. This means that after logging in, the Login page should somehow *propagate* the user information to the dashboard. We will be looking data communication between these programs in this chapter:
+Even though the programs operate independently, they need to have a way to exchange data with the other programs (i.e., web pages). For example, while you are in the Dashboard page, you need to know the username of the user who is currently logged in to show it in the header of the page, but the information related to the user such as the username and current session is first obtained from the Login page after a user is able to successfully log in with proper credentials. This means that after logging in, the Login page should somehow *propagate* the user information to the dashboard. We will be looking data communication between these programs in this chapter:
 
 <div style="margin-top: 40px; margin-bottom:40px;">
   <div style="margin: 0 auto; width:60%;">
