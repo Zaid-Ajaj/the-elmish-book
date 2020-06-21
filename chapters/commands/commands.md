@@ -20,8 +20,10 @@ Here `render` has the same signature but `init` and `update` now return a tuple 
 ### Counter With Commands
 The Elmish library includes many built-in commands under the `Cmd` module. A very useful command is `Cmd.none` which is a command that doesn't do anything, i.e. doesn't dispatch any message. Following here is the [Counter](/chapters/elm/counter.md) example but with commands:
 
-```fsharp {highlight: [9, 13, 14, 31]}
+```fsharp {highlight: [11, 15, 16, 33]}
 open Elmish
+open Elmish.React
+open Feliz
 
 type State = { Count : int }
 
