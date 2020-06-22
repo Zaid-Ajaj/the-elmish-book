@@ -108,7 +108,7 @@ Notice the highlighted lines, here is where the program decides whether it has s
 
 ### Alternatives To Recursion
 
-You might have thought: "there is definitely an easier way to do this" at the end of the day, we are just dispatching a bunch of messages one after the other with a delay in between. The only restriction we have at hand is the fact the `Cmd.fromAsync` only dispatches a single message that results from the asynchronous expression `Async<'Msg>` but nothing is stopping us from implementing a command that for example dispatches a message indefinitely between a delay of sleep:
+You might have thought: "there is definitely an easier way to do this". At the end of the day, we are just dispatching a bunch of messages one after the other with a delay in between. The only restriction we have at hand is the fact that `Cmd.fromAsync` only dispatches a single message that results from the asynchronous expression `Async<'Msg>` but nothing is stopping us from implementing a command that for example dispatches a message indefinitely between a delay of sleep:
 ```fsharp
 module Cmd =
   let indefinite (timeout: int) (msg: 'Msg) =
