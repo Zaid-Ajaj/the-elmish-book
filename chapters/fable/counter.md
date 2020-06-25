@@ -4,7 +4,7 @@ Let us now try to build something that not only has multiple elements but also k
 
 <resolved-image source="/images/fable/counter.gif" />
 
-We will need buttons that change the contents of a text element every time you click one of them. To build this from the template, we will add two button tags to the `index.html` page and give them identities `"increase"` and `"decrease"`. We will also add a header element with id `"countViewer"` where we will show the current count, here is what `index.html` will look like:
+We will need buttons that change the contents of a text element every time you click one of them. To build this from the template, we will add two button tags to the `index.html` page and give them identities `"increase"` and `"decrease"`. We will also add a header element with id `"countViewer"` where we will show the current count. Here is what `index.html` will look like:
 
 ```html {highlight:[10, 11, 12]}
 <!doctype html>
@@ -25,7 +25,7 @@ We will need buttons that change the contents of a text element every time you c
 </html>
 ```
 
-Now we will do something similar to what we did back with our [Hello World](hello-world) example that prints the console message: get references to the buttons by their id values and attaching event handlers. Because we want to keep the local state of the current count, we will use a mutable value. The `App.fs` becomes the following:
+Now we will do something similar to what we did back with our [Hello World](hello-world) example that prints the console message. We will get references to the buttons by their id values and attach event handlers. Because we want to keep the local state of the current count, we will use a mutable value. The `App.fs` becomes the following:
 
 ```fsharp
 module App
@@ -90,7 +90,7 @@ countViewer.innerText <- sprintf "Count is at %d" currentCount
 
 
 ### Delayed Increments and Decrements
-Now, let us complicate this simple application by introducing yet another button. This button will behave the same as the `increase` button does but with a slight difference: it will increase the count after a delay of 1 second. First things first, add a button tag to your html:
+Now, let us complicate this simple application by introducing yet another button. This button will behave the same as the `increase` button behaves, but with a slight difference: it will increase the count after a delay of 1 second. First things first, add a button tag to your html:
 ```html {highlight: [12]}
 <!doctype html>
 <html>
@@ -132,4 +132,4 @@ increaseDelayed.onclick <- fun _ ->
 
 <resolved-image source="/images/fable/random-counter-delayed.gif" />
 
-Alright, we got our counter up and running, had it increase or decrease the count value randomly and even used an asynchronous function in the mix. Now it is time to take a step back and think about what we actually did in this section to better understand Fable.
+Alright, we got our counter up and running, had it increase or decrease the count value randomly, and even used an asynchronous function in the mix. Now it is time to take a step back and think about what we actually did in this section to better understand Fable.

@@ -52,7 +52,7 @@ When the F# project is compiled using Fable, a single JavaScript file called `ma
 </body>
 </html>
 ```
-Which F# project to compile and where the output goes is defined within the configuration file `webpack.config.js`, in the following snippet I have highlighted the relevant configured options:
+The configuration file `webpack.config.js` defines which F# project to compile and where the output goes. In the following snippet I have highlighted the relevant configured options:
 
 ```js {highlight:[5]}
 var path = require("path");
@@ -71,7 +71,7 @@ module.exports = {
     }
 }
 ```
-the `entry` option specifies the path to the project that should be compiled. The other options will be discussed in a later chapter.
+The `entry` option specifies the path to the project that should be compiled. The other options will be discussed in a later chapter.
 
 ### Compiling the project
 To get your F# code to run in the browser, you will first need to compile the project and then open `index.html` in your browser. However, before being able to compile the project, there are a couple of requirements that you need to have installed on your machine:
@@ -79,7 +79,7 @@ To get your F# code to run in the browser, you will first need to compile the pr
 - [.NET Core](https://www.microsoft.com/net/download) 2.2 or later, both SDK and runtime
 - [Node.js](https://nodejs.org/en/) 10.0 or later
 
-Of course, having a code editor is not a requirement for building the project but rather for development. To edit F# code, it is highly recommended to have [VS Code](https://code.visualstudio.com/) installed (along with with the [Ionide](http://ionide.io/) extension).
+Of course, having a code editor is not a requirement for building the project but rather for development. To edit F# code, it is highly recommended to have [VS Code](https://code.visualstudio.com/) installed (along with the [Ionide](http://ionide.io/) extension).
 
 Once you have installed both .NET and Node.js, you can verify that you have the correct versions by running these commands in your terminal:
 ```bash
@@ -109,7 +109,7 @@ Now that we have the JavaScript generated, we can open the `index.html` page in 
 
 <resolved-image source='/images/fable/browser-console.png' />
 
-Congrats! We have just got our first Fable application running. Let us change the source code to make it print a different message and recompile. Go to `App.fs` and change the printed message from `"Hello from Fable"` to `"Fable is up and running..."` as follows:
+Congrats! We have our first Fable application running. Let us change the source code to make it print a different message and recompile. Go to `App.fs` and change the printed message from `"Hello from Fable"` to `"Fable is up and running..."` as follows:
 
 ```fsharp {highlight: [3]}
 module App
@@ -128,7 +128,7 @@ After `npm run build` finished running you can refresh the `index.html` page in 
 
 ### User Interaction
 
-Of course, printing out a message to the console is boring. We can try something slightly less boring with some user interaction, we are running our code in the browser after all. So let us add a button that will print a message in the console when clicked. First things first, add the button to the `index.html` page:
+Of course, printing out a message to the console is boring. We can try something slightly less boring with some user interaction. We are running our code in the browser after all! So let us add a button that will print a message in the console when clicked. First things first, add the button to the `index.html` page:
 
 ```html {highlight: [10]}
 <!doctype html>
@@ -145,7 +145,7 @@ Of course, printing out a message to the console is boring. We can try something
 </body>
 </html>
 ```
-Here, we have added a `button` tag to the page with identity attribute called `"printMsg"`, we will use this id to reference the button from the F# code. Modify the contents of `App.fs` to the following:
+Here, we have added a `button` tag to the page with identity attribute called `"printMsg"`. We will use this id to reference the button from the F# code. Modify the contents of `App.fs` to the following:
 ```fsharp
 module App
 
@@ -156,9 +156,9 @@ let printMsgButton = document.getElementById "printMsg"
 printMsgButton.onclick <- fun eventArgs ->
     printfn "Button clicked"
 ```
-We start by opening the namespace `Browser.Dom`: this is the first example of a Fable *binding*: a library that allows our code to access native JavaScript APIs. In the case above, we use `document` with which we can reference and manipulate elements on the page, see [full docs here](https://developer.mozilla.org/en-US/docs/Web/API/Document) of `document`.
+We start by opening the namespace `Browser.Dom`. This is the first example of a Fable *binding*: a library that allows our code to access native JavaScript APIs. In the case above, we use `document` with which we can reference and manipulate elements on the page. See the [full docs here](https://developer.mozilla.org/en-US/docs/Web/API/Document) of `document`.
 
-Then, we ask `document` to give us a reference for the HTML element that has the id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element: a function that will run when the button is clicked.
+Then, we ask `document` to give us a reference for the HTML element that has the id `"printMsg"`, i.e. the button tag we added earlier to the `index.html` page. After that, we attach an *event handler* to the button element. The *event handler* is  a function that will run when the button is clicked.
 
 Now you can save `App.fs` and recompile using `npm run build`, refresh the page and you should get something that looks like this:
 
