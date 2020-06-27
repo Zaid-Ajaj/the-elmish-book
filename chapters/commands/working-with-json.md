@@ -1,6 +1,6 @@
 # Working with JSON
 
-The information we get back from a web server using HTTP is usually not just plain text as in with the Lorem Ipsum snippet we retrieved in the previous section but very often the text we get back is *structured* where JSON is the most commonly used format to structure that text.
+The information we get back from a web server using HTTP is usually not just plain text. Unlike the Lorem Ipsum snippet we retrieved in the previous section, very often the text we get back is *structured* where JSON is the most commonly used format to structure that text.
 
 > We usually say "We get JSON from the web server" as shorthand for "We get text back from the web server structured as JSON"
 
@@ -8,7 +8,7 @@ Now understanding JSON and being able to parse the JSON-formatted text is essent
 
 Parsing the JSON means that we convert the text into a structured type that we can work and manipulate in our applications.
 
-In Fable, there two main libraries to work with JSON:
+In Fable, there are two main libraries to work with JSON:
  - [Thoth.Json](https://mangelmaxime.github.io/Thoth/json/v3.html), written by [Maxime Mangel](https://github.com/MangelMaxime) . It uses JSON encoders and decoders to transform JSON structures into user-defined types or vice-versa. It is inspired by the Elm package [elm/json](https://package.elm-lang.org/packages/elm/json/latest/). Comes with built-in "automatic converters".
  - [Fable.SimpleJson](https://github.com/Zaid-Ajaj/Fable.SimpleJson) written by yours truly. It converts JSON-formatted text itself into a JSON structure that can be manipulated, searched and transformed into other structures. Comes with built-in "automatic converters".
 
