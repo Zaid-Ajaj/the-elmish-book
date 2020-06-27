@@ -62,7 +62,7 @@ Let us make a sample application using the command above to make something that 
 
 As you can see, the application loads, the screen turns into the "loading" state and after a short delay, the famous [lorem ipsum](https://www.lipsum.com/) text is shown on screen.
 
-We start building the application by adding the lorem ipsum text into a `.txt` file inside the `public` directory called `lorem-ipsum.txt`:
+We start building the application by adding the lorem ipsum text into a `.txt` file inside the `dist` directory called `lorem-ipsum.txt`:
 ```{highlight: [4]}
 dist
   ├─── index.html
