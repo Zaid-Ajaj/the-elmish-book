@@ -216,7 +216,7 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
       div [ "column"; "is-narrow" ] [
         div [ "buttons" ] [
           Html.button [
-            prop.className [ true, "button"; todo.Completed, "is-success"]
+            prop.classes [ "button"; if todo.Completed then "is-success"]
             prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
             prop.children [
               Html.i [ prop.classes [ "fa"; "fa-check" ] ]
