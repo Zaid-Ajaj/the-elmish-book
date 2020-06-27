@@ -214,7 +214,7 @@ let index (state: State) (dispatch: Msg -> unit) =
         Html.div [
             Html.h1 "Welcome, guest"
             Html.a [
-                prop.className [ "button"; "is-info" ]
+                prop.classes [ "button"; "is-info" ]
                 prop.style [ style.margin 5 ]
                 prop.href (Router.format("login"))
                 prop.text "Login"
@@ -225,13 +225,13 @@ let index (state: State) (dispatch: Msg -> unit) =
         Html.div [
             Html.h1 (sprintf "Welcome, %s" user.Username)
             Html.a [
-                prop.className [ "button"; "is-info" ]
+                prop.classes [ "button"; "is-info" ]
                 prop.style [ style.margin 5 ]
                 prop.href (Router.format("overview"))
                 prop.text "Overview"
             ]
             Html.a [
-                prop.className [ "button"; "is-info" ]
+                prop.classes [ "button"; "is-info" ]
                 prop.style [ style.margin 5 ]
                 prop.href (Router.format("logout"))
                 prop.text "Logout"
