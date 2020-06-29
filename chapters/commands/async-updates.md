@@ -70,7 +70,7 @@ let update (msg: Msg) (state: State) =
 
       state, Cmd.ofSub incrementDelayedCmd
 ```
-A couple of things are going on in the code above. The most important of which is that we are returning the state *as is* not modifying it whatsoever but along with it we return the command `incrementDelayedCmd`. This command is a function that has `dispatch` as input which starts an asynchronous operation immediately. The operation is a simple `Async.Sleep` function that will wait for a second before calling `dispatch Increment` which in turn will update the state synchronously the same way as if the user clicked the "Increment" button. The following diagram illustrates the operation:
+A couple of things are going on in the code above. The most important of which is that we are returning the state *as is*. We are not modifying it whatsoever, but along with it we return the command `incrementDelayedCmd`. This command is a function that has `dispatch` as input which starts an asynchronous operation immediately. The operation is a simple `Async.Sleep` function that will wait for one second before calling `dispatch Increment`, which in turn will update the state synchronously the same way as if the user clicked the "Increment" button. The following diagram illustrates the operation:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:75%;">

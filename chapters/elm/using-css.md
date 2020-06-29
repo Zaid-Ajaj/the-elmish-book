@@ -60,7 +60,8 @@ It makes sense to use `classes` when your classes are bound to values so that yo
 > `prop.className` can also take a list of strings to combine them into a single class, just like `classes`.
 
 ### Conditional classes
-Many times, you want to apply a class based on the state. To take the example from the previous section, you want to apply the `hidden` class when `state.Count < 0`:
+Many times, you want to apply a class based on the state. To take the example from the previous section, you want to apply the `hidden` class when `state.Count < 0`. With the new [implicit yield](https://docs.microsoft.com/en-us/dotnet/fsharp/whats-new/fsharp-47#implicit-yields) feature of F# 4.7
+it's as simple as adding an `if` expression:
 ```fsharp {highlight: [8]}
 let render (state: State) (dispatch: Msg -> unit) =
     Html.div [
@@ -68,19 +69,19 @@ let render (state: State) (dispatch: Msg -> unit) =
         Html.div state.Count
         Html.button [ prop.onClick (fun _ -> dispatch Decrement); prop.text "-" ]
         Html.h1 [
-            prop.className [ state.Count < 0, "hidden" ]
+            prop.classes [ if state.Count < 0 then "hidden" ]
             prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
         ]
     ]
 ```
-The function `className` can take input of type `(bool * string) list` where the `string` is the class name and `bool` is the condition that determines whether the class is applied to element. To use a constant class with `classList`, simply use `true` as the condition:
+To use a constant class, simply include the class name in the `list`:
 ```fsharp
 let shinyAlways =
-  prop.className [
+  prop.classes [
     // apply spinner class when state is loading
-    state.Loading, "spinner"
+    if state.Loading then "spinner"
     // always apply the shiny class
-    true, "shiny"
+    "shiny"
   ]
 ```
 
@@ -105,4 +106,4 @@ This book unfortunately doesn't teach you nifty CSS tricks. When we want to use 
 ```
 Now you can use classes that bulma provides.
 
-Try adding `prop.className [ "button";  "is-primary" ]` to your counter buttons to see how they look like. Take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website because we will be using it again in this chapter along with [Font Awesome](https://fontawesome.com/) which will provide us a plethora of icons that we can use in our apps.
+Try adding `prop.classes [ "button";  "is-primary" ]` to your counter buttons to see how they look like. Take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website because we will be using it again in this chapter along with [Font Awesome](https://fontawesome.com/) which will provide us a plethora of icons that we can use in our apps.

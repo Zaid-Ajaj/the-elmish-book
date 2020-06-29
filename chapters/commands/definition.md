@@ -19,7 +19,7 @@ let none : Cmd<Msg> = Cmd.ofSub (fun (dispatch: Msg -> unit) -> ())
 ```
 
 <div style="padding:20px; border: 1px solid lightgrey;border-radius:5px;">
-The current container type for commands is a list. This means the Cmd.ofSub just takes the input function and puts in a list and it becomes a proper command. However, this is an implementation detail that *we*, consumers of the library, shouldn't be concerned with.
+The current container type for commands is a list. This means the Cmd.ofSub takes the input function, puts it in a list, and it becomes a proper command. However, this is an implementation detail that *we*, consumers of the library, shouldn't be concerned with.
 </div>
 
 Another simple command is one that simply dispatches a message immediately:

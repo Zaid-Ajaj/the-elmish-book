@@ -241,7 +241,7 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
       div [ "column"; "is-narrow" ] [
         div [ "buttons" ] [
           Html.button [
-            prop.className [ true, "button"; todo.Completed, "is-success"]
+            prop.classes [ "button"; if todo.Completed then "is-success"]
             prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
             prop.children [
               Html.i [ prop.classes [ "fa"; "fa-check" ] ]
@@ -274,7 +274,7 @@ To understand how the columns work, please refer to [Bulma's docs](https://bulma
 An interesting part of this layout is how the buttons are implemented:
 ```fsharp {highlight: [3, 11]}
 Html.button [
-  prop.className [ true, "button"; todo.Completed, "is-success"]
+  prop.classes [ "button"; if todo.Completed then "is-success"]
   prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
   prop.children [
     Html.i [ prop.classes [ "fa"; "fa-check" ] ]
@@ -305,13 +305,13 @@ You can think about it as if the buttons "remember" which `Todo` they are bound 
 Another nice things about the buttons, especially the first one with the `check` icon, is the use of conditional classes based on the state of the *individual* To-Do item:
 ```fsharp {highlight: [2]}
 Html.button [
-  prop.className [ true, "button"; todo.Completed, "is-success"]
+  prop.classes [ "button"; if todo.Completed then "is-success"]
   prop.onClick (fun _ -> dispatch (ToggleCompleted todo.Id))
   prop.children [
     Html.i [ prop.classes [ "fa"; "fa-check" ] ]
   ]
 ]
 ```
-The `className` will evaluate to "button is-success" when `todo.Completed` is true, making the button turn green. When `todo.Completed` returns false, the `className` property will evaluate to just "button" turning the button back to the default color of white.
+The list input to `classes` will evaluate to "button is-success" when `todo.Completed` is true, making the button turn green. When `todo.Completed` returns false, the list input will evaluate to just "button" turning the button back to the default color of white.
 
 That was it for part 2, you can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part2) for reference.

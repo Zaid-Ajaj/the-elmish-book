@@ -33,7 +33,7 @@ setTimeout(() => {
 ```
 Here, in every callback, we trigger another `setTimeout` operation in the callback of the one before it in order to run the next print statement in sequence and we end up with the infamous "callback pyramid of hell" of JavaScript where code starts to get really hard to read and confusing because of the nesting of callbacks.
 
-You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world JavaScript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs and also applies to any callback based API such that of the file system when running JavaScript in a Node.js environment.
+You might say "Well, this is just a silly example code, real-world code doesn't look like this, right?" Actually, real-world JavaScript can be even uglier, because when loading data from a server, especially for a RESTful API, the front-end code ends up with having to request data from multiple endpoints. However, this problem is not specific to calling web APIs and also applies to any callback based API such as the file system API when running JavaScript in a Node.js environment.
 
 Now since this is a common problem in the JavaScript world, developers have found solutions to make it easier to combine multiple callbacks in a linear fashion instead of the nesting applied in the code snippet above: Enter Promises!
 

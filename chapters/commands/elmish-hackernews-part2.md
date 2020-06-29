@@ -117,7 +117,7 @@ let renderTabs selectedStories dispatch =
       Html.ul [
         for stories in storyCategories ->
         Html.li [
-          prop.className [ if selectedStories = stories then "is-active" ]
+          prop.classes [ if selectedStories = stories then "is-active" ]
           prop.onClick (fun _ -> switchStories stories)
           prop.children [
             Html.a [ Html.span (storiesName stories) ]

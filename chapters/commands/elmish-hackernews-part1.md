@@ -12,7 +12,7 @@ Like always, we start building the application from the [elmish-getting-started]
 
 ### Modelling The State
 
-Our application will be loading a bunch of story items from the Hackernews API. Depending of the story *category*, wether it `Top`, `Best`, `New`,`Ask`, `Job` or `Show` the items will have different fields. However, regardless of the category, each story item will at least have the fields `id` and `title`. Some of these story items might have a `url` which links to the main story (or project, article etc.)
+Our application will be loading a bunch of story items from the Hackernews API. Depending on the story *category*, wether it's `Top`, `Best`, `New`, `Ask`, `Job` or `Show` the items will have different fields. However, regardless of the category, each story item will at least have the fields `id` and `title`. Some of these story items might have a `url` which links to the main story (or project, article etc.)
 
 In this part we will load the first ten `Top` story items from this end point: https://hacker-news.firebaseio.com/v0/topstories.json. To model the story items, we will use a record:
 ```fsharp
@@ -52,7 +52,7 @@ Result<
     string
 >
 ```
-The difference here is `HackernewsItem` in the latter, simplified case as opposed to `Result<HackernewsItem, string>` in the former, idealistic model. Since we are loading each story item *separately* (due to how Hackernews API works) and each one might fail due to HTTP or JSON, each story item can have an error. However, in our application, I am choosing to ignore these errors to keep the application simple.
+The difference here is `HackernewsItem` in the latter simplified case, as opposed to `Result<HackernewsItem, string>` in the former idealistic model. Since we are loading each story item *separately* (due to how Hackernews API works) and each one might fail due to HTTP or JSON, each story item can have an error. However, in our application, I am choosing to ignore these errors to keep the application simple.
 
 In depends on the requirements of your application in how far you want to keep track of the various errors that might occur in the program. In our case we don't care a lot about them because we want to keep things simple and we can afford to ignore those items that fail due to the HTTP call or the JSON parsing. The main point is: it is a deliberate choice whether or not we keep track of the errors that might occur because these are known.
 
@@ -183,7 +183,7 @@ Once we have our triplet `init`, `update` and `render` in place, we can actually
 
 ### Implementing `loadStoryItems`
 
-Now that we have the general shape of the application what it should do. We can focus actually reading the story items with the `loadStoryItems` that is now returning a hardcoded list of items. Let us recap what we have to do to load the items:
+Now that we have the general shape of the application and what it should do. We can focus actually reading the story items with the `loadStoryItems` that is now returning a hardcoded list of items. Let us recap what we have to do to load the items:
  - Query the top stories end point and get a list of story item IDs via HTTP
  - Parse the IDs from JSON into a `int list` using Thoth.Json
  - From each of those IDs take the first 10 then load and parse the associated item from Hackernews
@@ -250,7 +250,7 @@ First of all, we implement a `Decoder<HackernewsItem>` using Thoth.Json which we
 ```fsharp
 loadStoryItem : int -> Async<Option<HackernewsItem>>
 ```
-Now this function call the end point specifically for an item and tries to decode the JSON-formatted response text using the `itemDecoder` that we wrote earlier. Notice that the function returns `Option<HackernewsItem>` rather than `Result<HackernewsItem, someErrorType>` because we are choosing to ignore errors when loading individual items, both HTTP and JSON-decoding errors.
+Now this function calls the end point specifically for an item and tries to decode the JSON-formatted response text using the `itemDecoder` that we wrote earlier. Notice that the function returns `Option<HackernewsItem>` rather than `Result<HackernewsItem, someErrorType>` because we are choosing to ignore errors when loading individual items, both HTTP and JSON-decoding errors.
 
 Now combining both functions `loadStoryItem` and `loadStoryItems` we get:
 ```fsharp {highlight: ['14-19']}

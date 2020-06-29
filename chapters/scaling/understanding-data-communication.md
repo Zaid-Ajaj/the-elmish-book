@@ -113,7 +113,7 @@ Html.div [
     prop.className "field"
     prop.children [
         Html.button [
-            prop.className [
+            prop.classes [
                 "button is-info is-fullwidth"
                 if state.LoginAttempt = InProgress
                 then "is-loading"

@@ -127,7 +127,7 @@ let update (msg: Msg) (state: State) =
 ```
 Here, nothing changed when we receive the `LoadStoreInfo Started` message into the program, we simply load the JSON from the server. However, when the message `LoadStoreInfo (Finished (Ok storeInfoJson))` is received where `storeInfoJson` is a `string`, we try to parse that `string` into an instance of `StoreInfo` using the `parseStoreInfo` function. We haven't defined that function yet and we will be using `Thoth.Json` to do so.
 
-> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involving any side-effects which are sometimes easier to discarded when unit-testing the `update` function.
+> We keep the parsing of the JSON in the `update` function instead of inside the asynchronous command. This is because JSON parsing is a pure operation and can be unit-tested without involving any side-effects which are sometimes easier to discard when unit-testing the `update` function.
 
 We also now get a compile error in the `render` function because it doesn't know how to render the `StoreInfo`:
 ```fsharp {highlight: [11, 12, 13]}
@@ -184,7 +184,7 @@ In this section, we will be using *decoders* because we want to convert JSON (de
 ```fsharp
 type Decoder<'t> = (* ... *)
 ```
-Never mind the actual type definition for now, we will get to that later but essentially a `Decoder<'t>` is a *function* that can read a piece of JSON and converts it to an instance of `'t`.
+Never mind the actual type definition for now, we will get to that later but essentially a `Decoder<'t>` is a *function* that can read a piece of JSON and convert it to an instance of `'t`.
 
 Built-in decoders in the `Thoth.Json` library do not understand complex user-defined types such as that of `StoreInfo` so we have to "teach" a bunch of little decoders how to work together and decode JSON into `StoreInfo` by combining and composing smaller decoders that operate on simpler primitive types.
 
@@ -201,9 +201,9 @@ let productDecoder : Decoder<Product> =
     price = get.Required.At [ "price" ] Decode.float
   })
 ```
-Here, we are constructing the `Product` decoder using the `Decode.object` function. This is because we want to map a JSON object into the `Product` record. This function takes a single argument which is a "field getter" that allows you to define how the fields of the `Product` (the name and the price) can be decoded. In our case, we are decoding the `name` field using the `Decode.string` decoder which itself has type `Decoder<string>` and the for `price` field, we are using the `Decode.float` decoder which is of type `Decoder<float>`.
+Here, we are constructing the `Product` decoder using the `Decode.object` function. This is because we want to map a JSON object into the `Product` record. This function takes a single argument which is a "field getter" that allows you to define how the fields of the `Product` (the name and the price) can be decoded. In our case, we are decoding the `name` field using the `Decode.string` decoder which itself has type `Decoder<string>` and for the `price` field, we are using the `Decode.float` decoder which is of type `Decoder<float>`.
 
-You can use this decoder to try parse a piece of JSON into a record instance of `Product` as follows:
+You can use this decoder to try parsing a piece of JSON into a record instance of `Product` as follows:
 ```fsharp
 let productJson = """
   {
@@ -220,7 +220,7 @@ Here, we use the function `Decode.fromString` and give it two things: the decode
 Decode.fromString : Decoder<'t> -> string -> Result<'t, string>
 ```
 
-The parsing can fail for many reasons, for example because of invalid JSON formatting, the JSON not being an object literal which is what we are decoding against, the fields being missing or having the wrong the JSON type (e.g. `price` is a string).
+The parsing can fail for many reasons, for example because of invalid JSON formatting, the JSON not being an object literal which is what we are decoding against, the fields being missing or having the wrong JSON type (e.g. `price` is a string).
 
 Now that we have a `Decoder<Product>` we can use it as part of another, bigger decoder: `Decoder<StoreInfo>` because that is our object we want to parse:
 ```fsharp
