@@ -1,19 +1,19 @@
 # To-Do List Application: Exercises
 
-I could spend days, tediously going through code and explaining the concepts behind it but nothings helps you understand these concepts like actually trying to build something yourself. Many times one doesn't know what to build so instead of asking you to build something from scratch, I have decided that it would be nicer to work with and add features to something that by now you should hopefully be already familiar with: our To-Do list application.
+I could spend days tediously going through code and explaining the concepts behind it. But nothing helps you understand these concepts like actually trying to build something yourself. Many times one doesn't know what to build. So instead of asking you to build something from scratch, I have decided that it would be nicer to work with and add features to something that by now you should hopefully be already familiar with: our To-Do list application.
 
 ### Exercise 1: Refactor to-do IDs from `int` to `System.Guid`
 
-Currently each to-do's ID is an `int`, however .Net framework has a built-in module specifically for generating unique IDs: [`System.Guid`](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-3.1).
+Currently each to-do's ID is an `int`. However, the .NET framework has a built-in struct specifically for representing unique IDs: [`System.Guid`](https://docs.microsoft.com/en-us/dotnet/api/system.guid?view=netcore-3.1).
 
-The point of this exercise is to change the `Todo` type so the ID is of type `Guid`, then, using the IDE's errors, or even compiler errors, find all the places the change breaks the type-system and refactor them to make the application compile again.
+The point of this exercise is to change the `Todo` type so the ID is of type `Guid`. Then, using the IDE's errors, or even compiler errors, find all the places the change breaks the type-system and refactor them to make the application compile again.
 
-To cut down on keystrokes, don't forget to `open System`, after which you can refer to the module's simply as `Guid`.  
-Also, to generate a new ID using the module (_after opening it, of course)_, use `Guid.NewGuid()`.
+To cut down on keystrokes, don't forget to `open System`, after which you can refer to the `Guid` struct without the namespace.  
+Also, to generate a new ID using the `Guid` struct (_after opening it, of course)_, use `Guid.NewGuid()`.
 
 ### Exercise 2: Add Filter Tabs
 
-Your first exercise is a fairly simple one, adding filter tabs to your list that lets the user view all the items, the ones that are completed or the ones that still To-Do. It looks like this:
+Your second exercise is a fairly simple one: add filter tabs to your list. The filter tabs will allow the user to view all the items, the ones that are completed, or the ones that are uncompleted. It looks like this:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;">
@@ -21,7 +21,7 @@ Your first exercise is a fairly simple one, adding filter tabs to your list that
   </div>
 </div>
 
-As shown above, the filter tabs are buttons which have a "currently selected filter" feature as well. To give you a head start, this is how your `render` function will look like in the beginning:
+As shown above, the filter tabs are buttons which have a "currently selected filter" feature as well. To give you a head start, this is how your `render` function will look in the beginning:
 
 ```fsharp {highlight: [1, 10]}
 let renderFilterTabs (state: State) (dispatch: Msg -> unit) =
@@ -80,13 +80,13 @@ When in edit mode, the save button (the one with the floppy disk icon) has the c
   </div>
 </div>
 
-Of course, this is not "disabling" the button for real, it just shows the user that the button is kind of inactive or has no effect when clicked because he or she didn't modify the text.
+Of course, this is not "disabling" the button for real. It just shows the user that the button is kind of inactive or has no effect when clicked because he or she didn't modify the text.
 
 *Hint: remember how we implemented the completed check box*
 
 ### Exercise 4: Multi-Edit Mode
 
-The way we implemented the To-Do list application only allows to edit a *single* To-Do item at a time. In this exercise, you will extend this feature and allow the user to edit multiple items at the same time. It will look like this:
+The way we implemented the To-Do list application only allows the user to edit a *single* To-Do item at a time. In this exercise, you will extend this feature and allow the user to edit multiple items at the same time. It will look like this:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;">
@@ -94,7 +94,7 @@ The way we implemented the To-Do list application only allows to edit a *single*
   </div>
 </div>
 
-You will need to extend the state as now you are keeping track not of a single "edit model" (i.e. `TodoBeingEdited`) but multiple edit models instead. There are two ways you can approach this when extending the state:
+You will need to extend the state because now you are keeping track not of a *single* "edit model" (i.e. `TodoBeingEdited`) but *multiple* edit models instead. There are two ways you can approach this when extending the state:
  - (1) Keep track of `TodoBeingEdited list` instead of `TodoBeingEdited option`
  - (2) Remove `TodoBeingEdited option` altogether and instead add `BeingEdited:bool` and `EditDescription:string` to every `Todo` in your state
 
@@ -104,14 +104,14 @@ You can view and use the application [live here](https://zaid-ajaj.github.io/elm
 
 ### Exercise 5: Refactor Bulma With TypedCssClasses
 
-Throughout the user interface of the To-Do list, we have been using Bulma's classes to enhance the look and feel of the application. These classes are just strings that we have to look up in the documentation and remember to write correctly in our application, we can do much better than magic strings to avoid having to remember them or writing then incorrectly. The first approach is simply writing a module called `Bulma` that includes the class names:
+Throughout the user interface of the To-Do list, we have been using Bulma's classes to enhance the look and feel of the application. These classes are just strings that we have to look up in the documentation and remember to write correctly in our application. We can do much better than magic strings to avoid having to remember them or writing then incorrectly. The first approach is simply writing a module called `Bulma` that includes the class names:
 ```fsharp
 module Bulma =
   let [<Literal>] Button = "button"
   let [<Literal>] IsPrimary = "is-primary"
   // etc.
 ```
-Although this would work, it requires considerable amount of work of taking every class exposed from Bulma and writing in the module, not to mention that you have to maintain the module and update it when Bulma introduces breaking changes. Finally, you would have to follow this process for every CSS framework you want to use. What if there was a tool that does all things for us using a single line of code? Enter [TypedCssClasses](https://github.com/zanaptak/TypedCssClasses) written by [Zanaptak](https://github.com/zanaptak), a type-provider that infers the class names exposed from a stylesheet and makes them available during compile-time!
+Although this would work, it requires considerable amount of work to take every class exposed from Bulma and writing in the module, not to mention that you have to maintain the module and update it when Bulma introduces breaking changes. Finally, you would have to follow this process for every CSS framework you want to use. What if there was a tool that does all things for us using a single line of code? Enter [TypedCssClasses](https://github.com/zanaptak/TypedCssClasses) written by [Zanaptak](https://github.com/zanaptak), a type-provider that infers the class names exposed from a stylesheet and makes them available during compile-time!
 
 First of all, install the package into the F# project
 ```bash
