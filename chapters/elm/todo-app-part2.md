@@ -1,6 +1,6 @@
 # To-Do List Application: Part 2
 
-In this section, we will continue to build upon what we did in the previous section and upgrade our To-Do list application such that it is able to mark To-Do items as completed as well as the ability to delete them from the list. It will look like the following:
+In this section, we will continue to build upon what we did in the previous section. We will upgrade our To-Do list application such that it is able to mark To-Do items as completed. We will also add the  ability to delete them from the list. It will look like the following:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;">
@@ -12,7 +12,7 @@ You can see and use the application [live here](https://zaid-ajaj.github.io/elmi
 
 ### Modelling the State
 
-Previously, when modelling the To-Do items in our state, we chose to use `string list` because that is what they were. However, now these items have to carry more information, namely whether they are *completed* or not. So one might consider using a separate type for the To-Do item as follows:
+Previously, when modelling the To-Do items in our state, we chose to use `string list` because that is what they were. However, now these items need more information. Namely, the items can be either *completed* or not. So one might consider using a separate type for the To-Do item as follows:
 ```fsharp {highlight: ['1-4', 8]}
 type Todo = {
   Description: string
@@ -32,7 +32,7 @@ type Msg =
   | ToggleCompleted of ???
   | DeleteTodo of ???
 ```
-Here I have added two events: `ToggleCompleted` and `DeleteTodo`, these events are triggered when I want to toggle the completed flag or delete a *certain* To-Do item, but how do I know which one to toggle or to delete? The answer is to extend our state type and add an identity field to each of To-Do items:
+Here I have added two events: `ToggleCompleted` and `DeleteTodo`. These events are triggered when I want to toggle the completed flag or delete a *specific* To-Do item. But how do I know which one to toggle or to delete? The answer is to extend our state type and add an identity field to each of To-Do items:
 ```fsharp {highlight: [2]}
 type Todo = {
   Id : int
@@ -40,7 +40,7 @@ type Todo = {
   Completed : bool
 }
 ```
-Now the events can carry information about a certain To-Do item only by using the identity associated with that item:
+Now the events can carry information about a specific To-Do item by using the identity associated with that item:
 ```fsharp
 type Msg =
   | SetNewTodo of string
@@ -48,7 +48,7 @@ type Msg =
   | ToggleCompleted of int
   | DeleteTodo of int
 ```
-For example, an event `ToggleCompleted 4` means "Toggle the completed flag of the item with identity = 4" and the same holds for `DeleteTodo 4` which means "Delete the item that has identity = 4". Let's try to imagine how the state evolves as these events are triggered:
+For example, an event `ToggleCompleted 4` means "Toggle the completed flag of the item with identity = 4". The same holds for `DeleteTodo 4` which means "Delete the item that has identity = 4". Let's try to imagine how the state evolves as these events are triggered:
 ```bash
 -> Initial State
   {
@@ -97,11 +97,11 @@ For example, an event `ToggleCompleted 4` means "Toggle the completed flag of th
     ]
   }
 ```
-Notice how when we are adding a new todo, we are incrementing the `Id` by 1 based on the maximum value of `Id` in the list. Also we initialize the `Completed` flag of a new `Todo` item to be false.
+Notice that the example above requires that when adding a new todo, we are incrementing the `Id` by 1 based on the maximum value of `Id` in the list. Also notice that we initialize the `Completed` flag of a new `Todo` item to be false.
 
 ### Implementing State Updates
 
-Using the steps above, we have a rough idea of how we should implement the `update` function, let's try to implement it concretely, and go through the code:
+Using the steps above, we have a rough idea of how we should implement the `update` function. Let's try to implement it concretely, and go through the code:
 ```fsharp
 let update msg state =
   match msg with
@@ -191,11 +191,11 @@ Event `AddNewTodo` now has a bit more logic to it than from the previous section
         NewTodo = ""
         TodoList = List.append state.TodoList [nextTodo] }
 ```
-First we calculate the identity that our next To-Do item will have, we do so by checking the current list of `Todo`'s, if the list is empty, then use 1 is the identity for the first item, otherwise we get the To-Do item that has the largest `Id` value using `List.maxBy` and we extract the `Id` from that item. Afterwards we create a new `Todo` using the `Id` we calculated and adding (appending) it the `TodoList` we already have in the state.
+First we calculate the identity that our next To-Do item will have. We do so by checking the current list of `Todo`'s. If the list is empty, then use 1 is the identity for the first item. Otherwise we get the To-Do item that has the largest `Id` value using `List.maxBy` and we extract the `Id` from that item. Afterwards we create a new `Todo` using the `Id` we calculated and adding (appending) it to the `TodoList` we already have in the state.
 
-### Rendering The User Interface
+### Rendering the User Interface
 
-That was it for the `update`, now we consider the `render` function. Since the user interface is more or less the same as the in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Previously we had items rendered as simple `Html.li` elements:
+That was it for the `update` function. Now we consider the `render` function. Since the user interface is more or less the same as in the previous section, `render` will look almost the same, except now we have more logic when rendering the individual To-Do items. Previously we had items rendered as simple `Html.li` elements:
 ```fsharp {highlight: ['4-7']}
 let todoList (state: State) (dispatch: Msg -> unit) =
   Html.ul [
@@ -269,7 +269,7 @@ The layout can be visualized roughly as follows:
   </div>
 </div>
 
-To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly: 50% each of the width for each column in case of two columns. But in the example above, I want the description to have more space, so I use the `is-narrow` class on the second column such that the second column only takes the space it needs for the two buttons and the first column will automatically take up the rest of the space for the To-Do item description.
+To understand how the columns work, please refer to [Bulma's docs](https://bulma.io/documentation/columns/) about columns. Basically I am separating the layout into two columns. By default the columns will share the space evenly. In the case of two columns, that means each column will be allocated 50% of the width. But in the example above, I want the description to have more space. So I use the `is-narrow` class on the second column such that the second column is only allocated the space it needs for the two buttons. The first column will automatically take up the rest of the space for the To-Do item description.
 
 An interesting part of this layout is how the buttons are implemented:
 ```fsharp {highlight: [3, 11]}
@@ -289,7 +289,7 @@ Html.button [
   ]
 ]
 ```
-Notice the `onClick` event handlers: they trigger events `ToggleCompleted` and `DeleteTodo` providing the events with the `Id` of the To-Do item being rendered. This is important, because this means each button rendered in a To-Do item "knows" which item should be toggled or deleted. Let me try to visualize this, suppose you have the list of To-Do items:
+Notice the `onClick` event handlers. They trigger events `ToggleCompleted` and `DeleteTodo` providing the events with the `Id` of the To-Do item being rendered. This is important, because this means each button rendered in a To-Do item "knows" which item should be toggled or deleted. Let me try to illustrate this. Suppose you have the list of To-Do items:
 ```fsharp
 [
   { Id = 1; Description = "Learn F#"; Completed = true }
@@ -300,7 +300,7 @@ The rendered buttons know exactly which event to trigger and which `Todo` is ass
 
 <resolved-image source="/images/elm/associated-events.png" />
 
-You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are just using functions, the event handlers of these buttons create *closures* that maintain the information used within them, i.e. the `todo.Id` coming from the individual To-Do items that we rendering from the list.
+You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are using functions, the event handlers of these buttons create *closures* that maintain the information used within them. That information is the value of `todo.Id` coming from the individual To-Do items that we rendering from the list.
 
 Another nice things about the buttons, especially the first one with the `check` icon, is the use of conditional classes based on the state of the *individual* To-Do item:
 ```fsharp {highlight: [2]}
@@ -314,4 +314,4 @@ Html.button [
 ```
 The list input to `classes` will evaluate to "button is-success" when `todo.Completed` is true, making the button turn green. When `todo.Completed` returns false, the list input will evaluate to just "button" turning the button back to the default color of white.
 
-That was it for part 2, you can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part2) for reference.
+That was it for part 2. You can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part2) for reference.

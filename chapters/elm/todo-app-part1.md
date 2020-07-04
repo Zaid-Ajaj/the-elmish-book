@@ -10,9 +10,9 @@ In this part we will implement the bare minimum of the To-Do list application, i
 
 You can see and use the application [live here](https://zaid-ajaj.github.io/elmish-todo-part1/).
 
-### Modelling The State
+### Modelling the State
 
-Now that you have an idea of what the application has to do, the very first thing that we have to consider is the data model: the state of the application. The state is data that we want to keep track of while using the application. In our case, we have to keep track of a list of to-do items, each item is a piece of text (i.e. string). But that is not all, we also have a text box where the user can type in the contents of a new todo item. So we have to maintain what the user is typing as well. The state comes down to the following type:
+Now that you have an idea of what the application does, the very first thing that we have to consider is the data model: the state of the application. The state is data that we want to keep track of while using the application. In our case, we keep track of a list of to-do items. Each item is a piece of text (i.e. string). But that is not all. We also have a text box where the user can type in the contents of a new todo item. So we must maintain what the user is typing as well. The state comes down to the following type:
 ```fsharp
 type State = {
     TodoList : string list
@@ -21,17 +21,17 @@ type State = {
 ```
 Here, `TodoList` represents the list of the todo items and `NewTodo` represents the text that the user is typing in the text box.
 
-### Modelling The Events
+### Modelling the Events
 
-Now that we have the data model, we have to think about *which* events occur while the application is running. In this case, the user can only do two things: typing in the text box and clicking the `Add` button. So we have two events that we model with a `Msg` type:
+Now that we have the data model, we think about *which* events occur while the application is running. In this case, the user can only do two things: type in the text box and click the `Add` button. So we have two events that we model with a `Msg` type:
 ```fsharp
 type Msg =
     | SetNewTodo of string
     | AddNewTodo
 ```
-Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box, that's why we need extra information `of string` which will carry the text that the user typed. `AddNewTodo` on the other hand will take the *current* value of `NewTodo` and add it to `TodoList`. Notice here that `AddNewTodo` doesn't require extra information because we already have the text of the `NewTodo` in our state.
+Here, `SetNewTodo` will be used to update the value of `NewTodo` from the state as the user is typing in the text box. That's why the discriminated union case declaration includes the extra information `of string` which will carry the text that the user typed. `AddNewTodo` on the other hand will take the *current* value of `NewTodo` and add it to `TodoList`. Notice here that the `AddNewTodo` case doesn't require extra information because we already have the text of the `NewTodo` in our state.
 
-In the back of your mind, try to imagine how the state evolves from the initial state as these events are triggered:
+In your mind, try to imagine how the state evolves from the initial state as these events are triggered:
 ```bash
 -> Initial State = { NewTodo = ""; TodoList = [ "Learn F#" ] }
 -> User starts typing
@@ -50,7 +50,7 @@ This gives you an idea of whether your state has enough information to evolve as
 
 ### Implementing State Updates
 
-Since we started to think about how state evolves, we kind of already know what the `init` and `update` functions have to do so we can start implementing them concretely:
+Since we started to think about how state evolves, we kind of already know what the `init` and `update` functions have to do. We can start implementing them concretely:
 ```fsharp
 let init() : State =
   { TodoList = [ "Learn F#" ]
@@ -120,7 +120,7 @@ let inputField (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
-We are using Bulma's [form fields](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo` and whenever the user types in, the `onChange` event is triggered which in turn triggers (i.e. "dispatches") the `SetNewTodo` event giving it the current value of the input. The add button is trivial, just dispatches the `AddNewTodo` event when clicked.
+We are using Bulma's [form addons](https://bulma.io/documentation/form/general/#form-addons) to combine the input text box and the button. Notice how the input is using `valueOrDefault` to initialize itself with the value of `state.NewTodo`. Also notice that whenever the user types in the input box, the `onChange` event is triggered. This in turn triggers (i.e. "dispatches") the `SetNewTodo` event along with the current value of the input. The add button is trivial. It just dispatches the `AddNewTodo` event when clicked.
 
 Notice the part `Html.i [ prop.classes [ "fa"; "fa-plus" ] ]`. This is how we use icons from the Font Awesome library that we referenced in the beginning. Using the class `fa fa-plus` gives the "plus" icon. See [here](https://fontawesome.com/icons?d=gallery) all the icons you can use.
 
@@ -155,7 +155,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
-Here we also use a simple `div` as the container of the entire application and give it a bit of padding of 20 pixels. The `render` function passes it's `state` and `dispatch` parameters down to the smaller parts `inputField` and `todoList` so that these parts too can use the state to render information on screen or trigger events with the dispatch function. The `appTitle` didn't need the state, nor the ability to trigger events so we just used it as a value.
+Here we also use a simple `div` as the container of the entire application and give it a bit of padding of 20 pixels. The `render` function passes its `state` and `dispatch` parameters down to the smaller parts `inputField` and `todoList` so that these parts too can use the state to render information on the screen or trigger events with the dispatch function. The `appTitle` didn't need the state nor the ability to trigger events. So we just used it as a value.
 
 Finally, to bootstrap the application and actually bring it to life, we instruct Elmish to do so using:
 ```fsharp

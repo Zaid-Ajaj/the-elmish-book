@@ -1,6 +1,6 @@
 # Using CSS
 
-In the previous section we were using the `style` attribute to change the css styling of elements on the page, whether it is the text color or the display attribute. This is called "inline styling" in which you apply the style attributes directly on the elements. This can be helpful when you want to dynamically change certain attributes based on the state but in many cases you also need to use predefined stylesheets to implement these styles and reference them from your elements.
+In the previous section we were using the `style` attribute to change the CSS styling of elements on the page. We did examples with the text color and the display attribute. This is called "inline styling" in which you apply the style attributes directly on the elements. This can be helpful when you want to dynamically change certain attributes based on the state but in many cases you also need to use predefined stylesheets to implement these styles and reference them from your elements.
 
 ### Style Tags
 
@@ -32,7 +32,7 @@ let render state dispatch =
         prop.text "You can't see me"
     ]
 ```
-Of course, using `className` you can apply multiple classes to your elements. For example, given the styles:
+Of course, you can use `className` to apply multiple classes to your elements. For example, given the styles:
 ```html
 <style>
     .text-large { font-size: 18px }
@@ -104,6 +104,6 @@ This book unfortunately doesn't teach you nifty CSS tricks. When we want to use 
 </body>
 </html>
 ```
-Now you can use classes that bulma provides.
+Now you can use classes that Bulma provides.
 
-Try adding `prop.classes [ "button";  "is-primary" ]` to your counter buttons to see how they look like. Take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website because we will be using it again in this chapter along with [Font Awesome](https://fontawesome.com/) which will provide us a plethora of icons that we can use in our apps.
+Try adding `prop.classes [ "button";  "is-primary" ]` to your counter buttons to see how the appearance changes. Also, take a look around the rest of the [Bulma documentation](https://bulma.io/documentation/) website. We will be using Bulma again in this chapter along with [Font Awesome](https://fontawesome.com/), which provides a plethora of icons that we can use in our apps.

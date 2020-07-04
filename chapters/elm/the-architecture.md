@@ -8,18 +8,18 @@ Our primary focus in this chapter will be the concepts of The Elm Architecture a
 
 ### The problem: user interfaces
 
-Whatever application you might be building, there are almost always *two* main concerns that a UI application has to deal with
+Whatever application you might be building, there are almost always *two* main concerns that a UI application has to deal with:
  - How to keep track of and maintain the state of the application
  - How to keep the user interface in-sync with the state as it changes
 
 The Elm Architecture provides a systematic approach for these problems using some building blocks. These blocks are divided into the following:
 
- - State: also known as the *Model* is a type that represents the data you want to keep track of while the application is running
+ - **State**, also known as the *Model*, is a type that represents the data you want to keep track of while the application is running.
 
- - Messages: are the types of events that can change your state; these messages can either be triggered from the user interface or from external sources. The messages are usually modeled with a discriminated union.
+ - **Messages** are the types of events that can change your state. Messages can either be triggered from the user interface or from external sources. The messages are usually modeled with a discriminated union.
 
- - The Update function: is a function which takes a triggered message or event with the current state, then calculates the *next* state of the application.
+ - The **Update** function is a function which takes a triggered message or event, along with the *current* state, then calculates the *next* state of the application.
 
- - The Render function: also known as the "view" function, takes the current state and builds user interface from it. The user interface can trigger messages or events.
+ - The **Render** function, also known as the *View* function, takes the current state and builds the user interface from it. The user interface can trigger messages or events.
 
-These concepts take time and a lot of practice to get used to. They might seem a bit vague at this point, and you might have tons of questions. That is fine for now, we are just getting started, and we will take it step by step. The next section [Counter with Elmish](counter) will cover the concepts in great detail by example.
+These concepts take time and a lot of practice to get used to. They might seem a bit vague at this point, and you might have tons of questions. That is fine for now. We are just getting started and we will take it step by step. The next section [Counter with Elmish](counter) will cover the concepts in great detail by example.
