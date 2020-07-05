@@ -90,7 +90,7 @@ Now in the `render` function, how can we trigger `SetNumberInput` from the `Html
 prop.onChange (int >> SetNumberInput >> dispatch)
 ```
 And the `render` function will look like this:
-```fsharp {highlight: [6]}
+```fsharp {highlight: [5]}
 let render state dispatch =
   Html.div [
     Html.input [

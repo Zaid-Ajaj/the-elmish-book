@@ -1,6 +1,6 @@
 # Conditional Rendering
 
-Starting with our [Counter](counter.md) sample application, we can play around a little bit and extend it to get a better feeling for how the user interface DSL works: using conditional rendering.
+Starting with our [Counter](counter.md) sample application, we can play around a little bit and extend it to get a better feeling for how the user interface DSL works: using conditional rendering. Here we will write code that indicates whether or not elements should be rendered on screen based on the collected data from the state of the application.
 
 ### Conditional Rendering Using `if ... then ... else`
 
@@ -41,12 +41,17 @@ Here we are creating the element `oddOrEvenMessage` and then choosing whether or
 
 Using `if ... then ... else` can sometimes be tedious and repetitive. A simple way to show or hide elements is using the `display` CSS attribute. If an element has the CSS attribute `display: none` then the element is hidden. To show the element you either need to remove the `display` attribute or set it to `display: block`:
 
-```fsharp {highlight: [5, 6]}
+```fsharp {highlight: [6,7,8]}
 let render (state: State) (dispatch: Msg -> unit) =
 
   let oddOrEvenMessage =
     Html.h1 [
-        prop.style [ (if state.Count < 0 then style.display.none else style.display.block) ]
+        prop.style [
+          if state.Count < 0
+          then style.display.none
+          else style.display.block
+        ]
+
         prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
     ]
 
@@ -58,18 +63,6 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
 ```
 In this example, we are always rendering the message but when the CSS attribute `display` is `none`, it has the same effect as if we didn't render the element.
-
-The above example used a combination of `if..else..then` expression and `display` styling. Styles can be applied conditionally using the `style` property:
-```fsharp {highlight: [2, 3, 4]}
-Html.h1 [
-    prop.style [
-        state.Count < 0, [ style.display.none ]
-    ]
-
-    prop.text (if state.Count % 2 = 0 then "Count is even" else "Count is odd")
-]
-```
-This way, you apply a bunch of style attributes based on the predicate (the first item of the tuple). The property `style` is an overload that takes type `((bool * IStyleAttribute list) list)` as input and returns `IReactAttribute` like all other attributes.
 
 ### Conditional rendering using `Html.none`
 
