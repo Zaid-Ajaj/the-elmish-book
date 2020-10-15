@@ -180,7 +180,7 @@ Html.div [
 
 ### Arbitrary render logic
 
-It important to understand that although we are just calling these DSL functions such as `Html.div` and `Html.span` to build the HTML, we are still executing F# code. This code can be anything you want to do in a normal function. For example, you can use list comprehensions to build a list of elements that contains powers of 2:
+It is important to understand that although we are just calling these DSL functions such as `Html.div` and `Html.span` to build the HTML, we are still executing F# code. This code can be anything you want to do in a normal function. For example, you can use list comprehensions to build a list of elements that contains powers of 2:
 ```fsharp
 /// Computes x to the power n
 let power x n =
