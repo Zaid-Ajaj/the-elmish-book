@@ -208,7 +208,7 @@ let update msg state =
         let nextState = { state with RandomNumber = Resolved result }
         nextState, Cmd.none
 ```
-The icing on the cake will be the `render` function, because now it can handle the different states of the async operation is a succinct and concise manner:
+The icing on the cake will be the `render` function, because now it can handle the different states of the async operation in a succinct and concise manner:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
     let content =
