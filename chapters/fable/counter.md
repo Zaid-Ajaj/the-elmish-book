@@ -114,7 +114,7 @@ Now, let us complicate this simple application by introducing yet another button
 Next, we will write an `async` function that runs a callback after a delay and use it from the event handler:
 ```fsharp
 // Runs the callback after a delay
-let runAfter ms callback =
+let runAfter (ms: int) callback =
   async {
     do! Async.Sleep ms
     do callback()
