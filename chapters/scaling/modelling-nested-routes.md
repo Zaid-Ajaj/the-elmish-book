@@ -43,7 +43,7 @@ let parseUrl = function
   | _ -> Url.NotFound
 ```
 Then from the parent program, we can compose the bigger `Url` type from the smaller ones:
-```fsharp {highlight: [10]}
+```fsharp {highlight: [12]}
 // App.fs
 
 type Url =
