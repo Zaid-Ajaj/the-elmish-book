@@ -1,8 +1,8 @@
 # Modelling Nested Routes
 
-In section [Splitting Programs](splitting-programs), we leant how to model nested pages from child programs into a page type in the parent program and compose it correctly without having the parent know about the implementation details of the specific child program. We can do the same thing when it comes nested URL routes. Suppose we are building an application where we need a couple of pages to view, create or edit a certain user. We also need a page to view all users. Here we have two pages that are known from the root program. Assuming `Users` and `User` are child programs of the root `App` program. We can define the `Url` for the root program to be *independent* of those from the child programs. This means that `App` doesn't necessarily know about the nested URLs that child programs might be interested in.
+In section [Splitting Programs](splitting-programs), we leant how to model nested pages from child programs into a page type in the parent program and compose it correctly without having the parent know about the implementation details of the specific child program. We can do the same thing when it comes to nested URL routes. Suppose we are building an application where we need a couple of pages to view, create or edit a certain user. We also need a page to view all users. Here we have two pages that are known from the root program. Assuming `Users` and `User` are child programs of the root `App` program. We can define the `Url` for the root program to be *independent* of those from the child programs. This means that `App` doesn't necessarily know about the nested URLs that child programs might be interested in.
 
-It is a common trap to try to define the `Url` type from the parent model *before* the child program to work against the "limitations" of type inference and make the types available to both the parent program as well as the child program. This is sub-optimal because now the child programs suddenly know about the URLs of their parent program and probably other URLs about their sibling programs. There is a better way to do and it actually looks a lot like the state composition from child to parent.
+It is a common trap to try to define the `Url` type from the parent model *before* the child program to work against the "limitations" of type inference and make the types available to both the parent program as well as the child program. This is sub-optimal because now the child programs suddenly know about the URLs of their parent program and probably URLs of their sibling programs. There is a better way to do it and it actually looks a lot like the state composition from child to parent.
 
 Since we have two child programs `Users` and `User`, we want to map the URL of the application to one these programs. The `User` program however, is itself a parent program of the child programs `ShowUser`, `EditUser` and `AddUser`. The URL mapping of these programs goes as follows:
 ```bash
@@ -29,7 +29,7 @@ type Url =
   | Users
   | User of User.Url
 ```
-Notice here, in the same way the `Page` references the state of the child program, the `Url` type can reference the URL of the child program. From the `User` program, we can have a function that parses `Url` definition that is the `User` is interested in:
+Notice here, in the same way the `Page` references the state of the child program, the `Url` type can reference the URL of the child program. From the `User` program, we can have a function that parses `Url` definition that the `User` is interested in:
 ```fsharp
 // User.fs
 let parseUrl = function
@@ -43,7 +43,7 @@ let parseUrl = function
   | _ -> Url.NotFound
 ```
 Then from the parent program, we can compose the bigger `Url` type from the smaller ones:
-```fsharp {highlight: [10]}
+```fsharp {highlight: [12]}
 // App.fs
 
 type Url =
