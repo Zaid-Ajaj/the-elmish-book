@@ -52,7 +52,7 @@ We should mention here that even when the UI is re-rendered, the input box eleme
 
 This happens because HTML input elements such as a text box keep track of an *internal* state of their own so we don't have to tell the input box what text it should have now. However, sometimes we do want to tell the input box which value it should have, for example when initializing the application, maybe we don't want the input element to start empty but instead have an initial value. For this, we would use the `valueOrDefault` property that forces the input element to change the internal state:
 
-```fsharp {highlight: [5]}
+```fsharp {highlight: [4]}
 let render state dispatch =
   Html.div [
     Html.input [
