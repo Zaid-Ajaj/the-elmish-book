@@ -87,12 +87,12 @@ let render (state: State) (dispatch: Msg -> unit) =
     | [ "contact" ] -> Html.h1 "Contact"
     | _ -> Html.h1 "Not Found"
 
-  Router.router [
-    Router.onUrlChanged (UrlChanged >> dispatch)
-    Router.application [ activePage ]
+  React.router [
+    router.onUrlChanged (UrlChanged >> dispatch)
+    router.children [ activePage ]
   ]
 ```
-Here we are using a special kind of UI element: `Router.router`. Whenever this element is rendered on screen, it can listen to URL changes through the `Router.onUrlChanged` event handler that is triggered when the URL is modified. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. The other property that the router takes is the `Router.application` which is what gets rendered in the place where the router element was put, much like the children of the element except it it called `application` because it is common to put the router around the root of the application.
+Here we are using a special kind of UI element: `React.router`. Whenever this element is rendered on screen, it can listen to URL changes through the `router.onUrlChanged` event handler that is triggered when the URL is modified. This event handler expects an input function of type `string list -> unit` where the `string list` represents the segments of the new URL that was changed. The other property that the router takes is the `router.children` which is what gets rendered in the place where the router element was put, much like the children of the element.
 
 We end up with the following sample application, see source code in [Zaid-Ajaj/elmish-routing](https://github.com/Zaid-Ajaj/elmish-routing):
 
@@ -116,9 +116,9 @@ let render (state: State) (dispatch: Msg -> unit) =
     | [ "contact" ] -> Html.h1 "Contact"
     | _ -> Html.h1 "Not Found"
 
-  Router.router [
-    Router.onUrlChanged (UrlChanged >> dispatch)
-    Router.application [
+  React.router [
+    router.onUrlChanged (UrlChanged >> dispatch)
+    router.children [
       Html.a [
         prop.text "About"
         prop.href (Router.format "about")
