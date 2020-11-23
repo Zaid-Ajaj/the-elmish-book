@@ -12,7 +12,7 @@ val update : Msg -> State -> State
 // Computes the user interface based on the current state
 val render : State -> (Msg -> unit) -> ReactElement
 ```
-Here, `State` represents the the type that holds data we want to keep track of while the application is running and `Msg` encodes the different events that can be triggered.
+Here, `State` represents the type that holds data we want to keep track of while the application is running and `Msg` encodes the different events that can be triggered.
 
 An Elmish program revolves around the state that it manages and the events that cause the state to change. When we mention "events" we are talking about events that are triggered from the user interface. This is because the only way we can trigger an event is by using the `dispatch` function available as an argument of `render`:
 ```fsharp
