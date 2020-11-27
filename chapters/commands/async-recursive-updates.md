@@ -43,8 +43,7 @@ let init() = { CurrentTime = DateTime.Now }, Cmd.ofMsg Tick
 Notice the proper usage of `Cmd.ofMsg` as it is executed once when the application starts up and not from the `update` function. Once started, the ticking cannot be stopped as there is no base condition to stop the recursion. Finally the `render` function is implemented to format the time and show it on screen:
 ```fsharp
 let formatTime (time: DateTime) =
-    let padZero n = if n < 10 then sprintf "0%d" n else string n
-    sprintf "%s:%s:%s" (padZero time.Hour) (padZero time.Minute) (padZero time.Second)
+    sprintf "%02d:%02d:%02d" time.Hour time.Minute time.Second
 
 let render (state: State) (dispatch: Msg -> unit) =
     Html.div [
