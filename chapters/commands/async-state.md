@@ -1,6 +1,6 @@
 # Modelling Asynchronous State
 
-Asynchronous updates usually follow a simple pattern: every asynchronous operation is coupled with a "start" event and a "finished" event. The `start` event doesn't need any parameter most of the time and it only responsible for issuing a command that eventually dispatches the `finished` event which carries the result of the operation.
+Asynchronous updates usually follow a simple pattern: every asynchronous operation is coupled with a "start" event and a "finished" event. The `start` event doesn't need any parameter most of the time and is only responsible for issuing a command that eventually dispatches the `finished` event which carries the result of the operation.
 
 If your program happens to work with multiple asynchronous operations, then your `Msg` type could end up looking like this:
 ```fsharp
