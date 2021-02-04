@@ -197,8 +197,8 @@ Let's see how to build that `Decoder<Product>` in action and walk through the co
 ```fsharp
 let productDecoder : Decoder<Product> =
   Decode.object (fun get -> {
-    name = get.Required.At [ "name" ] Decode.string
-    price = get.Required.At [ "price" ] Decode.float
+    name = get.Required.Field "name" Decode.string
+    price = get.Required.Field "price" Decode.float
   })
 ```
 Here, we are constructing the `Product` decoder using the `Decode.object` function. This is because we want to map a JSON object into the `Product` record. This function takes a single argument which is a "field getter" that allows you to define how the fields of the `Product` (the name and the price) can be decoded. In our case, we are decoding the `name` field using the `Decode.string` decoder which itself has type `Decoder<string>` and for the `price` field, we are using the `Decode.float` decoder which is of type `Decoder<float>`.
@@ -225,11 +225,11 @@ The parsing can fail for many reasons, for example because of invalid JSON forma
 Now that we have a `Decoder<Product>` we can use it as part of another, bigger decoder: `Decoder<StoreInfo>` because that is our object we want to parse:
 ```fsharp
 let storeInfoDecoder : Decoder<StoreInfo> =
-  Decode.object (fun field -> {
-    name = field.Required.At [ "name" ] Decode.string
-    since = field.Required.At [ "since" ] (Decode.map string Decode.int)
-    daysOpen = field.Required.At [ "daysOpen" ] (Decode.list Decode.string)
-    products = field.Required.At [ "products" ] (Decode.list productDecoder)
+  Decode.object (fun get -> {
+    name = get.Required.Field "name" Decode.string
+    since = get.Required.Field "since" (Decode.map string Decode.int)
+    daysOpen = get.Required.Field "daysOpen" (Decode.list Decode.string)
+    products = get.Required.Field "products" (Decode.list productDecoder)
   })
 ```
 Same as with the previous decoder, we are using `Decode.object` and requiring fields at their respective JSON path. However, notice the `Decoder.list`: because we do not just want to decode a single product, but instead a list of products, we *transform* the decoder `productDecoder` into a new decoder that understands lists of that thing which the old decoder parses. To put it simply, `Decode.list` takes a `Decoder<'t>` and returns `Decoder<'t list>`.
