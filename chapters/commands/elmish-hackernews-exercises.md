@@ -30,7 +30,7 @@ Convert the `time` field from the previous exercise from a Unix-time `int` into 
 To use this library and binding from the Hackernews project, you have to install *both* the JavaScript `date-fns` package and the nuget `Fable.DateFunctions`:
 ```bash
 cd {repository-root}
-npm install date-fns@1.30.1
+npm install date-fns@2.16.1
 cd src
 dotnet add package Fable.DateFunctions
 ```
