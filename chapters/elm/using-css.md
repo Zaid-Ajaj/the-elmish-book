@@ -62,7 +62,7 @@ It makes sense to use `classes` when your classes are bound to values so that yo
 ### Conditional classes
 Many times, you want to apply a class based on the state. To take the example from the previous section, you want to apply the `hidden` class when `state.Count < 0`. With the new [implicit yield](https://docs.microsoft.com/en-us/dotnet/fsharp/whats-new/fsharp-47#implicit-yields) feature of F# 4.7
 it's as simple as adding an `if` expression:
-```fsharp {highlight: [8]}
+```fsharp {highlight: [7]}
 let render (state: State) (dispatch: Msg -> unit) =
     Html.div [
         Html.button [ prop.onClick (fun _ -> dispatch Increment); prop.text "+" ]
