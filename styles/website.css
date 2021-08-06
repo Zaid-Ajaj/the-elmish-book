@@ -32,7 +32,7 @@ html {
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background: #1C1E21;
+        background: #5e5f61;
     }
 
     /* Handle on hover */
@@ -41,7 +41,7 @@ html {
     }
 
     html {
-        scrollbar-color: #18191B #26282C;
+        scrollbar-color: #5e5f61 #26282C;
         scrollbar-width: thin;
     }
 }
