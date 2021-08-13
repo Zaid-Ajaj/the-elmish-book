@@ -32,13 +32,13 @@ Crazy, right?! This is almost what we wrote but with F# instead. This goes to sa
 Already introduced in section [Hello World](/chapters/fable/hello-world), a Fable *binding* is a special F# library that contains type definitions and method signatures of native JavaScript APIs (similar to `.ts.d` files of TypeScript). In the previous samples, we used `document` from the `Fable.Browser.Dom` binding package which was included in the template. The library consists of very large and comprehensive bindings for many browser APIs such as [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest), [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [CanvasRenderingContenxt2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) to name a few. Later on, we will explore many other bindings that not only support native APIs like the ones from the browsers but also APIs from third-party libraries that can be seamlessly consumed from within our Fable applications.
 
 ### Fable preserves F# semantics
-One of the most essential aspects of Fable is that it preserves the semantics of F# code and has full support for the F# core library modules such as `List`, `Seq`, `Array`, `Option`, `Map`, `Set`, `Async`, `String` etc. This means that your F# code should run the same way you would expect F# to behave on .NET. The following language constructs are supported: pattern matching, active patterns, object expressions, structural equality, sequence and list comprehensions, lazy values, anonymous records, classes and computations expressions.
+One of the most essential aspects of Fable is that it preserves the semantics of F# code and has full support for the F# core library modules such as `List`, `Seq`, `Array`, `Option`, `Map`, `Set`, `Async`, `String` etc. This means that your F# code should run the same way you would expect F# to behave on .NET. The following language constructs are supported: pattern matching, active patterns, object expressions, structural equality, sequence and list comprehensions, lazy values, anonymous records, classes and computation expressions.
 
 In the previous example, we used two different constructs: mutability and `async` computation expressions. Although mutability is to be avoided in F# applications, sometimes it makes sense to use it for performance gains and Fable supports it.
 
 ### F# Async in JavaScript
 
-As for `async`, it is natural for Fable to support that construct because the JavaScript runtime make heavy use of continuations, also known as callbacks. In fact, many if not all native JavaScript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in JavaScript into an async "sleep" function, you can write the following:
+As for `async`, it is natural for Fable to support that construct because the JavaScript runtime makes heavy use of continuations, also known as callbacks. In fact, many if not all native JavaScript callback-based APIs can be turned into `async` expressions quite easily, for example, to convert [setTimeout](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout) in JavaScript into an async "sleep" function, you can write the following:
 
 ```fsharp
 open Fable.Core
@@ -70,4 +70,4 @@ The above snippet uses native JavaScript and makes use of Fable's interop capabi
 
 ### Unsupported Features
 
-At the time of writing, a couple of F# features are not yet supported, for example, F# code quotations and `query` computation expression because it depends on the quotations feature.
+At the time of writing, a couple of F# features are not yet supported, for example, F# code quotations and `query` computation expressions because it depends on the quotations feature.
