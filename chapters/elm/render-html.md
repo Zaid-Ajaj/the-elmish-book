@@ -51,7 +51,7 @@ Html.div [
   ]
 ]
 ```
-In this example, we are using a different overload for the functions in the `Html` module. Here the functions `div`, `h1`, `h2`, etc. accept a `ReactElement list` and return `ReactElement` instead of just accepting `IReactProperty list`. This allows for a natural translation between plain old HTML and the equivalent F# code using the `Html` module.
+In this example, we are using a different overload for the functions in the `Html` module. Here the functions `div`, `h1`, `h2`, etc. accept a `ReactElement list` and return a  `ReactElement` instead of just accepting an `IReactProperty list`. This allows for a natural translation between plain old HTML and the equivalent F# code using the `Html` module.
 
 Of course, you can mix and match between the overloads of the functions in the `Html` module. For example, if a parent element doesn't have properties but the children do, then you can map it as follows:
 ```html
@@ -81,7 +81,7 @@ Html.div [
 ### Using attributes
 ```html
 <div id="main" class="shiny">
-    Hello, World
+    Hello, world
 </div>
 ```
 Is implemented with:
@@ -235,13 +235,13 @@ The snippet above uses the DSL provided in `Fable.React` library. There are some
  - 3) Has all these functions for HTML elements and properties *globally* available
  - 4) CSS attributes are not entirely type-safe
 
-The first difference is there for historical reasons to make it look like the Elm language equivalent when it comes to rendering user interfaces. However, this proves to be very messy in larger snippets. There can be so many unnecessary brackets that the code becomes unreadable. Developers also can't seem to decide on a convention when it comes to formatting the code with all those brackets. You end up having to make micro decisions of whether put the two lists in one line or in separate lines based on whether the elements have more properties than children or vice-versa. I built Feliz to solve this problem by using a single list for each element. The same list is overloaded to not just take a list of properties but also a list of children if the element doesn't have properties to keep simple things simple. This results in fewer brackets and likely more consistent formatting across your codebase.
+The first difference is there for historical reasons to make it look like the Elm language equivalent when it comes to rendering user interfaces. However, this proves to be very messy in larger snippets. There can be so many unnecessary brackets that the code becomes unreadable. Developers also can't seem to decide on a convention when it comes to formatting the code with all those brackets. You end up having to make micro decisions of whether to put the two lists in one line or in separate lines based on whether the elements have more properties than children or vice-versa. I built Feliz to solve this problem by using a single list for each element. The same list is overloaded to not just take a list of properties but also a list of children if the element doesn't have properties to keep simple things simple. This results in fewer brackets and likely more consistent formatting across your codebase.
 
 Because of the overloaded functions of Feliz, the conversion functions `str`, `ofInt` etc. are no longer needed. The HTML elements can simply take primitive values as inputs such as `Html.div 42`, `Html.h1 "Hello"` or `Html.li 20.0`.
 
 Feliz functions are grouped by modules so that you can easily discover where every function is by using auto-complete features of your favorite editor. HTML tags are explored by "dotting through" the `Html` module, element properties in the `prop` module, and CSS styling in the `style` module.
 
-Moreover, Feliz uses proper types and function to model and account for CSS styles with the possible values. In contrast, `Fable.React` still uses a discriminated union for defining style properties that cannot be overloaded. This results in properties that are incorrect and not type-safe. For example `Margin of obj` and `Border of obj` will accept anything as input where as Feliz has specialized functions to work with different overloads of CSS properties:
+Moreover, Feliz uses proper types and functions to model and account for CSS styles with the possible values. In contrast, `Fable.React` still uses a discriminated union for defining style properties that cannot be overloaded. This results in properties that are incorrect and not type-safe. For example `Margin of obj` and `Border of obj` will accept anything as input where as Feliz has specialized functions to work with different overloads of CSS properties:
 ```fsharp
 Html.div [
   prop.style [
