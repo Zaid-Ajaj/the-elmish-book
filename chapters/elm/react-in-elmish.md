@@ -72,7 +72,7 @@ let content = document.getElementById "content"
 content.classList.remove("full-width")
 content.classList.add("hidden")
 ```
-The process of comparing React element to determine the required modifications is called [Reconciliation](https://reactjs.org/docs/reconciliation.html) and it is one of the most important concepts in React. Although reconciliation is internal to React's implementation, getting an idea of how it works will help you optimize your user interface code and avoid certain UI bottlenecks.
+The process of comparing React elements to determine the required modifications is called [Reconciliation](https://reactjs.org/docs/reconciliation.html) and it is one of the most important concepts in React. Although reconciliation is internal to React's implementation, getting an idea of how it works will help you optimize your user interface code and avoid certain UI bottlenecks.
 
 Think about reconciliation as if it had the type:
 ```fsharp

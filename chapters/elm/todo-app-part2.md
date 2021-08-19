@@ -191,7 +191,7 @@ Event `AddNewTodo` now has a bit more logic to it than from the previous section
         NewTodo = ""
         TodoList = List.append state.TodoList [nextTodo] }
 ```
-First we calculate the identity that our next To-Do item will have. We do so by checking the current list of `Todo`'s. If the list is empty, then use 1 is the identity for the first item. Otherwise we get the To-Do item that has the largest `Id` value using `List.maxBy` and we extract the `Id` from that item. Afterwards we create a new `Todo` using the `Id` we calculated and adding (appending) it to the `TodoList` we already have in the state.
+First we calculate the identity that our next To-Do item will have. We do so by checking the current list of `Todo`'s. If the list is empty, then use 1 as the identity for the first item. Otherwise we get the To-Do item that has the largest `Id` value using `List.maxBy` and we extract the `Id` from that item. Afterwards we create a new `Todo` using the `Id` we calculated and adding (appending) it to the `TodoList` we already have in the state.
 
 ### Rendering the User Interface
 
@@ -300,9 +300,9 @@ The rendered buttons know exactly which event to trigger and which `Todo` is ass
 
 <resolved-image source="/images/elm/associated-events.png" />
 
-You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are using functions, the event handlers of these buttons create *closures* that maintain the information used within them. That information is the value of `todo.Id` coming from the individual To-Do items that we rendering from the list.
+You can think about it as if the buttons "remember" which `Todo` they are bound to when they were rendered. Because we are using functions, the event handlers of these buttons create *closures* that maintain the information used within them. That information is the value of `todo.Id` coming from the individual To-Do items that we are rendering from the list.
 
-Another nice things about the buttons, especially the first one with the `check` icon, is the use of conditional classes based on the state of the *individual* To-Do item:
+Another nice thing about the buttons, especially the first one with the `check` icon, is the use of conditional classes based on the state of the *individual* To-Do item:
 ```fsharp {highlight: [2]}
 Html.button [
   prop.classes [ "button"; if todo.Completed then "is-success"]

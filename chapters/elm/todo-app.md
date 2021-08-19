@@ -5,7 +5,7 @@ So far we have learned quite a bit about Elmish, but nothing helps in understand
 The most important thing about this experiment is that we understand the *train of thought* in how you approach the problem and which *questions* you ask yourself to guide you when writing your implementation.
 
 ### Part 1: The bare minimum
-We will implement the bare minimum of what you can a call a To-Do list application. Here we will learn how to render a list of text elements into the user interface with F#'s list comprehensions.
+We will implement the bare minimum of what you can call a To-Do list application. Here we will learn how to render a list of text elements into the user interface with F#'s list comprehensions.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:65%;">
@@ -33,7 +33,7 @@ Here we will dive deeper into our amazing To-Do list application and add the fea
 
 ### Styling with Bulma, Icons with Font Awesome
 
-As I have mentioned earlier, we will be using [Bulma](https://bulma.io/) as our CSS framework and [Font Awesome](https://fontawesome.com/) for, well, the awesome icons. To start off, we clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository like we did in the [Counter](counter.md) example. We then work our way from there to build the application. From part 1 up to Part 3, the `index.html` page will be same, including the external CSS files. So the very first thing do after cloning is to add a couple of links to reference Bulma and Font Awesome from the `index.html` page inside the `dist` directory:
+As I have mentioned earlier, we will be using [Bulma](https://bulma.io/) as our CSS framework and [Font Awesome](https://fontawesome.com/) for, well, the awesome icons. To start off, we clone the [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) repository like we did in the [Counter](counter.md) example. We then work our way from there to build the application. From part 1 up to Part 3, the `index.html` page will be the same, including the external CSS files. So the very first thing do after cloning is to add a couple of links to reference Bulma and Font Awesome from the `index.html` page inside the `dist` directory:
 ```html {highlight: ['7-12']}
 <!doctype html>
 <html>
