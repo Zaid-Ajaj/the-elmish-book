@@ -246,6 +246,6 @@ let renderTodo (todo: Todo) (dispatch: Msg -> unit) =
   ]
 ```
 
-We have reached the end for this part of the our To-Do application. You can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part3) for reference.
+We have reached the end for this part of our To-Do application. You can check out the [source code here](https://github.com/Zaid-Ajaj/elmish-todo-part3) for reference.
 
 I hope at this point that you have developed an idea of how an Elmish program works, how to think about a requirement in terms of state transitions, and how the application evolves as we add more features to it. In the next section, I want to put what you have learned to the test! Let's jump right in.

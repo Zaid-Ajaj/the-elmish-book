@@ -139,7 +139,7 @@ You end up with the following user interface
   </div>
 </div>
 
-Going even further, you can disallow the user to trigger certain events while there is an ongoing asynchronous operation. For example, if the user clicks `IncrementDelayed`, they shouldn't be allowed to trigger it again until the operation has finished (i.e. when `Loading` is `false`). There are two ways of implementing this, first is from user interface itself by disabling the "Increment Delayed" button until the operation finishes. The second option is in the `update` function, returning the state as is without commands if the operation is still ongoing (i.e. `Loading` is `true`). Let's do both, the `render` functions becomes:
+Going even further, you can disallow the user to trigger certain events while there is an ongoing asynchronous operation. For example, if the user clicks `IncrementDelayed`, they shouldn't be allowed to trigger it again until the operation has finished (i.e. when `Loading` is `false`). There are two ways of implementing this, the first is from the user interface itself by disabling the "Increment Delayed" button until the operation finishes. The second option is in the `update` function, returning the state as is without commands if the operation is still ongoing (i.e. `Loading` is `true`). Let's do both, the `render` functions becomes:
 ```fsharp {highlight: [20]}
 let render (state: State) (dispatch: Msg -> unit) =
   let content =
@@ -192,7 +192,7 @@ The resulting application becomes:
   </div>
 </div>
 
-The line `IncrementDelayed when state.Loading -> state, Cmd.none` is very common in Elmish application, many times you want certain events such as `IncrementDelayed` to have no effect in certain state conditions such when there is an ongoing asynchronous operation which is why you "trap" the state into the "empty transition" or the "sink transition" that does nothing to the state and does not execute any further commands.
+The line `IncrementDelayed when state.Loading -> state, Cmd.none` is very common in Elmish applications, many times you want certain events such as `IncrementDelayed` to have no effect in certain state conditions such when there is an ongoing asynchronous operation which is why you "trap" the state into the "empty transition" or the "sink transition" that does nothing to the state and does not execute any further commands.
 
 ### Conclusion
 

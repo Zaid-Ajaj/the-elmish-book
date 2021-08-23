@@ -54,7 +54,7 @@ let update msg state =
 
     | (* etc. *)
 ```
-This is much cleaner and more concise way of dealing with asynchronous events. Of course you could also handle them inside a single `GenerateRandomNumber` block:
+This is a much cleaner and more concise way of dealing with asynchronous events. Of course you could also handle them inside a single `GenerateRandomNumber` block:
 ```fsharp
 let rnd = System.Random()
 
@@ -92,7 +92,7 @@ Here is an example of an operation that generates a random number larger than 0.
 type Msg =
     | GenerateRandomNumber of AsyncOperationStatus<Result<double, string>>
 ```
-When you see a union case modelled this way, you read it in your head as follow: "`GenerateRandomNumber` describes the possible (start and finish) of an asynchronous operation that *might* succeed and return a `double` or fail with an error message". Handling this union case in the `update` function works the same as we did earlier:
+When you see a union case modelled this way, you read it in your head as follows: "`GenerateRandomNumber` describes the possible (start and finish) of an asynchronous operation that *might* succeed and return a `double` or fail with an error message". Handling this union case in the `update` function works the same as we did earlier:
 ```fsharp
 let update msg state =
     match msg with
@@ -110,11 +110,11 @@ let update msg state =
 ```
 This way we end up with a really nice and concise way of handling the different possible events of an asynchronous operation. However, we are not done yet because now that we have modelled the events of an operation, we need to keep track of the *state* of the operation while the application is running.
 
-The question is, what do we want to *know* about any given asynchronous operation at any point in time and how do we model that in the `State` of the application as a whole. During the life-time of an asynchronous operation, we can ask a couple of question:
+The question is, what do we want to *know* about any given asynchronous operation at any point in time and how do we model that in the `State` of the application as a whole. During the life-time of an asynchronous operation, we can ask a couple of questions:
  - Has the operation already started? The answer can either be "Not started yet" or "It is still ongoing"
  - Has the operation finished? The answer can either be "Finished successfully" or "Finished with an error"
 
-We can deduce from these questions that for any given asynchronous operation, it can be in one of four state:
+We can deduce from these questions that for any given asynchronous operation, it can be in one of four states:
  - Has not been started yet
  - Ongoing
  - Finished successfully
@@ -154,7 +154,7 @@ The `init()` is straightforward to implement because `RandomNumber` will simply 
 ```fsharp
 let init() = { RandomNumber = HasNotStartedYet }, Cmd.none
 ```
-The `update` function a bit more interesting:
+The `update` function is a bit more interesting:
 ```fsharp {highlight: [7, 18]}
 let rnd = System.Random()
 
@@ -169,7 +169,7 @@ let update msg state =
           if random > 0.5 then
             return GenerateRandomNumber (Finished (Ok random))
           else
-            let errorMsg = sprintf "Failed! Random number %f was < 0.5" random
+            let errorMsg = sprintf "Failed! Random number %f was <= 0.5" random
             return GenerateRandomNumber (Finished (Error errorMsg))
         }
 
@@ -183,7 +183,7 @@ let update msg state =
         let nextState = { state with RandomNumber = Resolved (Error error) }
         nextState, Cmd.none
 ```
-The first case that handles `GenerateRandomNumber Started` disallows from issuing a new command if one is already in progress, otherwise async operation will be started by issuing a command. Once the command is issued, the state of the operation `RandomNumber` turns into the `InProgress` mode. Finally when the operation finished with a result, we simply put that result in the `Resolved` state of the operation. In fact, the last two cases can be simplified into the following:
+The first case that handles `GenerateRandomNumber Started` disallows from issuing a new command if one is already in progress, otherwise an async operation will be started by issuing a command. Once the command is issued, the state of the operation `RandomNumber` turns into the `InProgress` mode. Finally when the operation finished with a result, we simply put that result in the `Resolved` state of the operation. In fact, the last two cases can be simplified into the following:
 ```fsharp {highlight: [20, 21, 22]}
 let rnd = System.Random()
 
