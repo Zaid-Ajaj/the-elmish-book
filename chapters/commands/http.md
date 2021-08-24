@@ -4,7 +4,7 @@ So far in this chapter, we have learnt a lot about asynchronous operations in El
 
 In any modern single page application, HTTP is at the core of the web application as the front-end exchanges data back and forth with a back-end by sending HTTP requests and processing HTTP responses.
 
-Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts a *static file server*. This means that the front-end we are building is able to ask the webpack development server for the content of static files inside the `dist` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
+Since we are only building a front-end, you might be wondering: "How will we work with HTTP if we don't have a back-end to communicate with?" and you would be almost right. The fact is, there *is* a back-end running and serving our front-end application while we are writing it during development: the webpack development server that acts as a *static file server*. This means that the front-end we are building is able to ask the webpack development server for the content of static files inside the `dist` directory using HTTP the same way the browser itself asks for the index pages when navigating to the root URL at `http://localhost:8080`.
 
 <div style="margin-top: 40px; margin-bottom:40px; width:100%">
   <div style="margin: 0 auto; width:75%;">
@@ -12,7 +12,7 @@ Since we are only building a front-end, you might be wondering: "How will we wor
   </div>
 </div>
 
-In the same way that the browser sends HTTP requests to the server, our Elmish application too can make HTTP requests, send them to webpack development server and process the HTTP responses it gets back. In the following sections, we will look into how that actually works and how we can can integrate HTTP communication into our Elmish applications from the very scratch.
+In the same way that the browser sends HTTP requests to the server, our Elmish application too can make HTTP requests, send them to the webpack development server and process the HTTP responses it gets back. In the following sections, we will look into how that actually works and how we can can integrate HTTP communication into our Elmish applications from the very scratch.
 
 ### HTTP from the browser with JavaScript
 
@@ -53,7 +53,7 @@ Before dissecting this code snippet, let us see what it does by running the code
   </div>
 </div>
 
-As you can see, two messages are logged to the console, one that prints the status code and one that prints the response text of the response we got back for our request. This small snippet of code demonstrate how easy it is to request data from the server and get the response as text to further process it in the application. Let us go through the code snippet and discuss what happened.
+As you can see, two messages are logged to the console, one that prints the status code and one that prints the response text of the response we got back for our request. This small snippet of code demonstrates how easy it is to request data from the server and get the response as text to further process it in the application. Let us go through the code snippet and discuss what happened.
 
 First of all we created an instance of the `XMLHttpRequest` object using the static function `Create()`:
 ```fsharp
@@ -71,7 +71,7 @@ The server returned a response with status code 200 for the client which is what
   </div>
 </div>
 
-Now the server responded with the infamous 404 status code, telling the client that it could not find the specified file we requested. This makes sense because the file does not exist. Also notice that the server still returned a HTML page that shows the error. This is same error page you get when you navigate the non existent page from your browser:
+Now the server responded with the infamous 404 status code, telling the client that it could not find the specified file we requested. This makes sense because the file does not exist. Also notice that the server still returned a HTML page that shows the error. This is the same error page you get when you navigate to the non existent page from your browser:
 
 <div style="width:100%;">
   <div style="margin: 0 auto; width:100%;">
@@ -83,7 +83,7 @@ The `url` parameter we use in the `open` method contains a *relative* path: we d
 
 ### Cross-Origin HTTP Requests
 
-We can use relative URLs to access content from same origin but this begs the question: can we use *absolute* URLs in our HTTP requests such that we can access content from other external websites? It depends, unlike desktop and mobile applications that can make HTTP requests to any website or domain, HTTP requests made from a browser application cannot reach any arbitrary website unless that website *gives permission* for access by means of [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) or CORS for short.
+We can use relative URLs to access content from the same origin but this begs the question: can we use *absolute* URLs in our HTTP requests such that we can access content from other external websites? It depends, unlike desktop and mobile applications that can make HTTP requests to any website or domain, HTTP requests made from a browser application cannot reach any arbitrary website unless that website *gives permission* for access by means of [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) or CORS for short.
 
 When a browser tries to communicate via HTTP with an external website or application, it is making a "cross origin" request. These requests are called "cross origin" because the web page initiating the request is trying to access a resource that is not from the same server (i.e. same origin) that the web page was served from.
 
