@@ -1,6 +1,6 @@
 # Elmish Hackernews: Part 3
 
-Previously on the Elmish Hackernews application we have using the function `loadStoryItems` to retrieve and parse the items from the Hackernews API. However, hypothetical users of the application are complaining: they say that it takes a long time before any useful information is presented on screen. After diagnosing the problem, we figured out that for some story items, the network latency is longer than 10 seconds. Even though other items might have already been loaded, the application is waiting *all* of the items to be loaded before it can show anything on screen.
+Previously on the Elmish Hackernews application we have using the function `loadStoryItems` to retrieve and parse the items from the Hackernews API. However, hypothetical users of the application are complaining: they say that it takes a long time before any useful information is presented on screen. After diagnosing the problem, we figured out that for some story items, the network latency is longer than 10 seconds. Even though other items might have already been loaded, the application is waiting for *all* of the items to be loaded before it can show anything on screen.
 
 After a review of the code, we concluded that the root of this "problem" is the `Async.Parallel` function that is combining all of the asynchronous operations to load story items into a single asynchronous operation and awaiting them until every one of them has been loaded before returning the result.
 
@@ -32,7 +32,7 @@ Instead of aggregating the operations using `Async.Parallel` to form a single re
 
 Using this strategy, the user interface will start showing story items as soon as they are loaded on an individual basis without waiting for every story item to load which makes the user interface feel very interactive as more data comes in.
 
-This strategy relies on the fact that you can run multiple commands simultaneously in one go which is exactly what the `Cmd.batch` function provides. It takes a bunch of commands and starts them in parallel but unlike `Async.Parallel`, this function does not wait for the commands to finish nor it aggregates the results. In fact, `Cmd.batch` *cannot* know when the commands has finished running because each command may or may not dispatch a message at any given time. Not to forget that some commands might even dispatch messages indefinitely. This is the signature of the function:
+This strategy relies on the fact that you can run multiple commands simultaneously in one go which is exactly what the `Cmd.batch` function provides. It takes a bunch of commands and starts them in parallel but unlike `Async.Parallel`, this function does not wait for the commands to finish nor it aggregates the results. In fact, `Cmd.batch` *cannot* know when the commands have finished running because each command may or may not dispatch a message at any given time. Not to forget that some commands might even dispatch messages indefinitely. This is the signature of the function:
 
 ```fsharp
 Cmd.batch : Cmd<'Msg> list -> Cmd<'Msg>
@@ -40,7 +40,7 @@ Cmd.batch : Cmd<'Msg> list -> Cmd<'Msg>
 
 ### A Realistic Use Case
 
-Imagine you are building a classic content management system (CMS), a common landing page for these systems after you login is a *dashboard* page. The dashboard has many different panels where each panel shows a summary of information for some part of that CMS, whether is it the total sales of the application, the number of viewers or a chart of the unsuccessful orders etc. Since each panel loads information that is independent of other panels, you can use this strategy to load the data of each panel in parallel, updating the user interface of each panel as more data is loaded without waiting for the other panels to finish loading their related information.
+Imagine you are building a classic content management system (CMS), a common landing page for these systems after you login is a *dashboard* page. The dashboard has many different panels where each panel shows a summary of information for some part of that CMS, whether it is the total sales of the application, the number of viewers or a chart of the unsuccessful orders etc. Since each panel loads information that is independent of other panels, you can use this strategy to load the data of each panel in parallel, updating the user interface of each panel as more data is loaded without waiting for the other panels to finish loading their related information.
 
 <div style="width:100%; margin-top: 50px; margin-bottom: 50px; ">
   <div style="margin: 0 auto; width:80%;">
@@ -54,7 +54,7 @@ In parts 1 and 2 we had a single asynchronous operation that loads all the story
 
 You might be tempted to use `Deferred<Result<HackernewsItem, string>> list` for these operations and that would be a close model but that is not enough (why? think about it before you read on).
 
-Once these operations start, they are all in the `Deferred.InProgress` state. You basically have a list that looks like this `[ Deferred.InProgress; Deferred.InProgress; Deferred.InProgress; ...]`. Once a story item is loaded with information, you have to update the list but there is no way *identify* which item was loaded. To identify story items, we need to associate each of the deferred states with an ID of the item being loaded:
+Once these operations start, they are all in the `Deferred.InProgress` state. You basically have a list that looks like this `[ Deferred.InProgress; Deferred.InProgress; Deferred.InProgress; ...]`. Once a story item is loaded with information, you have to update the list but there is no way to *identify* which item was loaded. To identify story items, we need to associate each of the deferred states with an ID of the item being loaded:
 ```fsharp
 (int * Deferred<Result<HackernewsItem, string>>) list
 ```
@@ -62,7 +62,7 @@ Here we are using an integer to identify the asynchronous state of each item. Th
 ```fsharp
 Map<int, Deferred<Result<HackernewsItem, string>>>
 ```
-This way, we keep track of the asynchronous state of each story item and we are able to identify these states by the ID of the story item that is being loaded. However, where are these IDs are coming from? These have to be loaded in an earlier stage which in itself is an asynchronous operation that can be modelled with `Deferred`. The end result for the state becomes something like this:
+This way, we keep track of the asynchronous state of each story item and we are able to identify these states by the ID of the story item that is being loaded. However, where are these IDs coming from? These have to be loaded in an earlier stage which in itself is an asynchronous operation that can be modelled with `Deferred`. The end result for the state becomes something like this:
 ```fsharp
 type DeferredStoryItem = Deferred<Result<HackernewsItem, string>>
 
@@ -70,7 +70,7 @@ type State =
   { CurrentStories: Stories
     StoryItems : Deferred<Result<Map<int, DeferredStoryItem>, string>> }
 ```
-The "outer" asynchronous operation is responsible for loading the only the IDs of the story items from the Hackernews API and from there we initialize the "inner" asynchronous states for the story items. I know this looks very complicated but bear in mind, this is the Hackernews API that is a bit unconventional which complicates our model with these nested asynchronous states.
+The "outer" asynchronous operation is responsible for loading only the IDs of the story items from the Hackernews API and from there we initialize the "inner" asynchronous states for the story items. I know this looks very complicated but bear in mind, this is the Hackernews API that is a bit unconventional which complicates our model with these nested asynchronous states.
 
 It might help to refactor the types to simplify the model. For example, you can combine `Deferred` and `Result` into a single type
 ```fsharp
@@ -84,7 +84,7 @@ type State =
 ```
 It is just a more compact version of the same type. Personally I would say they are the same but others might find this version to be a bit more readable.
 
-Moving on to the modelling the messages, we now know that there are two types of asynchronous events that might occur while the application is running:
+Moving on to modelling the messages, we now know that there are two types of asynchronous events that might occur while the application is running:
 
  - One event when the IDs of the story items have been loaded
  - One event when a single story item has been loaded
@@ -96,7 +96,7 @@ type Msg =
   | LoadedStoryItem of int * Result<HackernewsItem, string>
   | ChangeStories of Stories
 ```
-Notice here that `LoadStoryItems` eventually returns `int list` when finished, these are the IDs of the story items. When that event occurs, we initialize the asynchronous states of the items and wait for `LoadedStoryItem` events to get dispatched so we are able to process them and update the user interface.
+Notice here that `LoadStoryItems` eventually returns an `int list` when finished, these are the IDs of the story items. When that event occurs, we initialize the asynchronous states of the items and wait for `LoadedStoryItem` events to get dispatched so we are able to process them and update the user interface.
 
 ### Implementing `init` and `update`
 
@@ -111,7 +111,7 @@ let update (msg: Msg) (state: State) =
       // trigger a command from each story ID
       nextState, Cmd.batch [ for id in storyIds -> Cmd.fromAsync (loadStoryItem id) ]
 
-  | LoadedStoryItem (Ok item) ->
+  | LoadedStoryItem (itemId, Ok item) ->
       match state.StoryItems with
       | Resolved (Ok storiesMap) ->
           // update a single story item state from the storiesMap
