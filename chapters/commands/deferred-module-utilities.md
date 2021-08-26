@@ -1,6 +1,6 @@
 # Deferred Module Utilities
 
-Previously on [Modelling Asynchronous State](async-state) we discussed and learnt about the `Deferred<'T>` type which models the state of a piece of data that is yet to be retrieved from an external source like an HTTP web service. After we have modelled our data using this type, it is very easy to work with it efficiently: to access the `'T` in `Deferred<'T>` we always have to pattern match against the type, specifically matching the `Resolved` case and transforming the value. The same applies when we want to check whether the `Deferred<'T>` is still in progress to show some loading icon: we have pattern match against the `InProgress` case and return `true` if that is the case.
+Previously on [Modelling Asynchronous State](async-state) we discussed and learnt about the `Deferred<'T>` type which models the state of a piece of data that is yet to be retrieved from an external source like an HTTP web service. After we have modelled our data using this type, it is very easy to work with it efficiently: to access the `'T` in `Deferred<'T>` we always have to pattern match against the type, specifically matching the `Resolved` case and transforming the value. The same applies when we want to check whether the `Deferred<'T>` is still in progress to show some loading icon: we have to pattern match against the `InProgress` case and return `true` if that is the case.
 
 We can make our lives better by extracting common patterns of working with the `Deferred<'T>` type into a specialized module which we will call `Deferred`:
 ```fsharp

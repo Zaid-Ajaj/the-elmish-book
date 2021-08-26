@@ -11,7 +11,7 @@ Hackernews is built around "*news items*" coming from "*stories*". Stories are d
 ```
 > These are the results at the time of writing, you most likely will get different items when you try it out yourself.
 
-The top stories endpoint returned a JSON array of item identities for 500 items. For each of these items, you can issue another HTTP request to get the data of that specific item. For example to query the data of item with identity `21558013`, you send a GET request to [https://hacker-news.firebaseio.com/v0/item/21558013.json?print=pretty](https://hacker-news.firebaseio.com/v0/item/21558013.json?print=pretty) and you get these results back:
+The top stories endpoint returned a JSON array of item identities for 500 items. For each of these items, you can issue another HTTP request to get the data of that specific item. For example to query the data of the item with identity `21558013`, you send a GET request to [https://hacker-news.firebaseio.com/v0/item/21558013.json?print=pretty](https://hacker-news.firebaseio.com/v0/item/21558013.json?print=pretty) and you get these results back:
 ```json
 {
   "by" : "fortran77",
@@ -47,7 +47,7 @@ In the beginning, we will be implementing the minimal requirements of the applic
 
 ### Elmish Hackernews: Part 2
 
-In this part, we will expand upon what we have learnt in part 1 and implement different tabs that load different stories from Hackernews pages, as well decoding the "score" of each item and rendering it on screen:
+In this part, we will expand upon what we have learnt in part 1 and implement different tabs that load different stories from Hackernews pages, as well as decoding the "score" of each item and rendering it on screen:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">

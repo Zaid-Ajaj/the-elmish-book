@@ -22,9 +22,9 @@ Here the command `Cmd.ofMsg` is a simple command that dispatches the given messa
 let ofMsg (msg: 'msg) = Cmd.ofSub (fun (dispatch: 'msg -> unit) -> dispatch msg)
 ```
 
-As the `update` function receives the message `IssueCommand`, it will return the state as is and issue the command `Cmd.ofMsg Terminate`. As a result of which, the `Terminate` message will be dispatched. When `update` receives The `Terminate` message, it returns the state as is and doesn't issue any commands further.
+As the `update` function receives the message `IssueCommand`, it will return the state as is and issue the command `Cmd.ofMsg Terminate`. As a result of which, the `Terminate` message will be dispatched. When `update` receives the `Terminate` message, it returns the state as is and doesn't issue any commands further.
 
-Suppose you start with an initial state and the user interface dispatches `IssueCommand` message, the execution diagram would look something like this:
+Suppose you start with an initial state and the user interface dispatches an `IssueCommand` message, the execution diagram would look something like this:
 ```
 -> State: Initial State
 -> New Message: IssueCommand (dispatched from UI)

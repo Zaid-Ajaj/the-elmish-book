@@ -84,7 +84,7 @@ type StoreInfo = {
   products: Product list
 }
 ```
-Now we can convert JSON into these user defined types such that we are not loading just a `string` from the server, but instead a `StoreInfo` object. The `State` type become the following:
+Now we can convert JSON into these user defined types such that we are not loading just a `string` from the server, but instead a `StoreInfo` object. The `State` type becomes the following:
 ```fsharp
 type State =
   { StoreInfo: Deferred<Result<StoreInfo, string>> }
@@ -174,7 +174,7 @@ Now we can get back to the implementation of the `parseStoreInfo` function. From
 First of all, let us install the library into the project so that we have that out of the way:
 ```bash
 cd src
-dotnet add package Thoth.Json
+dotnet add package Thoth.Json -v 3.3.0
 ```
 `Thoth.Json` is built around functional constructs called "Coders". Coders are *functions* that convert JSON and are divided into two categories:
  - *Encoders* that transform typed objects and values into JSON
@@ -232,7 +232,7 @@ let storeInfoDecoder : Decoder<StoreInfo> =
     products = get.Required.Field "products" (Decode.list productDecoder)
   })
 ```
-Same as with the previous decoder, we are using `Decode.object` and requiring fields at their respective JSON path. However, notice the `Decoder.list`: because we do not just want to decode a single product, but instead a list of products, we *transform* the decoder `productDecoder` into a new decoder that understands lists of that thing which the old decoder parses. To put it simply, `Decode.list` takes a `Decoder<'t>` and returns `Decoder<'t list>`.
+Same as with the previous decoder, we are using `Decode.object` and requiring fields at their respective JSON path. However, notice the `Decode.list`: because we do not just want to decode a single product, but instead a list of products, we *transform* the decoder `productDecoder` into a new decoder that understands lists of that thing which the old decoder parses. To put it simply, `Decode.list` takes a `Decoder<'t>` and returns `Decoder<'t list>`.
 ```fsharp
 Decode.list : Decoder<'t> -> Decoder<'t list>
 
@@ -240,15 +240,15 @@ productDecoder : Decoder<Product>
 
 Decode.list productDecoder : Decoder<Product list>
 ```
-Another thing to notice as well is the field `since`. It is defined as a string in the `StoreInfo` record but in the JSON object we have as an integer. Since it is an integer in the JSON, we have to decode it using `Decode.int` which is a `Decoder<int>` but we *map* the result of the decoding (when it is successful) into another value which is in our case just making a `string` from the integer that was decoded.
+Another thing to notice as well is the field `since`. It is defined as a string in the `StoreInfo` record but in the JSON object we have it as an integer. Since it is an integer in the JSON, we have to decode it using `Decode.int` which is a `Decoder<int>` but we *map* the result of the decoding (when it is successful) into another value which is in our case just making a `string` from the integer that was decoded.
 ```fsharp
 Decode.map : Decoder<'t> -> ('t -> 'u) -> Decoder<'u>
 
-Decoder.int : Decoder<int>
+Decode.int : Decoder<int>
 
-Decoder.map Decoder.int string : Decoder<string>
+Decode.map Decoder.int string : Decoder<string>
 // Same as
-Decoder.map Decoder.int (fun parsedInt -> string parsedInt) : Decoder<string>
+Decode.map Decoder.int (fun parsedInt -> string parsedInt) : Decoder<string>
 ```
 Now we have our decoders ready to define the `parseStoreInfo` function that we want to use inside of the `update` function:
 ```fsharp
@@ -271,7 +271,7 @@ You can see the full worked out example at [elmish-with-json-thoth](https://gith
 
 ### Automatic Converters In Thoth.Json
 
-In this example of parsing the JSON, we have been using the *manual* way of parsing with decoders using `Thoth.Json`. You might have wondered, if the library already knows the types of the record fields, can't the library automatically implement a decoder based on the record type itself? Yes, it can! Thoth.Json makes use of the Reflection capabilities in Fable which allows it to inspect the type information and metadata from which it can infer a decoder that can parse the corresponding JSON structure. However, in order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor `StoreInfo` and change the `since` field into an integer as well:
+In this example of parsing the JSON, we have been using the *manual* way of parsing with decoders using `Thoth.Json`. You might have wondered, if the library already knows the types of the record fields, can't the library automatically implement a decoder based on the record type itself? Yes, it can! Thoth.Json makes use of the Reflection capabilities in Fable which allows it to inspect the type information and metadata from which it can infer a decoder that can parse the corresponding JSON structure. However, in order for the automatic conversion to work, the shape of the JSON has to match that of the F# type but that is not entirely the case of our store information: the `since` field is an integer in the JSON but it is a `string` in the `StoreInfo` type. So we have to refactor `StoreInfo` and change the `since` field into an integer as well:
 ```fsharp {highlight: [3]}
 type StoreInfo = {
   name: string

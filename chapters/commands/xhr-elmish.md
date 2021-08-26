@@ -6,7 +6,7 @@ In the previous chapter, we have seen how to use `XMLHttpRequest` in a non-Elmis
 
 The very first attempt to integrate any callback-based API such as that of `XMLHttpRequest` into an Elmish program is to implement them directly as commands. To turn an HTTP request into a command means that the command will be able to dispatch various messages from events that are triggered from the `XMLHttpRequest`, in particular the `onreadystatechange` event.
 
-As a request is being processed, this event is triggered multiple times notifying the subscribers of the event about the current state the HTTP request. For the purposes of this section, we will only be interested in the state of the HTTP request when it has been processed (i.e. when ready state is `DONE`) and the response information is available for use. We will not be looking into the intermediate states of an ongoing HTTP request and that is enough to cover 99% of the requirements a web application has when it comes to making HTTP requests.
+As a request is being processed, this event is triggered multiple times notifying the subscribers of the event about the current state of the HTTP request. For the purposes of this section, we will only be interested in the state of the HTTP request when it has been processed (i.e. when ready state is `DONE`) and the response information is available for use. We will not be looking into the intermediate states of an ongoing HTTP request and that is enough to cover 99% of the requirements a web application has when it comes to making HTTP requests.
 
 I hear you saying: "just get to the code already!?" and we will surely do! For our first attempt, let us model the types of the request and response first:
 ```fsharp
@@ -151,7 +151,7 @@ The application ends up as follows:
 
 ### Composability problems with `httpRequest`
 
-In the section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multiple responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implements an asynchronous function:
+In this section, we have seen how easy it is to use `XMLHttpRequest` in Elmish applications using the custom command `httpRequest` but it has one big problem which is that it does not compose: if you had to make multiple HTTP requests where each request has to be issued separately via a command, it would unnecessarily blow up the code with noise and your update function would be really hard to read. One could implement yet another custom command that issues multiple HTTP requests and lets you handle multiple responses (feel free to implement it by making a monadic `cmd` computation expression) but there is a much better approach that lets issue multiple requests and manipulate their responses easily with a single command which implements an asynchronous function:
 ```fsharp
 type httpRequest : Request -> Async<Response>
 ```

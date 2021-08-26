@@ -183,7 +183,7 @@ let update msg state =
 ```
 Issuing a GET request is as simple as `Http.get "/lorem-ipsum.txt"`, this function returns `Async<int * string>` where `int` is the status code of the response and `string` is the response body. All of the functions included in the `Http` module *do not throw exceptions* and that makes them fit perfectly in combination with `Cmd.fromAsync`.
 
-Module functions of `Http` such as `get`, `post`, `patch` etc. all account for the simple cases of HTTP requests where you are only interested in the status code and response text which the case for a lot of cases but the moment you want to configure a more complex request, adding headers and modifying body content types, then you can use the `Http.request` function that allows you to configure the request by chaining configuration functions of `Http` module, let us see how to use it instead of `Http.get`
+Module functions of `Http` such as `get`, `post`, `patch` etc. all account for the simple cases of HTTP requests where you are only interested in the status code and response text which is sufficient for a lot of use cases. But the moment you want to configure a more complex request, adding headers and modifying body content types, then you can use the `Http.request` function that allows you to configure the request by chaining configuration functions of the `Http` module. Let us see how to use it instead of `Http.get`
 ```fsharp {highlight: ['9-12']}
 open Fable.SimpleHttp
 
