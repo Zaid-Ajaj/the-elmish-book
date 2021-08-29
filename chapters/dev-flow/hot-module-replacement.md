@@ -2,7 +2,7 @@
 
 Very early on in chapter 1, we learnt about [Development Mode](../fable/development-mode) via the webpack development server. This server runs our front-end application and watches for changes in source files. Once any change is detected, only that part of the application and its dependencies are recompiled really fast and the page is refreshed automatically. However, this automatic refresh of the page is not optimal because it is a full-refresh: the application loses its state and data when the page refreshes itself.
 
-Image you have an application where you first have to login to get to the page you are currently working on. Every time you make a change in the source code like changing the font size of some element, the page is refreshed and you are reset back to the login page where you have to login again to see your changes.
+Imagine you have an application where you first have to login to get to the page you are currently working on. Every time you make a change in the source code like changing the font size of some element, the page is refreshed and you are reset back to the login page where you have to login again to see your changes.
 
 Here is where *hot module replacement* (HMR for short) comes into play. Instead of refreshing the entire page when some piece of code changes, only that piece is recompiled and *re-executed separately* to reflect the changes without needing a full page refresh.
 
@@ -22,11 +22,11 @@ However, when Hot Module Replacement is enabled, it is a whole new level of grea
   </div>
 </div>
 
-As you can see, changing certain pieces of the user interface updates automatically while *maintaining the state* without full refresh. This makes prototyping the user interface a real joy and once you get used, you never want to go back.
+As you can see, changing certain pieces of the user interface updates automatically while *maintaining the state* without full refresh. This makes prototyping the user interface a real joy and once you get used to it, you never want to go back.
 
-Now that I have hyped up this feature, let us see how to enable it in our project. Hot Module Replacement is enabled by just adding a webpack plugin. Just like with dotenv files, we will add the plugin to webpack for HMR. However, this time it will be a *development-specific* plugin: only available while developing because we don't want to enable it with our production builds since it adds some extra code to the bundle to communicate with webpack development server via web sockets.
+Now that I have hyped up this feature, let us see how to enable it in our project. Hot Module Replacement is enabled by just adding a webpack plugin. Just like with dotenv files, we will add the plugin to webpack for HMR. However, this time it will be a *development-specific* plugin: only available while developing because we don't want to enable it with our production builds since it adds some extra code to the bundle to communicate with the webpack development server via web sockets.
 
-We can add import by first importing the webpack module in the beginning of the `webpack.config.js`file
+We can add it by first importing the webpack module in the beginning of the `webpack.config.js`file
 ```js
 var webpack = require("webpack");
 ```
@@ -70,7 +70,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-To the following where we initialize the HMR plugin into the plugins array when are in development:
+To the following where we initialize the HMR plugin into the plugins array when we are in development:
 ```js {highlight: ['18-37']}
 const path = require("path")
 const DotenvPlugin = require("dotenv-webpack")
@@ -166,4 +166,4 @@ Program.mkSimple init update render
 |> Program.run
 #endif
 ```
-That is it, we have enabled one of most useful features in web development and the template we started with is starting to look more like a very modern one used in real-world applications.
+That is it, we have enabled one of the most useful features in web development and the template we started with is starting to look more like a very modern one used in real-world applications.
