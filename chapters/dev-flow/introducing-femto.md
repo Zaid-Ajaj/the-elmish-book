@@ -6,13 +6,13 @@ The [Feliz](https://github.com/Zaid-Ajaj/Feliz) nuget package for example, the o
 ```bash
 dotnet add package Feliz
 ```
-Then install the corresponding npm packages separately using as follows:
+Then install the corresponding npm packages separately as follows:
 ```bash
 npm install react@16.8.0 react-dom@16.8.0
 ```
 The versions of the npm dependencies are tightly coupled with the version of the nuget package. For a long time, as a Fable developer you had to lookup the documentation of the binding to know which versions of npm packages it requires. Sometimes the situation was even worse: you have to search through the source of the binding which npm package version is supported to finally give up, install the latest version of the npm package and hope for the best.
 
-For direct dependencies, the problem isn't as bad as it seems. However, when it comes to transitive dependencies, this problem starts to become a blocker and a real pain for many developers. Let us take for the example the package [Feliz.Recharts](https://zaid-ajaj.github.io/Feliz/#/Ecosystem/Recharts) it is a binding for [recharts](http://recharts.org/en-US/) that can be used to build interactive charts in Elmish applications. Since it is a binding for the [recharts](http://recharts.org/en-US/) npm dependency, recharts must be installed. Also, since this (nuget) package depends on Feliz, it will by extension depend on `react@16.8.0` and `react-dom@16.8.0`. How do you manage the versions of these packages, and how does a major version update influence the version of the dependant npm package?
+For direct dependencies, the problem isn't as bad as it seems. However, when it comes to transitive dependencies, this problem starts to become a blocker and a real pain for many developers. Let us take for example the package [Feliz.Recharts](https://zaid-ajaj.github.io/Feliz/#/Ecosystem/Recharts) it is a binding for [recharts](http://recharts.org/en-US/) that can be used to build interactive charts in Elmish applications. Since it is a binding for the [recharts](http://recharts.org/en-US/) npm dependency, recharts must be installed. Also, since this (nuget) package depends on Feliz, it will by extension depend on `react@16.8.0` and `react-dom@16.8.0`. How do you manage the versions of these packages, and how does a major version update influence the version of the dependant npm package?
 
 ### Femto to the rescue!
 
