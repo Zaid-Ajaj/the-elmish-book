@@ -13,7 +13,7 @@ In this section, we will step it up a notch by taking the example above and intr
  2. The Home page has a link that navigates to the *Login* page where an admin can login, just like in the example above. This page is at the `/login` URL.
  3. Once a user has logged in, they are redirected back to the landing page at the root `/` URL where the greeting message now refers to the username of that user who logged in. I.e. `"Hello, {username}"`.
  4. Once a user has logged in, the Home page no longer shows the link to the login page, instead it shows a link to logout which resets the application back to the Home page.
- 5. Once a user has logged in and is now on the Home page, they can see a link that navigates to URL `/overview`. This URL points to the *Overview* page where information about the currently logged in user is shown.
+ 5. Once a user has logged in and is now on the Home page, they can see a link that navigates to the `/overview` URL. This URL points to the *Overview* page where information about the currently logged in user is shown.
  6. An anonymous user of the application who hasn't logged in, isn't allowed to view the overview page if they manually change the URL to point to `/overview`. Instead, the user is redirected to the Login page immediately.
 
 > In the initial sample, the Home page is a child program of the App root program. Here, we will have the Home page be the root program of the application.
@@ -24,7 +24,7 @@ The first thing we have to think about when it comes to applications that involv
 
 The requirements (1) and (3) tell us that the Home should be available for both anonymous and logged in users, showing different information and different UI elements in each case. Requirement (6) shows that the Overview page is only accessible after a user has successfully logged in.
 
-What about the Login page, though? Of course, anonymous users should always be allowed to view the Login. However, once they logged in, should they be allowed to go to the login page again (if they happen to manually change the URL in the address bar)? There are a couple of options. First of all, you can simply not allow logged in users to go the Login page and instead redirect them immediately to the Home page. Another option is let them login again, in which case the user of the application is replaced with that last user who logged in. I think both options are fine, for our sample application, we will just allow everyone to view the Login page since that still adheres to the requirements above. In summary, we have three pages:
+What about the Login page, though? Of course, anonymous users should always be allowed to view the Login. However, once they logged in, should they be allowed to go to the login page again (if they happen to manually change the URL in the address bar)? There are a couple of options. First of all, you can simply not allow logged in users to go to the Login page and instead redirect them immediately to the Home page. Another option is to let them login again, in which case the user of the application is replaced with that last user who logged in. I think both options are fine, for our sample application, we will just allow everyone to view the Login page since that still adheres to the requirements above. In summary, we have three pages:
 ```fsharp
         Route "/"
     (anonymous or logged-in)
@@ -39,7 +39,7 @@ Route "/overview"    Route "/login"
 ```
 ### Modelling The State
 
-To start off with the Home page, since it has to show different UI elements based on whether a has logged in or not, it has to keep track of the state of the application user. Since I am re-using the `Api` module from the initial sample, I can model an anonymous user and a logged in user simply as `Option<Api.User>`. However, for the sake of better semantics I will define a custom discriminated union, similar to the shape of `Option` that represents a user of the application:
+To start off with the Home page, since it has to show different UI elements based on whether a user has logged in or not, it has to keep track of the state of the application user. Since I am re-using the `Api` module from the initial sample, I can model an anonymous user and a logged in user simply as `Option<Api.User>`. However, for the sake of better semantics I will define a custom discriminated union, similar to the shape of `Option` that represents a user of the application:
 ```fsharp
 type ApplicationUser =
     | Anonymous
@@ -75,7 +75,7 @@ type State =
       CurrentUrl  : Url
       CurrentPage : Page }
 ```
-Here, the `Page.Index` and `Url.Index` both refer to the Home page itself. Another curious case of URL is the `Logout` case. We are implementing it here such that if the application navigated to the `/logout` URL, then the user of the application will be reset back to `Anonymous`. Of course, I could have implement a specialized case in the `Msg` called `Logout` but I want to follow a simple rule for consistency: Page changes are always driven URL changes. This includes logging out.
+Here, the `Page.Index` and `Url.Index` both refer to the Home page itself. Another curious case of URL is the `Logout` case. We are implementing it here such that if the application navigated to the `/logout` URL, then the user of the application will be reset back to `Anonymous`. Of course, I could have implemented a specialized case in the `Msg` called `Logout` but I want to follow a simple rule for consistency: Page changes are always driven by URL changes. This includes logging out.
 
 We are also assuming we have two pages, `Login` and `Overview` implemented as child programs of `Home` in their respective modules. The implementation of `Login` will be exactly the same as the one from the initial sample. As for the `Overview` module, it is a simple page that shows the username of the currently logged in user (requires a user for initialization). We will not be focussing a lot on the `Login` and `Overview` modules because the interesting stuff are happening in the parent `Home` that is managing which page to show based on the URL and how to propagate the information based on whether or not a user has logged in.
 
@@ -129,7 +129,7 @@ let init() =
     | Url.NotFound ->
         { defaultState with CurrentPage = Page.NotFound }, Cmd.none
 ```
-The highlighted line shows how requirement (6) can be enforced. Once the application starts up, we know for sure that the `User = Anonymous` which means if the application happened to start with an initial URL that is pointing to the Overview page, it will immediately redirect the user to Login page instead as a result of the `Router.navigate("login", HistoryMode.ReplaceState)` command. We use the parameter `HistoryMode.ReplaceState` so that the navigation command doesn't push a "history entry" into the browser page. If that was the case, then a user will be trapped in `/login` as every time the user hits the Back button of the browser, he or she will go back to `/overview` which is a protected page that takes you back again to `/login` and so on and so forth.
+The highlighted line shows how requirement (6) can be enforced. Once the application starts up, we know for sure that the `User = Anonymous` which means if the application happened to start with an initial URL that is pointing to the Overview page, it will immediately redirect the user to the Login page instead as a result of the `Router.navigate("login", HistoryMode.ReplaceState)` command. We use the parameter `HistoryMode.ReplaceState` so that the navigation command doesn't push a "history entry" into the browser page. If that was the case, then a user will be trapped in `/login` as every time the user hits the Back button of the browser, he or she will go back to `/overview` which is a protected page that takes you back again to `/login` and so on and so forth.
 
 
 > There are cases where the user information is loaded from the [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) after a previous login attempt when the application is re-initialized after a full refresh. This way, the user wouldn't be `Anonymous` anymore and you have access to secure pages, such as the overview page in our example.
@@ -160,7 +160,7 @@ let update (msg: Msg) (state: State) =
     | _, _ ->
         state, Cmd.none
 ```
-This does two things. First of all, it makes the information of the logged in user available in the `Home` program and changes the URL back to the root `/`. This effectively makes triggers a `UrlChanged` event where the URL will be `Url.Index` (the entry page of `Home`). We haven't handled the `UrlChanged` event, so let us do that:
+This does two things. First of all, it makes the information of the logged in user available in the `Home` program and changes the URL back to the root `/`. This effectively triggers a `UrlChanged` event where the URL will be `Url.Index` (the entry page of `Home`). We haven't handled the `UrlChanged` event, so let us do that:
 ```fsharp {highlight: ['16-34']}
 let update (msg: Msg) (state: State) =
     match msg, state.CurrentPage with
@@ -200,13 +200,13 @@ let update (msg: Msg) (state: State) =
     | _, _ ->
         state, Cmd.none
 ```
-Similar to the way we handled the changed `Url` event in `init()`, we are checking the next URL that the application was navigated to (i.e. the `nextUrl` value) and deciding which page we should show next based on that. However, there are two special case, with `Url.Overview` we do not initialize the `Overview` child program unless there is indeed a logged in user, otherwise we navigate the application into the `login` page and for `Url.Logout` we reset the application and go back the root using `Router.navigate("/")`.
+Similar to the way we handled the changed `Url` event in `init()`, we are checking the next URL that the application was navigated to (i.e. the `nextUrl` value) and decide which page we should show next based on that. However, there are two special cases, with `Url.Overview` we do not initialize the `Overview` child program unless there is indeed a logged in user, otherwise we navigate the application into the `login` page and for `Url.Logout` we reset the application and go back the root using `Router.navigate("/")`.
 
 It is important to realize that even though we are *re-initializing* the `Overview` program by calling its `init` function, there are more things we can do. For example, we can check that if the current page is already `Page.Overview`, then we do not re-initialize it and instead trigger a message to reload a specific part of the information. This way, that page doesn't lose its state unnecessarily. Just remember that you have full control over how these child programs are initialized or updated, this is the flexibility of The Elm Architecture.
 
 Now we can implement the final part which is the `render` function. First of all, let us implement a smaller rendering function to show the user interface of the `Home` page itself. I will call it `index` because we will call that function when `state.CurrentPage = Page.Index`
 
-This page simply checks whether the user of application has yet logged in or not, then proceeds to welcome the user by their username if they are logged in or welcoming an anonymous guest when a user has yet to login:
+This page simply checks whether the user of the application has yet logged in or not, then proceeds to welcome the user by their username if they are logged in or welcoming an anonymous guest when a user has yet to login:
 ```fsharp
 let index (state: State) (dispatch: Msg -> unit) =
     match state.User with
@@ -238,9 +238,9 @@ let index (state: State) (dispatch: Msg -> unit) =
             ]
         ]
 ```
-When the user is `Anonymous`, we show a `Login` anchor element which navigates the `/login`. When a user logs in, this `Home` page will switch the current view and instead shows two buttons, one for navigating to the `Overview` page and another for logging out. See the `href` values for these anchor elements. Since we are using Bulma for styling, I am giving these links a class of `button` to make them look like buttons but they are just links actually.
+When the user is `Anonymous`, we show a `Login` anchor element which navigates to `/login`. When a user logs in, this `Home` page will switch the current view and instead shows two buttons, one for navigating to the `Overview` page and another for logging out. See the `href` values for these anchor elements. Since we are using Bulma for styling, I am giving these links a class of `button` to make them look like buttons but they are just links actually.
 
-Finally the root `render` function that puts application together and sets up the router to listen for URL changes:
+Finally the root `render` function that puts the application together and sets up the router to listen for URL changes:
 ```fsharp
 let render (state: State) (dispatch: Msg -> unit) =
     let activePage =
