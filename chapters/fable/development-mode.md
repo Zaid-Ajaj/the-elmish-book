@@ -33,4 +33,36 @@ The command `npm start` will start the webpack development server, compile the p
 
 Once you start modifying your F# source code, only a subset of the project will be recompiled: the code you changed and other pieces that depend on the code you changed. After a successful recompilation cycle, webpack will refresh the browser for you to see the changes you made.
 
+```js {highlight: [3, 4, 9, 12, 13, 14, 15, 16, 17, 18]}
+var path = require("path");
+
+var { HotModuleReplacementPlugin } = require('webpack');
+var hmrPlugin = new HotModuleReplacementPlugin();
+
+module.exports = {
+    mode: "none",
+    entry: "./src/App.fsproj",
+    plugins: [ hmrPlugin ],
+    devServer: {
+        contentBase: path.join(__dirname, "./dist"),
+        hot: true,
+        proxy: {
+            '/socket/**': {
+                target: 'http://localhost:8085',
+                ws: true
+            }
+        }
+    },
+    module: {
+        rules: [{
+            test: /\.fs(x|proj)?$/,
+            use: "fable-loader"
+        }]
+    }
+}
+```
+
+This version of the script adds `HotModuleReplacementPlugin` and `hmrPlugin` which are a way to interact with the hot reload 
+Within then `devServer` section two new options were added: `hot` to enable the hot reload, and `proxy` to leverage on websockets so the browser can be notified of changes. 
+
 These recompilation cycles are very fast, a lot faster than a full build and make for a pleasant development workflow. From now on, I will assume that we will be working in development mode.
