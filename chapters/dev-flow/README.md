@@ -2,10 +2,10 @@
 
 Throughout the book, we had been using primarily two templates to work with Fable front-end projects: [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) and [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started). The former scaffolds a simple plain Fable project to work in the browser and the latter is the basic Elmish template that we have been using in chapters 2, 3 and 4.
 
-When I introduced these templates, I mentioned that both of them are made for the purpose of *learning* and that they shouldn't be used for production environments. The primary reason was to keep the build configuration at a minimum so that we don't get too distracted with these aspects of the front-end development. However, the bigger our applications get, more advanced and fine-tuned build configuration are required both for development and production environments. The template as it is now suffers from many problems, let us go through a couple of them.
+When I introduced these templates, I mentioned that both of them are made for the purpose of *learning* and that they shouldn't be used for production environments. The primary reason was to keep the build configuration at a minimum so that we don't get too distracted with these aspects of the front-end development. However, the bigger our applications get, more advanced and fine-tuned build configurations are required both for development and production environments. The template as it is now suffers from many problems, let us go through a couple of them.
 
 ### Running Environment Specific Code
-In many scenarios, we want the ability to execute different pieces of the code when running the environment in different environments: primarily development and production. For example, we want to introduce logging state changes of Elmish application to the console while in development but disable it in production.
+In many scenarios, we want the ability to execute different pieces of the code when running the application in different environments: primarily development and production. For example, we want to introduce logging state changes of an Elmish application to the console while in development but disable it in production.
 
 ### Large bundle size
 

@@ -16,7 +16,7 @@ The best way to communicate intentions of certain parts of the application is to
 
 > The `Intent` type is also known as `ExternalMsg`.
 
-Along with `State` and `Msg` that each child program has, there is a new ingredient that can be added to the mix called `Intent`. This type is just like `Msg` in the sense that it describes events that can occur within a single program but instead of being processed by the the child program itself, it is specifically meant to communicate events that the parent program has to process and act upon.
+Along with `State` and `Msg` that each child program has, there is a new ingredient that can be added to the mix called `Intent`. This type is just like `Msg` in the sense that it describes events that can occur within a single program but instead of being processed by the child program itself, it is specifically meant to communicate events that the parent program has to process and act upon.
 
 In the previous example, we used an active pattern called `UserLoggedIn` from the `Login` module to check whether a user has logged in and switch the application to the Home page if that was the case. This `UserLoggedIn` is a great candidate as an event to be included in a specialized `Intent` type from the `Login` module:
 ```fsharp
@@ -27,7 +27,7 @@ type Intent =
     | UserLoggedIn of Api.User
     | DoNothing
 ```
-We also add another case of `Intent.DoNothing` which means that the parent program shouldn't take further action other than propagating the events as is. Then we can can extend the definition of the `update` function and have it return the intent as part of its return values:
+We also add another case of `Intent.DoNothing` which means that the parent program shouldn't take further action other than propagating the events as is. Then we can extend the definition of the `update` function and have it return the intent as part of its return values:
 ```fsharp {highlight: [19, 20, 21]}
 let update (msg: Msg) (state: State) =
     match msg with
@@ -90,4 +90,4 @@ This way, the parent program does not have to guess whether it should propagate 
 
 ### Keep Things Simple
 
-Introducing the `Intent` type might increase the robustness of your application but it also complicates the API quite a bit. Do not introduce this type when there is no need for it and try to keep your definitions as simple as possible. I know this applies to many areas of Elmish application but especially with composing larger applications, you might fall in the trap of trying to build the perfect and most consistent API where a simple part of your application becomes a "perfect mess" no one of team wants to touch any more.
+Introducing the `Intent` type might increase the robustness of your application but it also complicates the API quite a bit. Do not introduce this type when there is no need for it and try to keep your definitions as simple as possible. I know this applies to many areas of Elmish applications but especially with composing larger applications, you might fall in the trap of trying to build the perfect and most consistent API where a simple part of your application becomes a "perfect mess" no one of the team wants to touch any more.

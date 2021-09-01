@@ -41,7 +41,7 @@ let init() =
   { CurrentStories = Stories.New
     StoryItems = HasNotStartedYet }, Cmd.ofMsg (LoadStoryItems Started)
 ```
-As for `update`, it needs to account for the new `Msg.ChangeStories` we added to the `State` but also needs to refactor `LoadStoryItems Started` case because we not loading just the hardcoded end point of the top stories but instead the end point should be dependant on the currently active stories category:
+As for `update`, it needs to account for the new `Msg.ChangeStories` we added to the `State` but also needs to refactor the `LoadStoryItems Started` case because we are not loading just the hardcoded end point of the top stories anymore but instead the end point should be dependant on the currently active stories category:
 ```fsharp {highlight: [3,4,5,6, 10]}
 let update (msg: Msg) (state: State) =
     match msg with
@@ -78,7 +78,7 @@ let loadStoryItems stories = async {
     let! (status, responseText) = Http.get endpoint
     (* the rest is the same, omitted for brevity *)
 ```
-Great! Now the loading story items is refactored. Nothing needs to change in the actual implementation because only end point is different per story category. As for the individual items themselves, loading and parsing also doesn't require any refactoring, except that we now need to decode the `score` field as well of each item as follows:
+Great! Now the loading of story items is refactored. Nothing needs to change in the actual implementation because only the end point is different per story category. As for the individual items themselves, loading and parsing also doesn't require any refactoring, except that we now need to decode the `score` field as well of each item as follows:
 ```fsharp {highlight: [5, 13]}
 type HackernewsItem = {
   id: int
@@ -141,8 +141,8 @@ let render (state: State) (dispatch: Msg -> unit) =
     ]
   ]
 ```
-Here we are rendering the tabs using the `renderTabs` function which takes as input the currently selected stories category from the state as well as the `dispatch` function because we want to be able to dispatch `Msg.ChangeStories` from the one of the tabs if it is not already selected. Also to highlight the active tab, we give it the [Bulma Tab](https://bulma.io/documentation/components/tabs/) class `is-active` when the currently selected stories category is equal to the corresponding category of the tab.
+Here we are rendering the tabs using the `renderTabs` function which takes as input the currently selected stories category from the state as well as the `dispatch` function because we want to be able to dispatch `Msg.ChangeStories` from one of the tabs if it is not already selected. Also to highlight the active tab, we give it the [Bulma Tab](https://bulma.io/documentation/components/tabs/) class `is-active` when the currently selected stories category is equal to the corresponding category of the tab.
 
 There are some changes required for rendering the score and the icon in each loaded story item but I don't think it particularly interesting to go through the code in detail like I did for the rest of the application. You can try to implement it yourself based on the gif in the beginning of this section and use the source code at [Zaid-Ajaj/elmish-hackernews-part2](https://github.com/Zaid-Ajaj/elmish-hackernews-part2) as a reference.
 
-That sums it up for part 2 of the Elmish Hackernews application. I admit there hasn't much new theory for the material in this part but it will provide a nice segway into the next part where we use an entirely different technique for loading the story items from Hackernews.
+That sums it up for part 2 of the Elmish Hackernews application. I admit there hasn't been much new theory for the material in this part but it will provide a nice segway into the next part where we use an entirely different technique for loading the story items from Hackernews.

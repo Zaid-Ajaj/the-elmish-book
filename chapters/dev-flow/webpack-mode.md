@@ -1,6 +1,6 @@
 # Webpack Mode
 
-At the heart of the build pipeline for the entire compilation process stands webpack. The role of webpack is central in Fable project and many types of modern front-end projects. It is the tool that calls the Fable to subsequently compile your F# project into JavaScript. The contents of the file `webpack.config.js` define the build configuration for a project. The [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template configures the build pipeline in the simplest possible way:
+At the heart of the build pipeline for the entire compilation process stands webpack. The role of webpack is central in Fable projects and many types of modern front-end projects. It is the tool that calls Fable to subsequently compile your F# project into JavaScript. The contents of the file `webpack.config.js` define the build configuration for a project. The [elmish-getting-started](https://github.com/Zaid-Ajaj/elmish-getting-started) template configures the build pipeline in the simplest possible way:
 ```js {highlight: [4]}
 const path = require("path")
 
@@ -80,7 +80,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-Here, the configuration module doesn't export the configuration object anymore but rather exports a *function* that returns the build configuration. That function takes in the command-line arguments in the form of `argv` parameter from which we extract the `mode` and supply it to the returned object.
+Here, the configuration module doesn't export the configuration object anymore but rather exports a *function* that returns the build configuration. That function takes in the command-line arguments in the form of the `argv` parameter from which we extract the `mode` and supply it to the returned object.
 
 That is pretty much it. We have optimized the workflow to use the proper build mode based on the npm script that we run. Using `npm run build` now passes the `production` mode and using `npm start` passes `development` mode to webpack automatically.
 

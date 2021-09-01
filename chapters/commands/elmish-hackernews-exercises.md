@@ -38,7 +38,7 @@ Once you have installed both packages, you can open the `Fable.DateFunctions` na
 
 ### Exercise 3: Implement a "Load More" button
 
-In the current implementation of this application, we are choosing to load the IDs of only the first ten story items when the stories end point and from there load the contents of each item. However, as of now there is no way to load more items other than the ones that are already loaded. The top stories end point for example, returns the most recent 500 story items from the Hackernews API.
+In the current implementation of this application, we are choosing to load the IDs of only the first ten story items from the stories end point and from there load the contents of each item. However, as of now there is no way to load more items other than the ones that are already loaded. The top stories end point for example, returns the most recent 500 story items from the Hackernews API.
 
 ```fsharp {highlight: [10]}
 let loadStoryItems stories = async {
@@ -61,7 +61,7 @@ let loadStoryItems stories = async {
 }
 ```
 
-Add a (sticky) button at the bottom of the screen to load the *next 10* story items that haven't been loaded yet. This button becomes disabled when story items are being loaded and invisible when there no more story items that can be loaded.
+Add a (sticky) button at the bottom of the screen to load the *next 10* story items that haven't been loaded yet. This button becomes disabled when story items are being loaded and invisible when there are no more story items that can be loaded.
 
 Hint: refactor `LoadedStoryItem` as follows
 ```fsharp

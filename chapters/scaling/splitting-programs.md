@@ -40,7 +40,7 @@ type State =
     IsUpperCase: bool
     CurrentPage : Page }
 ```
-We have the `Count` field which is used in the counter view. As for `InputText` and `IsUpper`, they are used in the text input view. Finally we have the `CurrentPage` field which is of type `Page` defined earlier that keeps track of view is currently shown on screen.
+We have the `Count` field which is used in the counter view. As for `InputText` and `IsUpper`, they are used in the text input view. Finally we have the `CurrentPage` field which is of type `Page` defined earlier that keeps track of which view is currently shown on screen.
 
 The associated `Msg` type and its cases are also straightforward:
 ```fsharp
@@ -268,7 +268,7 @@ let inputTextDispatch (inputTextMsg: InputTextMsg) : unit =
 ```
 Here they are again. As you can see, these functions do nothing special, they only wrap their input messages (for the child programs) into a message type of the parent program, namely from the cases `Msg.CounterMsg` and `Msg.InputTextMsg` which the original `dispatch` function understands since it takes `Msg` as input.
 
-Actually, you will rarely ever see these composed `dispatch` functions written out in this format, most of the time the are written in-line where the smaller render functions are being called as follows:
+Actually, you will rarely ever see these composed `dispatch` functions written out in this format, most of the time they are written in-line where the smaller render functions are being called as follows:
 ```fsharp {highlight: [11, 22]}
 let render (state: State) (dispatch: Msg -> unit) =
   match state.CurrentPage with
@@ -350,7 +350,7 @@ val initCounter : unit -> CounterState
 val initInputText : unit -> InputTextState
 val init : unit -> State
 ```
-All of these functions have `unit` as input. It makes sense the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data to initialize their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having a `init` signature of `User -> UserDashboardState`. We will take a look at such an example in a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
+All of these functions have `unit` as input. It makes sense for the root program to have the initialization function be of type `unit -> State` because it is the "entry" program. The child programs however, will *not* necessarily have `unit` as input, in fact, it is quite often not the case. These child programs often require some data to initialize their fields with when they are rendered on screen. For example, if you have a user dashboard page, that page will be implemented as a program which will likely require a `User` as input for initialization, having an `init` signature of `User -> UserDashboardState`. We will take a look at such an example in a later section, I just wanted you to realize that the child programs do not necessarily need to follow the "standard" program definition as long as they are *composable* with their parent program.
 
 Moving on to the `update` function, which has become a bit of a mess because of the types that were introduced earlier, let's take a look:
 ```fsharp
@@ -375,7 +375,7 @@ let update (msg: Msg) (state: State): State =
   | SwitchPage page ->
       { state with CurrentPage = page }
 ```
-It is a mess because of the nested message definitions from `CounterMsg` and `InputTextMsg` as well as the nested records of type `CounterState` and `InputTextState` that has to be updated separately before updating the parent record of type `State`. Luckily though, it is easy to refactor the `update` function into specialized functions that update the nested records:
+It is a mess because of the nested message definitions from `CounterMsg` and `InputTextMsg` as well as the nested records of type `CounterState` and `InputTextState` that have to be updated separately before updating the parent record of type `State`. Luckily though, it is easy to refactor the `update` function into specialized functions that update the nested records:
 ```fsharp {highlight: [14, 15, 18, 19]}
 let updateCounter (counterMsg: CounterMsg) (counterState: CounterState) =
   match counterMsg with
@@ -400,7 +400,7 @@ let update (msg: Msg) (state: State): State =
   | SwitchPage page ->
       { state with CurrentPage = page }
 ```
-And there we have it! Took us a while but we now have an `init` function, an `update` function and a `render` function, all of which are specialized to deal with a part of the application that is entirely separate of other parts. This means if you were to add or remove feature from the counter view, the input text view isn't impacted in anyway and there is no risk of introducing bugs in one program when we make changes in another, except of course for the parent program that controls the data flow between the views and the switching from one into another.
+And there we have it! Took us a while but we now have an `init` function, an `update` function and a `render` function, all of which are specialized to deal with a part of the application that is entirely separate of other parts. This means, if you were to add or remove a feature from the counter view, the input text view isn't impacted in any way and there is no risk of introducing bugs in one program when we make changes in another, except of course for the parent program that controls the data flow between the views and the switching from one into another.
 
 ### Programs As Modules
 

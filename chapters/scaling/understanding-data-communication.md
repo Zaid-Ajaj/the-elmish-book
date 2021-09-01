@@ -2,7 +2,7 @@
 
 What happens within a child program is often of interest for other child programs to know about. Sometimes it is even necessary to communicate information that was gathered in one child program to another. Since child programs do not know about the existence of their siblings (nor they should know because that is not of their concern), relaying information from one child program to another goes through the parent program before it is passed down to other children. Here, the parent program acts as a proxy because of the order in which the messages are handled: first the child program dispatches an event which is wrapped into a parent message type before it gets unwrapped back and processed by the `update` function of that child program. Review section [Flow of Messages](splitting-programs.md#flow-of-messages) for a refresher to understand why that is the case.
 
-Since all events of child programs has to go through the parent, the parent program can decide whether to just pass down these events to the child programs for further processing or it can initiate different events in other child programs after initializing them. To better understand what I am talking about, let us go through an example.
+Since all events of child programs have to go through the parent, the parent program can decide whether to just pass down these events to the child programs for further processing or it can initiate different events in other child programs after initializing them. To better understand what I am talking about, let us go through an example.
 
 Consider the following application that for now only consists of a Login page as you can see below. After logging in, the result of the login attempt is shown below the Login button where it will be a successful attempt when the username and password are both "admin". Using other credentials will fail to login and an error "Username or password is incorrect" is shown on screen.
 
@@ -26,7 +26,7 @@ The repository consists of an Elmish application, some extension functions and a
   │ -- App.fs # App parent and root program
   │ -- Main.fs # Entry point of the application
 ```
-This `Api` module is a mock of a back-end. The functions in there will just wait for a bit to simulate network latency then come back with hardcoded results. We have the Login page implemented as a child program of the root program called App. This App module isn't doing anything interesting at this point, only receiving events and passing them right back at the Login. The state of Login is integrated into App using [State-Field composition](composition-forms#state-field-composition) where Login is only child in this program:
+This `Api` module is a mock of a back-end. The functions in there will just wait for a bit to simulate network latency then come back with hardcoded results. We have the Login page implemented as a child program of the root program called App. This App module isn't doing anything interesting at this point, only receiving events and passing them right back at the Login. The state of Login is integrated into App using [State-Field composition](composition-forms#state-field-composition) where Login is the only child in this program:
 ```fsharp
 type State =
   { Login: Login.State }
@@ -47,7 +47,7 @@ let update (msg: Msg) (state: State) =
 let render (state: State) (dispatch: Msg -> unit) =
   Login.render state.Login (LoginMsg >> dispatch)
 ```
-Since we will be introducing a Home page into this App module, we will turn to using [Discriminated Union composition](composition-forms#discriminated-union-composition) very soon. For now, let us discuss the Login and Api modules. Login is a simple page which collects the the username and password using form inputs. When you click the "Login" button, the function `Api.login` is called which takes a username and password input, then after a short delay, returns you a `LoginResult`. This is a type that describes the possible outcomes of a login attempt. The entire `Api` module is implemented as follows:
+Since we will be introducing a Home page into this App module, we will turn to using [Discriminated Union composition](composition-forms#discriminated-union-composition) very soon. For now, let us discuss the Login and Api modules. Login is a simple page which collects the username and password using form inputs. When you click the "Login" button, the function `Api.login` is called which takes a username and password input, then after a short delay, returns you a `LoginResult`. This is a type that describes the possible outcomes of a login attempt. The entire `Api` module is implemented as follows:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Api
@@ -72,7 +72,7 @@ let login (username: string) (password: string) =
             return UsernameOrPasswordIncorrect
     }
 ```
-This `LoginResult` type can either give you `UsernameOrPasswordIncorrect` if you happen to give it the wrong credentials (anything other than "admin") or it can give you a `LoggedIn of User` where `User` contains information about the use who logged in. Currently, this `User` type has only the username and an *access token*. In real world single page applications, it is common that authenticated users receive an access token after a successful login attempt. Using this token, they can issue subsequent requests to the back-end by which they are identified and authorized. Access tokens usually do not contain sensitive information and often expire after a couple of hours. During a session, a single page application keeps track of the token from the currently logged in user because it needs this token to issue requests and ask for data about that user.
+This `LoginResult` type can either give you `UsernameOrPasswordIncorrect` if you happen to give it the wrong credentials (anything other than "admin") or it can give you a `LoggedIn of User` where `User` contains information about the user who logged in. Currently, this `User` type has only the username and an *access token*. In real world single page applications, it is common that authenticated users receive an access token after a successful login attempt. Using this token, they can issue subsequent requests to the back-end by which they are identified and authorized. Access tokens usually do not contain sensitive information and often expire after a couple of hours. During a session, a single page application keeps track of the token from the currently logged in user because it needs this token to issue requests and ask for data about that user.
 
 Enough with the little detour of security management, what we care about now is that after we get a `User` instance from logging in, we can track the currently logged in user and share his or her information across the pages of the application so that these pages can themselves issue requests to the back-end and ask for data.
 
@@ -128,7 +128,7 @@ I will let you study the rest of the render function on your own, there isn't mu
 
 ### Modelling The Home Page
 
-Once the currently logged in user lands on the Home page, he or she should see their username on that page. This means that the Home page has information about currently logged in user. Regardless of where this information comes from, it is a *requirement* for initializing the Home page: it shouldn't be possible to go the Home page without obtaining an instance of a `User` first. This can be enforced by modelling the exposed program API of Home to reflect this requirement, specifically in the `init` function of Home:
+Once the currently logged in user lands on the Home page, he or she should see their username on that page. This means that the Home page has information about the currently logged in user. Regardless of where this information comes from, it is a *requirement* for initializing the Home page: it shouldn't be possible to go to the Home page without obtaining an instance of a `User` first. This can be enforced by modelling the exposed program API of Home to reflect this requirement, specifically in the `init` function of Home:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Home
@@ -204,7 +204,7 @@ You might have not noticed it, but the `Logout` event isn't actually doing *anyt
 
 ### Wiring Up The Pages
 
-Now that we have two modules, Home and Login, each containing a child program we can wire them up using Discriminated Union composition like we did before. First we introduce a new `Page` type that captures they currently active page and use it in the `State` type of the App module.
+Now that we have two modules, Home and Login, each containing a child program we can wire them up using Discriminated Union composition like we did before. First we introduce a new `Page` type that captures the currently active page and use it in the `State` type of the App module.
 ```fsharp
 [<RequireQualifiedAccess>]
 type Page =
@@ -253,7 +253,7 @@ If you were to run the application using this implementation of `update`, the us
 ```fsharp
 Msg.Login (Finished (LoginResult.LoggedIn user))
 ```
-That event is triggered from within the Login page, but it also has to go through parent like all events which means the parent can **inspect** the data from this event, extract the `User` instance from it and initialize the Home page with it. First of all, I will add an [*active pattern*](https://fsharpforfunandprofit.com/posts/convenience-active-patterns/) in the `Login` module to make it easy for the parent program to inspect that specific event:
+That event is triggered from within the Login page, but it also has to go through the parent like all events which means the parent can **inspect** the data from this event, extract the `User` instance from it and initialize the Home page with it. First of all, I will add an [*active pattern*](https://fsharpforfunandprofit.com/posts/convenience-active-patterns/) in the `Login` module to make it easy for the parent program to inspect that specific event:
 ```fsharp
 // Inside of Login.fs
 
@@ -284,7 +284,7 @@ let update (msg: Msg) (state: State) =
 ```
 Let that sink in for a moment because this is pretty much the gist of data communication in Elmish apps: parent applications **inspect** and **intercept** events coming from child programs in order to initialize or trigger more events in the current program and other child programs. We effectively took the data from an event that occurred in the Login page and used it to initialize the Home page.
 
-It is very important to understand that inspection and interception are very different: the former is only peeking into the data of the event but the latter is also preventing the child program from processing that event. In the snippet above, once the parent program has intercepted the event of a successful login attempt, it directly initializes the Home page without letting the Login page process that event. Keep this in mind because sometime you still want to the state of the child program to change or let execute side-effects in which case you only want to do inspection. More on this coming up. Now let us see the results of the application:
+It is very important to understand that inspection and interception are very different: the former is only peeking into the data of the event but the latter is also preventing the child program from processing that event. In the snippet above, once the parent program has intercepted the event of a successful login attempt, it directly initializes the Home page without letting the Login page process that event. Keep this in mind because sometimes you still want the state of the child program to change or execute side-effects in which case you only want to do inspection. More on this coming up. Now let us see the results of the application:
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">
@@ -320,7 +320,7 @@ let update (msg: Msg) (state: State) =
 ```
 Intercepting the `Logout` will simply reset the data to its initial state using the `init` which effectively resets the application right back into the Login page.
 
-> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and F# compiler will complain that the second pattern will never match but I will keep it nonetheless because usually there are more than one event that can occur in child programs.
+> Handling messages other than `Logout` from the Home page is actually redundant because there are no other types of messages and the F# compiler will complain that the second pattern will never match but I will keep it nonetheless because usually there are more than one event that can occur in child programs.
 
 <div style="width:100%">
   <div style="margin: 0 auto; width:60%;">

@@ -14,7 +14,7 @@ let render state dispatch =
         prop.text "Welcome to Fable"
     ]
 ```
-We want to make the both the text used in `prop.text` and the color used in `prop.style` configurable and not hard-coded like they are now. To do that, we need some *source* for these variables to come from. A common way to define these configuration variables in front-end applications is to use the so-called `dotenv` files. These are files that have extension `.env` (hence the name) which are specifically made to define key-value pairs in the format where each line is written as `{KEY}={VALUE}`:
+We want to make both the text used in `prop.text` and the color used in `prop.style` configurable and not hard-coded like they are now. To do that, we need some *source* for these variables to come from. A common way to define these configuration variables in front-end applications is to use the so-called `dotenv` files. These are files that have the extension `.env` (hence the name) which are specifically made to define key-value pairs in the format where each line is written as `{KEY}={VALUE}`:
 ```
 KEY=VALUE
 MESSAGE=Hello from F#
@@ -27,11 +27,11 @@ MESSAGE_COLOR=blue
 ```
 Even though we don't use any secrets or API keys in this example, it is good practice to put this file in the list of `git-ignored` files and only use it during development per developer machine. Later on if you are building your application inside of a CI server, the variables will be loaded from the configured environment variables which every CI server supports instead of the values in this file.
 
-After you have added file, you need to install a webpack plugin that will load the key-pair values as well as all environment variables and make them available for use from within the application. Install this plugin using `npm`:
+After you have added the file, you need to install a webpack plugin that will load the key-pair values as well as all environment variables and make them available for use from within the application. Install this plugin using `npm`:
 ```bash
 npm install --save-dev dotenv-webpack
 ```
-After installation completes, configure the plugin in `webpack.config.js`:
+After the installation completes, configure the plugin in `webpack.config.js`:
 ```js {highlight: [2, '15-21']}
 const path = require("path")
 const DotenvPlugin = require("dotenv-webpack")
@@ -85,7 +85,7 @@ open Fable.Core.JsInterop
 [<Emit("process.env[$0] ? process.env[$0] : ''")>]
 let variable (key: string) : string = jsNative
 ```
-I promise to cover Fable and JavaScript interop in a separate chapter. Since it is a very big and important topic, I want to cover it properly and do it justice. One section won't be enough for it. Please bear with me for now, the function `Config.variable` will return you the value of configured variable if it exists in the `.env` file or if it is available in the environment where the application was compiled.
+I promise to cover Fable and JavaScript interop in a separate chapter. Since it is a very big and important topic, I want to cover it properly and do it justice. One section won't be enough for it. Please bear with me for now, the function `Config.variable` will return you the value of the configured variable if it exists in the `.env` file or if it is available in the environment where the application was compiled.
 
 You can use the function like this in your `render` functions or any other place for that matter:
 ```fsharp

@@ -2,7 +2,7 @@
 
 In Elmish applications, we can add styling to our applications by simply customizing the `style` property of individual UI elements. This is called *inline-styling*. Another way to use styles is to write CSS files and include them in the `index.html` file. I think that if you are writing your application styling from scratch, that inline-styling would be the way to go because the API is nice to work with and you have the power of all the F# language to do all kinds of manipulations and transformations required for the styles.
 
-However, chances are you will not write inline styles from scratch for the entire application. You will either be using some kind of CSS framework like Bulma or React library like AntDesign that has predefined styles or the designers on your team prefer to write the styling in a language that they are most familiar with: old-school CSS.
+However, chances are you will not write inline styles from scratch for the entire application. You will either be using some kind of CSS framework like Bulma or a React library like AntDesign that has predefined styles or the designers on your team prefer to write the styling in a language that they are most familiar with: old-school CSS.
 
 The CSS language has been around for quite sometime now. Nowadays, there are better tools to build the styling of an application. One such tool is the [Sass](https://sass-lang.com/) language: A modern *superset* of CSS that allows developers to build modular and maintainable style sheets for an application.
 
@@ -24,7 +24,7 @@ In order to integrate Sass styling and use Sass stylesheets in our Elmish applic
  - The `node-sass` package which is the actual `Sass -> CSS` compiler
  - Extra loaders `style-loader` and `css-loader` for easily importing the styles directly from the application.
 
-> The relation between `sass-loader` and `node-sass` is very much the same one between `fable-loader` and `fable-compiler`.
+> The relation between `sass-loader` and `node-sass` is very much the same one as between `fable-loader` and `fable-compiler`.
 
 We can install these development dependencies in one go like this:
 ```bash
@@ -142,7 +142,7 @@ Now the application should have an ugly red background and a nice font on all te
 
 ### Overriding Variables of Third-Party Sass frameworks
 
-In chapters 2 and 3 we used the [Bulma](https://bulma.io) library for styling. We did so by importing the link of the stylesheet directly into the `index.html` page and had all classes from Bulma available for use from within the application. Regardless of the simplicity of this approach, it has quite a number of disadvantages. First of all, we are importing the entire library with everything included, even the classes that don't use which only adds to the latency when downloading the stylesheet. Another problem is that maintaining the version of the package is manual: updating the package to a new version requires going the download page of Bulma and copying the URL that references the latest package. This is unlike how we manage the versions of npm dependencies using just npm. Finally and this is the biggest problem of all when using the direct links to stylesheets is that we cannot modify the defaults of the library.
+In chapters 2 and 3 we used the [Bulma](https://bulma.io) library for styling. We did so by importing the link of the stylesheet directly into the `index.html` page and had all classes from Bulma available for use from within the application. Regardless of the simplicity of this approach, it has quite a number of disadvantages. First of all, we are importing the entire library with everything included, even the classes that we don't use which only adds to the latency when downloading the stylesheet. Another problem is that maintaining the version of the package is manual: updating the package to a new version requires going to the download page of Bulma and copying the URL that references the latest package. This is unlike how we manage the versions of npm dependencies using just npm. Finally and this is the biggest problem of all when using the direct links to stylesheets is that we cannot modify the defaults of the library.
 
 > I am taking Bulma as an example but this applies to many other CSS frameworks.
 
@@ -163,7 +163,7 @@ Now all of Bulma modules are imported into the application. You can cherry pick 
 ```
 Only classes related to buttons will be available for use from the application. Learn more about Bulma modules in the [Modularity Overview](https://bulma.io/documentation/overview/modular) from the documentation.
 
-Moving on to the more interesting parts: overriding the defaults of Bulma. Even though the defaults of Bulma are quite nice to begin with, using custom color scheme will give your application a unique look and feel. Bulma has *a lot* of [variables](https://bulma.io/documentation/customize/variables/) and according to the docs: it says "To override any of these variables, just set them before importing Bulma". We can do that:
+Moving on to the more interesting parts: overriding the defaults of Bulma. Even though the defaults of Bulma are quite nice to begin with, using a custom color scheme will give your application a unique look and feel. Bulma has *a lot* of [variables](https://bulma.io/documentation/customize/variables/) and according to the docs: it says "To override any of these variables, just set them before importing Bulma". We can do that:
 ```css
 /* define custom variables and colors */
 $purple: #8A4D76;
@@ -183,6 +183,6 @@ Another language that compiles to CSS is [Less](http://lesscss.org) which is sim
 
 ### Further Reading
 
-Sass and less are an entire world of their own. I would recommend you read the official documentation of both [Sass](https://sass-lang.com/documentation) and [Less](http://lesscss.org/features) to learn more about them. Even though if you don't plan on becoming a specialist in either technologies, it would benefit you and your team if you can read the code and be able to do just a tad more than what you would be able to do with CSS.
+Sass and Less are an entire world of their own. I would recommend you read the official documentation of both [Sass](https://sass-lang.com/documentation) and [Less](http://lesscss.org/features) to learn more about them. Even though if you don't plan on becoming a specialist in either technologies, it would benefit you and your team if you can read the code and be able to do just a tad more than what you would be able to do with CSS.
 
 Last point I want to talk about is the fact that we are compiling the stylesheets into (side-effectful) JavaScript modules which are imported at the entry point of the Fable project. Depending on how big your stylesheets are, the main generated bundle can become bigger than it should be and take longer to download on initial loading of the application. In many cases, we would like to *extract* the used stylesheets into a separate CSS output file. This requires a combination of using the awesome [mini-css-extract](https://github.com/webpack-contrib/mini-css-extract-plugin) plugin which is usually included in most webpack templates that you can come across.

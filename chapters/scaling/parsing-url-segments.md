@@ -4,7 +4,7 @@ In the [previous section](routing), we talked about how URL segments represented
 
 ### Parsing Segments As Numbers
 
-Many pages might be expecting a number in the URL segments such as `/user/42`. This URL contains two segments and it will be turned into `[ "user"; "42" ]`. We can read this numeric value of "42" dynamically and do something with it using a partial active pattern. In the `Feliz.Router` package, the module `Route` contains active patterns that be used to pattern match against these segments. The first of which is the `Route.Int` pattern which can be used to match against string that is parsable as integer:
+Many pages might be expecting a number in the URL segments such as `/user/42`. This URL contains two segments and it will be turned into `[ "user"; "42" ]`. We can read this numeric value of "42" dynamically and do something with it using a partial active pattern. In the `Feliz.Router` package, the module `Route` contains active patterns that can be used to pattern match against these segments. The first of which is the `Route.Int` pattern which can be used to match against a string that is parsable as an integer:
 ```fsharp {highlight: [7]}
 let render (state: State) (dispatch: Msg -> unit) =
   let activePage =
@@ -20,13 +20,13 @@ let render (state: State) (dispatch: Msg -> unit) =
     Router.application [ activePage ]
   ]
 ```
-That parsed integer `userId` is made available in the scope and be used in the render function dynamically. The `Route` module contains more patterns like the one above:
+That parsed integer `userId` is made available in the scope and can be used in the render function dynamically. The `Route` module contains more patterns like the one above:
  - `Route.Number` to match against (floating) numbers
  - `Route.Int64` to match against 64-bit integers
  - `Route.Guid` to match against `Guid` values
  - `Route.Decimal` to match against decimal values
  - `Route.Bool` to match against boolean values
- - `Route.Query` to expand query string parameters into a `(string * string) list` which be pattern matched against further.
+ - `Route.Query` to expand query string parameters into a `(string * string) list` which can be pattern matched against further.
 
 The `Route.Query` matches against a special kind of URL segment: the query string parameters.
 
