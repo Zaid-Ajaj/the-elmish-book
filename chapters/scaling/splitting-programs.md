@@ -233,7 +233,7 @@ let render (state: State) (dispatch: Msg -> unit) =
     dispatch (Msg.CounterMsg counterMsg)
 
   let inputTextDispatch (inputTextMsg: InputTextMsg) : unit =
-    dispatch (Msg.TextInputMsg inputTextMsg)
+    dispatch (Msg.InputTextMsg inputTextMsg)
 
   match state.CurrentPage with
   | Page.Counter ->
@@ -264,7 +264,7 @@ let counterDispatch (counterMsg: CounterMsg) : unit =
   dispatch (Msg.CounterMsg counterMsg)
 
 let inputTextDispatch (inputTextMsg: InputTextMsg) : unit =
-  dispatch (Msg.TextInputMsg inputTextMsg)
+  dispatch (Msg.InputTextMsg inputTextMsg)
 ```
 Here they are again. As you can see, these functions do nothing special, they only wrap their input messages (for the child programs) into a message type of the parent program, namely from the cases `Msg.CounterMsg` and `Msg.InputTextMsg` which the original `dispatch` function understands since it takes `Msg` as input.
 
