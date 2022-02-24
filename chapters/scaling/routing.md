@@ -68,13 +68,15 @@ let update (msg: Msg) (state: State): State =
   match msg with
   | UrlChanged url -> { state with CurrentUrl = url }
 ```
-Within the `Feliz.Router` namespace, we primarily use two modules:
- - `Router` which contains functions to work with and listen to URLs.
- - `Route` which contains active patterns to parse URL segments easily.
+The `Feliz.Router` namespace brings into scope these routing helpers:
+ - `Router` module which contains functions to work with and listen to URLs.
+ - `Route` module which contains active patterns to parse URL segments easily.
+ - `Cmd` functions for creating URL-related Elmish commands.
+ - `React.router` extension method for rendering the React-based router itself.
 
 The first function to use from the `Router` module is `currentUrl()` which parses the URL of the page that the application has landed on into URL segments. The parsed segments will be the initial value for the `CurrentUrl`.
 
-Much more interesting is what is happening in the `render` function. Here we will use the `router` function from the `Router` module and use it as if it was a UI element:
+Much more interesting is what is happening in the `render` function. Here we will use the `router` extention method for the `React` class:
 ```fsharp {highlight: ['12-15']}
 open Feliz
 open Feliz.Router
