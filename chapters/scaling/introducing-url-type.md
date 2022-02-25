@@ -40,9 +40,9 @@ let render (state: State) (dispatch: Msg -> unit) =
     | Url.User userId -> Html.h1 (sprintf "UserId: %d" userId)
     | Url.NotFound -> Html.h1 "Not Found"
 
-  Router.router [
-    Router.onUrlChanged (parseUrl >> UrlChanged >> dispatch)
-    Router.application [ activePage ]
+  React.router [
+    router.onUrlChanged (parseUrl >> UrlChanged >> dispatch)
+    router.children [ activePage ]
   ]
 ```
 Now this is a much cleaner solution. However, it is very important to understand how the `Url` correlates to the `Page` type. I have seen frameworks that model both in one type and make a mess out of it. The `Url` is not to be mapped one-to-one into a `Page` instance, but rather it should contain enough information for the **initialization** of a `Page`. Suppose I have the following types:

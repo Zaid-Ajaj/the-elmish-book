@@ -15,9 +15,9 @@ let render (state: State) (dispatch: Msg -> unit) =
     | [ "user"; Route.Int userId ] -> Html.h1 (sprintf "UserId: %d" userId)
     | _ -> Html.h1 "Not Found"
 
-  Router.router [
-    Router.onUrlChanged (UrlChanged >> dispatch)
-    Router.application [ activePage ]
+  React.router [
+    router.onUrlChanged (UrlChanged >> dispatch)
+    router.children [ activePage ]
   ]
 ```
 That parsed integer `userId` is made available in the scope and can be used in the render function dynamically. The `Route` module contains more patterns like the one above:
@@ -50,9 +50,9 @@ let render (state: State) (dispatch: Msg -> unit) =
     | [ "user"; Route.Query [ "id", Route.Int userId ] ] -> Html.h1 (sprintf "UserId: %d" userId)
     | _ -> Html.h1 "Not Found"
 
-  Router.router [
-    Router.onUrlChanged (UrlChanged >> dispatch)
-    Router.application [ activePage ]
+  React.router [
+    router.onUrlChanged (UrlChanged >> dispatch)
+    router.children [ activePage ]
   ]
 ```
 Of course, you can pattern match against multiple parameters using the same list of query string parameters. Suppose we have a "search" page which has two parameters: `query` and `limit`. The first parameter is the string that we want to look for and the second parameter is optional and specifies the maximum number of search results to show on screen. Then we can pattern match that page as follows:
