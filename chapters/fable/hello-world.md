@@ -1,6 +1,8 @@
 # Hello World
 
-To get started with Fable, it is easier to use a template instead of building your application from scratch, so I have set up a simple hello world fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository. Clone it locally on your machine as follows:
+To get started with Fable, it is easier to use a template instead of building your application from scratch. I have set up a simple hello world Fable application in the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository. We will use this repository to demonstrate Fable features. Keep in mind that this template is not suitable for production use.
+
+Now, to get started, clone the repository locally on your machine as follows:
 
 ```bash
 git clone https://github.com/Zaid-Ajaj/fable-getting-started.git
@@ -11,11 +13,13 @@ fable-getting-started
   ├─── .gitattributes
   ├─── .gitignore
   ├─── LICENSE
-  ├─── Nuget.Config
   ├─── package-lock.json
   ├─── package.json
   ├─── README.md
   ├─── webpack.config.js
+  ├─── App.sln
+  ├─── .config
+  │     ├───  dotnet-tools.json
   ├─── dist
   │     ├───  fable.ico
   │     ├───  index.html
@@ -29,7 +33,9 @@ The most important parts of the template are these directories:
 - `src` is where your F# source code lives
 - `dist` is the output directory when you compile F# to JavaScript
 - `package.json` is used by Node.js to give information to the Node.js package manager (npm for short) that allows it to identify the project as well as handle the project's *dependencies*
-- `webpack.config.js` will contain our "compiler configuration" with [webpack](https://webpack.js.org/). We will talk about Webpack in great detail in a later chapter because it is an advanced topic.
+- `webpack.config.js` will contain our development server configuration as well as instructions for bundling the generated code by Fable using [webpack](https://webpack.js.org/). We will talk about Webpack in great detail in a later chapter because it is an advanced topic.
+- `App.sln` is the solution file for the project
+- `.config/dotnet-tools.json` specifies dotnet CLI tools that are used in this project. The Fable compiler itself is a dotnet CLI tool which is specified here.
 
 The only F# source file in the project is `App.fs` and it contains the following code:
 ```fsharp
@@ -59,27 +65,30 @@ var path = require("path");
 
 module.exports = {
     mode: "none",
-    entry: "./src/App.fsproj",
-    devServer: {
-        contentBase: path.join(__dirname, "./dist")
+    entry: "./src/App.fs.js",
+    output: {
+        path: path.join(__dirname, "./dist"),
+        filename: "main.js"
     },
-    module: {
-        rules: [{
-            test: /\.fs(x|proj)?$/,
-            use: "fable-loader"
-        }]
+    devServer: {
+        static: path.join(__dirname, "./dist")
     }
 }
 ```
-The `entry` option specifies the path to the project that should be compiled. The other options will be discussed in a later chapter.
+- The `entry` option specifies the path to entry _JavaScript_ file. This entry file defined here is `./App.fs.js` which is compiled from the F# entry file `App.fs`. 
+- The `output` option defines where the bundled JavaScript code should be emitted. Here we say that the bundled code should go in the `./dist` directory in a file named `main.js`. This is actually the default configuration that webpack uses when we don't specify `output` so we can omit this option entirely but I've kept here to show what webpack is doing.
+- The `devServer` option specifies further options for the development server. More about that discussed in [Development Mode](development-mode.md)
 
 ### Compiling the project
 To get your F# code to run in the browser, you will first need to compile the project and then open `index.html` in your browser. However, before being able to compile the project, there are a couple of requirements that you need to have installed on your machine:
 
-- [.NET Core](https://www.microsoft.com/net/download) 2.2 or later, both SDK and runtime
-- [Node.js](https://nodejs.org/en/) 10.0 or later
+- [dotnet SDK](https://dotnet.microsoft.com/en-us/download) v6.0 or a more recent version
+- [Node.js](https://nodejs.org/en/) 18.0 or later
 
-Of course, having a code editor is not a requirement for building the project but rather for development. To edit F# code, it is highly recommended to have [VS Code](https://code.visualstudio.com/) installed (along with the [Ionide](http://ionide.io/) extension).
+Of course, having a code editor is not a requirement for building the project but rather for development. To edit F# code, you can use:
+- Visual Studio
+- Rider from JetBrains
+- [Visual Studio Code](https://code.visualstudio.com/) along with the [Ionide](http://ionide.io/) extension.
 
 Once you have installed both .NET and Node.js, you can verify that you have the correct versions by running these commands in your terminal:
 ```bash
@@ -89,9 +98,11 @@ node --version
 After you have checked the versions, you can clone the [fable-getting-started](https://github.com/Zaid-Ajaj/fable-getting-started) repository from GitHub and compile the whole project
 ```bash
 cd fable-getting-started
+dotnet tool restore
 npm install
 npm run build
 ```
+
 I use Windows, so the compilation looks as follows on my machine
 
 <resolved-image source='/images/fable/compile.gif' />
@@ -139,10 +150,10 @@ Of course, printing out a message to the console is boring. We can try something
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="fable.ico" />
     </head>
-<body>
-  <button id="printMsg">Print Message</button>
-  <script src="main.js"></script>
-</body>
+  <body>
+    <button id="printMsg">Print Message</button>
+    <script src="main.js"></script>
+  </body>
 </html>
 ```
 Here, we have added a `button` tag to the page with identity attribute called `"printMsg"`. We will use this id to reference the button from the F# code. Modify the contents of `App.fs` to the following:
