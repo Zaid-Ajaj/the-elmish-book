@@ -86,8 +86,8 @@ To get your F# code to run in the browser, you will first need to compile the pr
 - [Node.js](https://nodejs.org/en/) 18.0 or later
 
 Of course, having a code editor is not a requirement for building the project but rather for development. To edit F# code, you can use:
-- Visual Studio
-- Rider from JetBrains
+- [Visual Studio](https://visualstudio.microsoft.com/)
+- [Rider from JetBrains](https://www.jetbrains.com/rider/)
 - [Visual Studio Code](https://code.visualstudio.com/) along with the [Ionide](http://ionide.io/) extension.
 
 Once you have installed both .NET and Node.js, you can verify that you have the correct versions by running these commands in your terminal:
