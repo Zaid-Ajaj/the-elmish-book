@@ -20,12 +20,12 @@ module.exports = {
     }
 }
 ```
-Within the `devServer` section, you see the `contentBase` options pointing to the `dist` directory. These options are the configuration for the development server of webpack. This setup says, "Start a local server that serves files from the `dist` directory." The development server runs on port 8080 by default. To use the development server, run the following commands:
+Within the `devServer` section, you see the `static` option pointing to the `dist` directory. These options are the configuration for the development server of webpack. This setup says, "Start a local server that serves files from the `dist` directory." The development server runs on port 8080 by default. To use the development server, run the following commands:
 ```bash
 npm install
 npm start
 ```
-The command `npm start` will start the webpack development server, compile the project *only once*, and keep watching the project files for any changes. You can then navigate to `http://localhost:8080` to see your project running.
+The command `npm start` will start both the compilation process by Fable and start the webpack development server at the same time. Fable will watch for changes in F# source files and recompile only the files affected, then webpack dev server will pick up the newly generated JS files and refresh the page. You can then navigate to `http://localhost:8080` to see your project running.
 
 > Learn how `npm start` relates to webpack development server in the paragraph [Npm Scripts](node-packages#npm-scripts) of section [Node.js Packages](node-packages).
 
