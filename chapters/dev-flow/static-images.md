@@ -89,7 +89,7 @@ module.exports = (env, argv) => {
     }
 }
 ```
-With that in place, we can import images by their relative paths when they have the extension `.png`, `.jpeg`, or `.gif` as specified in the regex of the `test` option. What I always do is create a helper module for referencing relative images as follows:
+With that in place, we can import images by their relative paths when they have the extension `.png`, `.jpg`, `.jpeg`, or `.gif` as specified in the regex of the `test` option. What I always do is create a helper module for referencing relative images as follows:
 ```fsharp
 [<RequireQualifiedAccess>]
 module Image =
