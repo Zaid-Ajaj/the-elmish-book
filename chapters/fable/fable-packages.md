@@ -4,13 +4,13 @@ From the template we started within the [Hello World](hello-world.md) section, w
 ```xml {highlight:[9]}
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+      <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="App.fs" />
+      <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fable.Browser.Dom" Version="1.0.0" />
+    <PackageReference Include="Fable.Browser.Dom" Version="2.10.0" />
   </ItemGroup>
 </Project>
 ```

@@ -88,6 +88,8 @@ This may sound worrisome since you have to know which versions of npm packages g
 
 ### Authoring Fable libraries and bindings
 
-This was just a glimpse at how Fable packages can integrate native JavaScript modules into Fable applications. In chapter 5, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
+This was just a glimpse at how Fable packages can integrate native JavaScript modules into Fable applications. 
+
+In chapter 5 <strong>[TODO]</strong>, we will be looking into interoperability in great detail and the different ways of authoring a Fable package.
 
 If you would like to find out more about how to write bindings, here is a write-up of my own on Medium. It is a little out of date, e.g. Pojo attributes, but the ideas are pretty much the same. [F# Interop with Javascript in Fable: The Complete Guide](https://medium.com/@zaid.naom/f-interop-with-javascript-in-fable-the-complete-guide-ccc5b896a59f).
